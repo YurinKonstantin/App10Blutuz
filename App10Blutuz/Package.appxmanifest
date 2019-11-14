@@ -4,18 +4,19 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
+  xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10"
+  IgnorableNamespaces="uap mp iot">
 
   <Identity
-    Name="715c089d-b768-4512-aece-eded85575f13"
-    Publisher="CN=Konstantin"
-    Version="1.0.0.0" />
+    Name="38673Yurin.BluetoothDevice"
+    Publisher="CN=6DBA1DE5-9EA9-4313-BEA7-F315A6AEEB19"
+    Version="1.0.14.0" />
 
-  <mp:PhoneIdentity PhoneProductId="715c089d-b768-4512-aece-eded85575f13" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="edd1c739-c94c-4e5b-b5be-6fc8f011bbf1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>App10Blutuz</DisplayName>
-    <PublisherDisplayName>Konstantin</PublisherDisplayName>
+    <DisplayName>Bluetooth Device</DisplayName>
+    <PublisherDisplayName>Yurin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,19 +33,22 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="App10Blutuz.App">
       <uap:VisualElements
-        DisplayName="App10Blutuz"
+        DisplayName="Bluetooth Device"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="App10Blutuz"
-        BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        BackgroundColor="transparent"
+        Description="Это приложение предназначено для разработчиков устройств, где требуется передача данных через bluetooth.">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\Square71x71Logo.png" Square310x310Logo="Assets\Square310x310Logo.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
+        <uap:SplashScreen Image="Assets\SplashScreen.png"/>
       </uap:VisualElements>
     </Application>
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClient" />
     <DeviceCapability Name="bluetooth"/>
   </Capabilities>
 </Package>

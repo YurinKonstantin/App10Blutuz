@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Media.Audio;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
+using Windows.System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
@@ -213,5 +219,144 @@ namespace App10Blutuz
             BluetoothConnectionHandler bluetoothConnectionHandler = new BluetoothConnectionHandler();
             bluetoothConnectionHandler.StartServer();
         }
-    }
+
+     
+
+        private void NavView_ItemInvoked(object sender, NavigationViewItemInvokedEventArgs args)
+        {
+            try
+            {
+
+
+                if (args.IsSettingsInvoked)
+                {
+                    // ContentFrame.Navigate(typeof(PageSetting));
+                }
+                else
+                {
+                    // find NavigationViewItem with Content that equals InvokedItem
+
+                    var item = ((NavigationView)sender).MenuItems.OfType<NavigationViewItem>().First(x => (string)x.Content == (string)args.InvokedItem);
+                    NavView_Navigate(item as NavigationViewItem);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void NavView_Loaded(object sender, RoutedEventArgs e)
+        {
+            // you can also add items in code behind
+            // NavView.MenuItems.Add(new NavigationViewItemSeparator());
+            // NavView.MenuItems.Add(new NavigationViewItem()
+            // { Content = "My content", Icon = new SymbolIcon(Symbol.Folder), Tag = "content" });
+
+            // set the initial SelectedItem 
+            foreach (NavigationViewItemBase item in NavView.MenuItems)
+            {
+                if (item is NavigationViewItem && item.Tag.ToString() == "BlankPageScaner")
+                {
+                    NavView.SelectedItem = item;
+                    ContentFrame.Navigate(typeof(BlankPageScaner));
+                    // NavView.Header = "IP Scanner";
+
+
+                    break;
+                }
+            }
+
+            //  ContentFrame.Navigated += On_Navigated;
+
+            // add keyboard accelerators for backwards navigation
+            //  KeyboardAccelerator GoBack = new KeyboardAccelerator();
+            // GoBack.Key = VirtualKey.GoBack;
+            //  GoBack.Invoked += BackInvoked;
+            //  KeyboardAccelerator AltLeft = new KeyboardAccelerator();
+            //  AltLeft.Key = VirtualKey.Left;
+            //  AltLeft.Invoked += BackInvoked;
+            // this.KeyboardAccelerators.Add(GoBack);
+            // this.KeyboardAccelerators.Add(AltLeft);
+            // ALT routes here
+            //   AltLeft.Modifiers = VirtualKeyModifiers.Menu;
+            // NavView.IsPaneOpen = false;
+            KeyboardAccelerator GoBack = new KeyboardAccelerator();
+            GoBack.Key = VirtualKey.GoBack;
+            GoBack.Invoked += BackInvoked;
+            KeyboardAccelerator AltLeft = new KeyboardAccelerator();
+            AltLeft.Key = VirtualKey.Left;
+            AltLeft.Invoked += BackInvoked;
+            this.KeyboardAccelerators.Add(GoBack);
+            this.KeyboardAccelerators.Add(AltLeft);
+            // ALT routes here
+            AltLeft.Modifiers = VirtualKeyModifiers.Menu;
+
+
+        }
+        private async void NavView_Navigate(NavigationViewItem item)
+        {
+
+            switch (item.Tag)
+            {
+
+                case "BlankPageScaner":
+                    NavView.IsPaneOpen = false;
+                    NavView.SelectedItem = null;
+                    ContentFrame.Navigate(typeof(BlankPageScaner));
+                    break;
+                case "BlankPageServer":
+                    NavView.IsPaneOpen = false;
+                    NavView.SelectedItem = null;
+                    ContentFrame.Navigate(typeof(BlankPageServer));
+                    break;
+
+
+
+
+
+            }
+        }
+
+        private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+
+        }
+
+        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            On_BackRequested();
+
+        }
+
+        private void BackInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            On_BackRequested();
+            args.Handled = true;
+
+        }
+
+        private bool On_BackRequested()
+        {
+            bool navigated = false;
+
+            // don't go back if the nav pane is overlayed
+            if (NavView.IsPaneOpen && (NavView.DisplayMode == NavigationViewDisplayMode.Compact || NavView.DisplayMode == NavigationViewDisplayMode.Minimal))
+            {
+                return false;
+            }
+            else
+            {
+                if (ContentFrame.CanGoBack)
+                {
+                    ContentFrame.GoBack();
+                    navigated = true;
+                }
+            }
+            return navigated;
+        }
+    
+
+
+}
 }

@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="App10Blutuz.BlankPageScaner"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App10Blutuz"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Margin="16" Grid.Row="0" x:Uid="textHead" TextWrapping="Wrap" HorizontalTextAlignment="Center" HorizontalAlignment="Center"  />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <AppBarButton Icon="Add" x:Uid="addDevice"  Click="AppBarButton_Click_1"/>
+            <AppBarButton Icon="Refresh" x:Uid="refDevice"  Click="AppBarButton_Click"/>
+            <AppBarButton Icon="Filter" Label="Фильтр" Visibility="Collapsed"/>
+        </StackPanel>
+        <ListView x:Uid="ListDev"  x:Name="listV"  HorizontalAlignment="Center" Grid.Row="2" SelectionChanged="listV_SelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:ClassBluetoothDevice">
+                    <Grid>
+                        <TextBlock Text="{x:Bind namea}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ProgressRing Name="PRing" Grid.Row="2" IsActive="True" Width="20" Height="20" />
+        <TextBlock Grid.Row="3" x:Uid="textBut" TextWrapping="Wrap" HorizontalTextAlignment="Center" HorizontalAlignment="Center"  Margin="16"/>
+        <HyperlinkButton x:Uid="hupDalee" Content="Далее" Grid.Row="4" HorizontalAlignment="Right" Margin="16" Click="HyperlinkButton_Click" Foreground="Blue"/>
+    </Grid>
+</Page>

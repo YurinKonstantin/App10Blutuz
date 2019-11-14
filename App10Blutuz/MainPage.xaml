@@ -9,10 +9,35 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <StackPanel Margin="200">
-            <TextBlock x:Name="DeviceName"/>
-            <Button x:Name="DiscoverButton" Click="DiscoverButton_Click" Content="hhh"/>
-            <Button Content="jhgg" />
-        </StackPanel>
+        <NavigationView x:Name="NavView" Loaded="NavView_Loaded"
+                         ItemInvoked="NavView_ItemInvoked"
+                         BackRequested="NavView_BackRequested" IsBackButtonVisible="Collapsed">
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="A" Tag="A" x:Uid="NavigA" >
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets"  Glyph="&#xE702;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="BlankPageServer" Tag="BlankPageServer" x:Uid="NavigB" Content="Bluetooth сервер">
+                    <NavigationViewItem.Icon>
+                
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE774;"/>
+                
+                   
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem  x:Name="BlankPageScaner" Tag="BlankPageScaner" x:Uid="NavigC" Content="Сканер Bluetooth">
+                    <NavigationViewItem.Icon>
+                       
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;"/>
+                     
+                       
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame" Padding="12,0,12,24" IsTabStop="True"
+                   NavigationFailed="ContentFrame_NavigationFailed"/>
+        </NavigationView>
+     
     </Grid>
 </Page>
