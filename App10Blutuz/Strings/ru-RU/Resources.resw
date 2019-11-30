@@ -123,7 +123,13 @@
   <data name="BStart.Content" xml:space="preserve">
     <value>Старт СЕРВЕР</value>
   </data>
+  <data name="BStart.Label" xml:space="preserve">
+    <value>Старт СЕРВЕР</value>
+  </data>
   <data name="BStop.Content" xml:space="preserve">
+    <value>Стоп СЕРВЕР</value>
+  </data>
+  <data name="BStop.Label" xml:space="preserve">
     <value>Стоп СЕРВЕР</value>
   </data>
   <data name="ButSend.Label" xml:space="preserve">

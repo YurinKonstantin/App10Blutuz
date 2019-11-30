@@ -16,10 +16,12 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -40,8 +42,19 @@ namespace App10Blutuz
           bluetoothConnectionHandler = new BluetoothConnectionHandler();
             DropRecive.Content = bluetoothConnectionHandler.formStrReceiv;
             Dropsend.Content = formStrSend;
+            Application.Current.Suspending += new SuspendingEventHandler(App_Suspending);
         }
-       public string formStrSend = "UTF8";
+        public List<ClassMessage> classMessages = new List<ClassMessage>();
+        async void App_Suspending(Object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        {
+            if (v)
+            {
+
+                await appWindow.CloseAsync();
+            }
+
+        }
+        public string formStrSend = "UTF8";
        
         ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
         BluetoothConnectionHandler bluetoothConnectionHandler;
@@ -118,7 +131,7 @@ namespace App10Blutuz
 
                 // Make sure that the connection is still up and there is a message to send.
                 if (socket == null || writer == null) 
-                { Debug.WriteLine("Cannot send message: No clients connected.");
+                { 
                     Text.Text += ">>Cannot send message: No clients connected."+"\n";
                     return; 
                 } // "No clients connected, please wait for a client to connect before attempting to send a message."
@@ -150,13 +163,7 @@ namespace App10Blutuz
                     Text.Text += ">>Send message: " + message + "\n";
 
                 }
-                // byte[] countBuffer = BitConverter.GetBytes(messageLength);
-                // buffer = Encoding.UTF8.GetBytes(message);
-
-
-        
-
-                //writer.WriteBytes(countBuffer);
+             
              
             }
 
@@ -195,14 +202,16 @@ namespace App10Blutuz
                 Debug.WriteLine("Connection device.");
                 var remoteDevice = await BluetoothDevice.FromHostNameAsync(socket.Information.RemoteHostName);
                 naame = remoteDevice.Name;
-                await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Text.Text += ">>Connection device: "+ remoteDevice.Name+"\n"; });
+                DateTime dateTime = new DateTime();
+                dateTime = DateTime.Now;
+                await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Text.Text += dateTime.ToString()+">>"+">>Connection device: " + remoteDevice.Name+"\n"; });
                 Debug.WriteLine("Connection device."+ remoteDevice.Name);
                 Debug.WriteLine("Connection established.");
                listeningTask = new Task(() => StartListeringBute());
                listeningTask.Start();
                 // Notify connection received.
             }
-            string naame = String.Empty;
+           public string naame = String.Empty;
             private async void StartListening()
             {
                 Debug.WriteLine("Starting to listen for input.");
@@ -308,21 +317,58 @@ namespace App10Blutuz
                             if (formStrReceiv=="UTF8")
                             {
                                 valor = ">>" + naame + ">>" + Encoding.UTF8.GetString(buffer, 0, bytes);
+                                if (blankPagePlot != null && v)
+                                {
+                                    string[] vs = Encoding.UTF8.GetString(buffer, 0, bytes).Split(new char[] { ' ', ',', ' ', ':' });
+                                    for (int i = 0; i < vs.Length; i++)
+                                    {
+                                        if (Int32.TryParse(vs[i], out int j) || Double.TryParse(vs[i], out double t))
+                                        {
+                                            blankPagePlot.PlotModel.addPoint(Convert.ToDouble(vs[i]));
+                                        }
+                                    }
+
+                                }
                             }
                             if (formStrReceiv == "ASCII")
                             {
+                                if (blankPagePlot != null && v)
+                                {
+                                    string[] vs = Encoding.ASCII.GetString(buffer, 0, bytes).Split(new char[] { ' ', ',', ' ', ':' });
+                                    for (int i = 0; i < vs.Length; i++)
+                                    {
+                                        if (Int32.TryParse(vs[i], out int j) || Double.TryParse(vs[i], out double t))
+                                        {
+                                            blankPagePlot.PlotModel.addPoint(Convert.ToDouble(vs[i]));
+                                        }
+                                    }
+
+                                }
                                 valor = ">>" + naame + ">>" + Encoding.ASCII.GetString(buffer, 0, bytes);
 
                             }
                             if (formStrReceiv == "Unicode")
                             {
+                                if (blankPagePlot != null && v)
+                                {
+                                    string[] vs = Encoding.Unicode.GetString(buffer, 0, bytes).Split(new char[] { ' ', ',', ' ', ':' });
+                                    for (int i = 0; i < vs.Length; i++)
+                                    {
+                                        if (Int32.TryParse(vs[i], out int j) || Double.TryParse(vs[i], out double t))
+                                        {
+                                            blankPagePlot.PlotModel.addPoint(Convert.ToDouble(vs[i]));
+                                        }
+                                    }
 
+                                }
                                 valor = ">>" + naame + ">>" + Encoding.Unicode.GetString(buffer, 0, bytes);
                             }
 
                             await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
-                                    Text.Text += valor+"\n";
+                                DateTime dateTime = new DateTime();
+                                dateTime = DateTime.Now;
+                                Text.Text += dateTime.ToString() +valor +"\n";
                             });
                                
                             
@@ -368,6 +414,9 @@ namespace App10Blutuz
                     }
                 }
             }
+          public  BlankPagePlot blankPagePlot { get; set; }
+          public  AppWindow appWindow;
+          public  bool v = false;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -376,20 +425,20 @@ namespace App10Blutuz
            bool b=await bluetoothConnectionHandler.StartServer();
             if(b)
             {
+                
                 sostoanie.Text = resourceLoader.GetString("textServerStart");
                 elipsSos.Fill = new SolidColorBrush(Windows.UI.Colors.Green);
                 BStop.IsEnabled = true;
                 BStart.IsEnabled = false;
 
             }
-            //bluetoothConnectionHandler.socketListener.ConnectionReceived += OnConnectionReceived;
-             //Task.Run(() => StartListening());
+           
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             bluetoothConnectionHandler.Disconnect();
-            sostoanie.Text += resourceLoader.GetString("textServerStop");
+            sostoanie.Text = resourceLoader.GetString("textServerStop");
             elipsSos.Fill = new SolidColorBrush(Windows.UI.Colors.Red);
             BStop.IsEnabled = false;
             BStart.IsEnabled = true;
@@ -413,6 +462,84 @@ namespace App10Blutuz
         {
             bluetoothConnectionHandler.formStrReceiv = ((MenuFlyoutItem)sender).Tag.ToString();
             DropRecive.Content = ((MenuFlyoutItem)sender).Tag.ToString(); 
+        }
+        private void AppBarButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            classMessages.Clear();
+            terminalText.Text = String.Empty;
+        }
+
+        private async void AppBarButton_Click_2(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+
+                var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+                folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+                folderPicker.FileTypeFilter.Add("*");
+
+                Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+                if (folder != null)
+                {
+                    Windows.Storage.StorageFile sampleFile = await folder.CreateFileAsync("ReportBluetooth.txt", Windows.Storage.CreationCollisionOption.GenerateUniqueName);
+                    await Windows.Storage.FileIO.WriteTextAsync(sampleFile, terminalText.Text);
+
+                }
+                else
+                {
+
+                    await new MessageDialog("Operation cancelled.").ShowAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await new MessageDialog(ex.Message).ShowAsync();
+            }
+
+        }
+        BlankPagePlot blankPagePlot { get; set; }
+        AppWindow appWindow;
+        bool v = false;
+        private async void AppBarButton_Click_3(object sender, RoutedEventArgs e)
+        {
+            blankPagePlot = new BlankPagePlot();
+           
+            appWindow = await AppWindow.TryCreateAsync();
+
+            ElementCompositionPreview.SetAppWindowContent(appWindow, blankPagePlot);
+
+            v = await appWindow.TryShowAsync();
+            if (v)
+            {
+
+
+                blankPagePlot.iniPlot(bluetoothConnectionHandler.naame);
+                blankPagePlot.PlotModel.addSeries();
+                Size size = new Size() { Height = 100, Width = 100 };
+                appWindow.RequestSize(size);
+                appWindow.Closed += delegate
+                {
+                    v = false;
+                    blankPagePlot = null;
+                    appWindow = null;
+                    bluetoothConnectionHandler.blankPagePlot = null;
+                    bluetoothConnectionHandler.v = false;
+                    bluetoothConnectionHandler.appWindow = null;
+                };
+                bluetoothConnectionHandler.blankPagePlot = blankPagePlot;
+                bluetoothConnectionHandler.v = v;
+                bluetoothConnectionHandler.appWindow = appWindow;
+            }
+
+
+        }
+
+    
+
+        private void AppBarButton_Click_5(object sender, RoutedEventArgs e)
+        {
+            spl.IsPaneOpen = !spl.IsPaneOpen;
         }
     }
 }
