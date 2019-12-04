@@ -49,15 +49,12 @@ namespace App10Blutuz
                 this.MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title="X" });
                 this.MyModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Y" });
                 MyModel.InvalidatePlot(true);
-               
-              
             }
             LineSeries lineSeries1 { get; set; }
             public void addSeries()
             {
                 this.MyModel.Series.Clear();
                 lineSeries1 = new LineSeries();
-              
                 this.MyModel.Series.Add(lineSeries1);
                 MyModel.InvalidatePlot(true);
                 
