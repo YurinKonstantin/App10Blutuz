@@ -9,6 +9,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <NavigationView x:Name="NavView" Loaded="NavView_Loaded"
                          ItemInvoked="NavView_ItemInvoked"
                          BackRequested="NavView_BackRequested" IsBackButtonVisible="Collapsed">
@@ -37,7 +41,11 @@
             </NavigationView.MenuItems>
             <Frame x:Name="ContentFrame" Padding="0,0,4,4" IsTabStop="True"
                    NavigationFailed="ContentFrame_NavigationFailed"/>
+            
         </NavigationView>
-     
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" x:Name="trial" HorizontalAlignment="Center"  Visibility="Collapsed">
+            <TextBlock x:Name="textlic" Foreground="Red" FontSize="16" Margin="18"/>
+            <Button Click="Button_Click_11" Content="Buy App" Margin="8,0"/>
+        </StackPanel>
     </Grid>
 </Page>

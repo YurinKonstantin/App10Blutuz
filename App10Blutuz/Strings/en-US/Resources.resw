@@ -120,6 +120,18 @@
   <data name="addDevice.Label" xml:space="preserve">
     <value>Add Device</value>
   </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Chart</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>Setting</value>
+  </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>Start</value>
   </data>
@@ -170,5 +182,14 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>You</value>
+  </data>
+  <data name="TRec.Text" xml:space="preserve">
+    <value>Received Message Format</value>
+  </data>
+  <data name="TSent.Text" xml:space="preserve">
+    <value>Send Message Format</value>
+  </data>
+  <data name="TSet.Text" xml:space="preserve">
+    <value>Setting</value>
   </data>
 </root>

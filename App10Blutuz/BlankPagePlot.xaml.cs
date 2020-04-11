@@ -53,19 +53,37 @@ namespace App10Blutuz
             LineSeries lineSeries1 { get; set; }
             public void addSeries()
             {
-                this.MyModel.Series.Clear();
-                lineSeries1 = new LineSeries();
-                this.MyModel.Series.Add(lineSeries1);
-                MyModel.InvalidatePlot(true);
+                try
+                {
+
+
+                    this.MyModel.Series.Clear();
+                    lineSeries1 = new LineSeries();
+                    this.MyModel.Series.Add(lineSeries1);
+                    MyModel.InvalidatePlot(true);
+                }
+                catch(Exception)
+                {
+
+                }
                 
 
 
             }
             public void addPoint(double x)
             {
-                var dd = MyModel.Series.ElementAt(0) as LineSeries;
-                lineSeries1.Points.Add(new DataPoint(dd.Points.Count+1, x));
-                MyModel.InvalidatePlot(true);
+                try
+                {
+
+
+                    var dd = MyModel.Series.ElementAt(0) as LineSeries;
+                    lineSeries1.Points.Add(new DataPoint(dd.Points.Count + 1, x));
+                    MyModel.InvalidatePlot(true);
+                }
+                catch(Exception)
+                {
+
+                }
                 
             }
 

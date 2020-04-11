@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.Services.Store.Engagement;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
@@ -20,6 +23,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Services.Store.Engagement;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -32,41 +36,93 @@ namespace App10Blutuz
     {
         Windows.Devices.Bluetooth.Rfcomm.RfcommDeviceService _service;
         Windows.Networking.Sockets.StreamSocket _socket;
-        List<ClassBluetoothDevice> classBluetoothDevices = new List<ClassBluetoothDevice>();
+        ObservableCollection<ClassBluetoothDevice> classBluetoothDevices = new ObservableCollection<ClassBluetoothDevice>();
         public BlankPageScaner()
         {
             this.InitializeComponent();
+            listV.ItemsSource = classBluetoothDevices;
         }
         public ClassBluetoothDevice ClassBluetoothDeviceSelect { get; set; }
         private async void FindDeviceRfc()
         {
-            classBluetoothDevices.Clear();
-            var services =
-        await Windows.Devices.Enumeration.DeviceInformation.FindAllAsync();
+            try
+            {
+
+
+                classBluetoothDevices.Clear();
+                var services =
+            await Windows.Devices.Enumeration.DeviceInformation.FindAllAsync();
+                for (int i = 0; i < services.Count; i++)
+                {
+
+
+                    //if (services[i].Id.Contains("Bluetooth") && (service.ProtectionLevel== SocketProtectionLevel.BluetoothEncryptionWithAuthentication || service.ProtectionLevel == SocketProtectionLevel.BluetoothEncryptionWithAuthentication || SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication))
+                    if (services[i].Id.Contains("Bluetooth"))
+                    {
+                        var service = await RfcommDeviceService.FromIdAsync(services[0].Id);
+                        BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(services[0].Id);
+                        //   MessageDialog messageDialog = new MessageDialog(services[i].Properties.ElementAt(2).Key + "\t" + services[i].Properties.ElementAt(2).Value.ToString() +"\n"+ service.ToString());
+                        //  await messageDialog.ShowAsync();
+                        if (service != null)
+                        {
+                            classBluetoothDevices.Add(new ClassBluetoothDevice() { namea = services[i].Name, rfcommDeviceService = service });
+                        }
+
+                    }
+
+                }
+                listV.ItemsSource = classBluetoothDevices;
+            }
+            catch(Exception)
+            {
+
+            }
+        }
+        private async void FindDeviceLe()
+        {
+            PRing.IsActive = true;
+            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected" };
+            var services =await Windows.Devices.Enumeration.DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false), requestedProperties, DeviceInformationKind.AssociationEndpoint);
+
+          
             for (int i = 0; i < services.Count; i++)
             {
-             
-                
+
+
                 //if (services[i].Id.Contains("Bluetooth") && (service.ProtectionLevel== SocketProtectionLevel.BluetoothEncryptionWithAuthentication || service.ProtectionLevel == SocketProtectionLevel.BluetoothEncryptionWithAuthentication || SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication))
                 if (services[i].Id.Contains("Bluetooth"))
-                {
-                    var service = await RfcommDeviceService.FromIdAsync(services[0].Id);
-                 //   MessageDialog messageDialog = new MessageDialog(services[i].Properties.ElementAt(2).Key + "\t" + services[i].Properties.ElementAt(2).Value.ToString() +"\n"+ service.ToString());
-                  //  await messageDialog.ShowAsync();
-                    if (service != null)
+                {try
                     {
-                        classBluetoothDevices.Add(new ClassBluetoothDevice() { namea = services[i].Name, rfcommDeviceService= service });
+
+
+                        //var service = await RfcommDeviceService.FromIdAsync(services[0].Id);
+                        BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(services[i].Id);
+                        //   MessageDialog messageDialog = new MessageDialog(services[i].Properties.ElementAt(2).Key + "\t" + services[i].Properties.ElementAt(2).Value.ToString() +"\n"+ service.ToString());
+                        //  await messageDialog.ShowAsync();
+                        if (bluetoothLEDevice != null)
+                        {
+                            
+                            classBluetoothDevices.Add(new ClassBluetoothDevice() {namea= services[i].Name, bluetoothLEDevice= bluetoothLEDevice, tip= "LE" });
+                            
+
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageDialog messageDialog1 = new MessageDialog(ex.ToString());
+                        await messageDialog1.ShowAsync();
                     }
 
                 }
 
             }
-            listV.ItemsSource = classBluetoothDevices;
+            PRing.IsActive = false;
+           
         }
         public async void FindDeviceD()
         {
             PRing.IsActive = true;
-            classBluetoothDevices.Clear();
+            //classBluetoothDevices.Clear();
            // var BluetoothDeviceSelector = "System.Devices.DevObjectType:=5 AND System.Devices.Aep.ProtocolId:=\"{E0CBF06C-CD8B-4647-BB8A-263B43F0F974}\"";
           //  var deviceInfoCollection = await DeviceInformation.FindAllAsync(BluetoothDeviceSelector);
          //   foreach (var ff in deviceInfoCollection)
@@ -100,7 +156,7 @@ namespace App10Blutuz
                             {
                                 //   var service = rfcommServices.Services[0];
                                 //   await _socket.ConnectAsync(service.ConnectionHostName, service.ConnectionServiceName);
-                                classBluetoothDevices.Add(new ClassBluetoothDevice() { namea = dd.Name, bluetoothDeviced = bluetoothDevice });
+                                classBluetoothDevices.Add(new ClassBluetoothDevice() { namea = dd.Name, bluetoothDeviced = bluetoothDevice, tip="RFCOMM" });
                             }
                         }
                     }
@@ -110,7 +166,55 @@ namespace App10Blutuz
                     }
                 }
             }
-            listV.ItemsSource = classBluetoothDevices;
+            //  listV.ItemsSource = classBluetoothDevices;
+            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected" };
+            var services = await Windows.Devices.Enumeration.DeviceInformation.FindAllAsync(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false), requestedProperties, DeviceInformationKind.AssociationEndpoint);
+
+
+            for (int i = 0; i < services.Count; i++)
+            {
+
+
+                //if (services[i].Id.Contains("Bluetooth") && (service.ProtectionLevel== SocketProtectionLevel.BluetoothEncryptionWithAuthentication || service.ProtectionLevel == SocketProtectionLevel.BluetoothEncryptionWithAuthentication || SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication))
+                if (services[i].Id.Contains("Bluetooth"))
+                {
+                    try
+                    {
+
+
+                        //var service = await RfcommDeviceService.FromIdAsync(services[0].Id);
+                        BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(services[i].Id);
+                        //   MessageDialog messageDialog = new MessageDialog(services[i].Properties.ElementAt(2).Key + "\t" + services[i].Properties.ElementAt(2).Value.ToString() +"\n"+ service.ToString());
+                        //  await messageDialog.ShowAsync();
+                        if (bluetoothLEDevice != null)
+                        {
+                            string name = "NAME";
+                            if(!String.IsNullOrEmpty(bluetoothLEDevice.Name))
+                            {
+                                name = bluetoothLEDevice.Name;
+                            }
+                            else
+                            {
+                                if(!String.IsNullOrEmpty(services[i].Name))
+                                {
+                                    name = services[i].Name;
+                                }
+
+                            }
+                            classBluetoothDevices.Add(new ClassBluetoothDevice() { namea =name, bluetoothLEDevice = bluetoothLEDevice, tip = "LE" });
+
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageDialog messageDialog1 = new MessageDialog(ex.ToString());
+                        await messageDialog1.ShowAsync();
+                    }
+
+                }
+
+            }
             PRing.IsActive = false;
         }
 
@@ -128,20 +232,32 @@ namespace App10Blutuz
         {
          
             base.OnNavigatedTo(e);
+            StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+            await engagementManager.RegisterNotificationChannelAsync();
             FindDeviceD();
+            //FindDeviceLe();
+          
         }
-
+       
         private async void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
             //if(ClassBluetoothDeviceSelect!=null)
             // Frame.Navigate(typeof(BlankPageBluettotchDevice), ClassBluetoothDeviceSelect);
+            StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+            logger.Log("HyperlinBluetooth");
             try
             {
 
+                if (ClassBluetoothDeviceSelect.tip == "RFCOMM")
+                {
+                    var rfcommServices = await ClassBluetoothDeviceSelect.bluetoothDeviced.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(RfcommServiceId.SerialPort.Uuid), BluetoothCacheMode.Uncached);
+                    if (ClassBluetoothDeviceSelect != null)
+                    {
 
-                var rfcommServices = await ClassBluetoothDeviceSelect.bluetoothDeviced.GetRfcommServicesForIdAsync(RfcommServiceId.FromUuid(RfcommServiceId.SerialPort.Uuid), BluetoothCacheMode.Uncached);
-                if (ClassBluetoothDeviceSelect != null)
-                    Frame.Navigate(typeof(BlankPageBluettotchDevice), ClassBluetoothDeviceSelect);
+
+                        Frame.Navigate(typeof(BlankPageBluettotchDevice), ClassBluetoothDeviceSelect);
+                    }
+                }
             }
             catch(Exception ex)
             {
@@ -156,7 +272,7 @@ namespace App10Blutuz
             {
                 try
                 {
-                    
+              
                 }
                 catch(Exception ex)
                 {
@@ -167,7 +283,9 @@ namespace App10Blutuz
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
+            classBluetoothDevices.Clear();
             FindDeviceD();
+            
         }
 
         private async  void AppBarButton_Click_1(object sender, RoutedEventArgs e)
@@ -175,7 +293,8 @@ namespace App10Blutuz
             try
             {
 
-
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("AddBluetooth");
                 string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected" };
 
                 DeviceWatcher deviceWatcher =

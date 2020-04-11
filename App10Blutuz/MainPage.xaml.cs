@@ -14,6 +14,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Services.Store.Engagement;
+using Windows.Services.Store;
+using System.Collections.Generic;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
@@ -26,10 +29,137 @@ namespace App10Blutuz
     {
         public MainPage()
         {
+          //  Windows.ApplicationModel.Resources.Core.ResourceContext.SetGlobalQualifierValue("Language", "uk");
             this.InitializeComponent();
+            FrameworkElement root = (FrameworkElement)Window.Current.Content;
+            root.RequestedTheme = AppSettings.Theme;
+          
+
+
+        }
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+
+
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            
+            try
+            {
+                InitializeLicense();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        private StoreContext context = null;
+        private StoreAppLicense appLicense = null;
+
+        private async void InitializeLicense()
+        {
+            try
+            {
+
+
+                if (context == null)
+                {
+                    context = StoreContext.GetDefault();
+                    // If your app is a desktop app that uses the Desktop Bridge, you
+                    // may need additional code to configure the StoreContext object.
+                    // For more info, see https://aka.ms/storecontext-for-desktop.
+                }
+
+
+                appLicense = await context.GetAppLicenseAsync();
+                if (appLicense.IsActive)
+                {
+                    if (appLicense.IsTrial)
+                    {
+                        int remainingTrialTime = (appLicense.ExpirationDate - DateTime.Now).Days;
+                        trial.Visibility = Visibility.Visible;
+                        //Debug.WriteLine($"This is the trial version. Expiration date: {appLicense.ExpirationDate}");
+                        textlic.Text = $"You can use this app for {remainingTrialTime} more days before the trial period ends.";
+                        // StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                        // logger.Log("isTrialEvent");
+                        //  textBlock.Text = $"This is the trial version. Expiration date: {appLicense.ExpirationDate}";
+
+                        // Show the features that are available during trial only.
+                    }
+                    else
+                    {
+                        textlic.Text = "You have a full license.";
+                        trial.Visibility = Visibility.Collapsed;
+                        // StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                        //  logger.Log("NotTrialEvent");
+
+                        // Show the features that are available only with a full license.
+                    }
+                }
+                else
+                {
+                    trial.Visibility = Visibility.Collapsed;
+                    textlic.Text = "You don't have a license. The trial time can't be determined.";
+                    //StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                    //  logger.Log("NotActiveEvent");
+                }
+
+                // Register for the licenced changed event.
+                context.OfflineLicensesChanged += context_OfflineLicensesChanged;
+            }
+            catch (Exception ex)
+            {
+                trial.Visibility = Visibility.Collapsed;
+            }
         }
 
+        private async void context_OfflineLicensesChanged(StoreContext sender, object args)
+        {
+            // Reload the license.
+            try
+            {
 
+
+                appLicense = await context.GetAppLicenseAsync();
+
+
+                if (appLicense.IsActive)
+                {
+                    if (appLicense.IsTrial)
+                    {
+                        Debug.WriteLine($"This is the trial version. Expiration date: {appLicense.ExpirationDate}");
+                        textlic.Text = $"This is the trial version. Expiration date: {appLicense.ExpirationDate}";
+                        trial.Visibility = Visibility.Visible;
+                        // Show the features that are available during trial only.
+                    }
+                    else
+                    {
+                        Debug.WriteLine("rff");
+                        trial.Visibility = Visibility.Collapsed;
+                        // Show the features that are available only with a full license.
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                trial.Visibility = Visibility.Collapsed;
+            }
+        }
+        private async void Button_Click_11(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+
+                // StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                // logger.Log("butByaEvent");
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://pdp/?ProductId=9N5H75QWBHLL"));
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
         public sealed class BluetoothConnectionHandler
         {
             RfcommServiceProvider provider;
@@ -219,10 +349,10 @@ namespace App10Blutuz
             BluetoothConnectionHandler bluetoothConnectionHandler = new BluetoothConnectionHandler();
             bluetoothConnectionHandler.StartServer();
         }
+   
 
-     
 
-        private void NavView_ItemInvoked(object sender, NavigationViewItemInvokedEventArgs args)
+        private async void NavView_ItemInvoked(object sender, NavigationViewItemInvokedEventArgs args)
         {
             try
             {
@@ -230,7 +360,8 @@ namespace App10Blutuz
 
                 if (args.IsSettingsInvoked)
                 {
-                    // ContentFrame.Navigate(typeof(PageSetting));
+                  // GetLicenseInfo();
+                     ContentFrame.Navigate(typeof(BlankPageSettup));
                 }
                 else
                 {

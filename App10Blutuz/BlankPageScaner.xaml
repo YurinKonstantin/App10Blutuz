@@ -27,7 +27,12 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="local:ClassBluetoothDevice">
                     <Grid>
-                        <TextBlock Text="{x:Bind namea}"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition  Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{x:Bind namea}" />
+                        <TextBlock Text="{x:Bind tip}" FontSize="12" Margin="0,0,0,4"  Grid.Row="1"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

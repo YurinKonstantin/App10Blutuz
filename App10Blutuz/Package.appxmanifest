@@ -10,7 +10,7 @@
   <Identity
     Name="38673Yurin.BluetoothDevice"
     Publisher="CN=6DBA1DE5-9EA9-4313-BEA7-F315A6AEEB19"
-    Version="1.0.26.0" />
+    Version="1.0.85.0" />
 
   <mp:PhoneIdentity PhoneProductId="edd1c739-c94c-4e5b-b5be-6fc8f011bbf1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -25,7 +25,7 @@
   </Dependencies>
 
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
 
   <Applications>
@@ -36,11 +36,12 @@
         DisplayName="Bluetooth Device"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        BackgroundColor="transparent"
-        Description="Это приложение предназначено для разработчиков устройств, где требуется передача данных через bluetooth.">
+        BackgroundColor="#ffffff"
+        Description="This application is intended for developers of devices where data transmission via bluetooth is required.">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\Square71x71Logo.png" Square310x310Logo="Assets\Square310x310Logo.png">
         </uap:DefaultTile >
-        <uap:SplashScreen Image="Assets\SplashScreen.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#ffffff"/>
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
       </uap:VisualElements>
     </Application>
   </Applications>

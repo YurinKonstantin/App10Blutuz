@@ -129,42 +129,61 @@ namespace App10Blutuz
                 // There no need to send a zero length message.
                 if (string.IsNullOrEmpty(message)) return;
 
-                // Make sure that the connection is still up and there is a message to send.
-                if (socket == null || writer == null) 
-                { 
-                    Text.Text += ">>Cannot send message: No clients connected."+"\n";
-                    return; 
-                } // "No clients connected, please wait for a client to connect before attempting to send a message."
-                uint messageLength = (uint)message.Length;
-                byte[] buffer;
-                if (format=="UTF8")
+                try
                 {
-                    buffer = Encoding.UTF8.GetBytes(message);
-                    writer.WriteBytes(buffer);
 
-                    await writer.StoreAsync();
-                    Text.Text += ">>Send message: " + message+"\n";
+
+                    // Make sure that the connection is still up and there is a message to send.
+                    if (socket == null || writer == null)
+                    {
+                        Text.Text += ">>Cannot send message: No clients connected." + "\n";
+                        return;
+                    } // "No clients connected, please wait for a client to connect before attempting to send a message."
+                    uint messageLength = (uint)message.Length;
+                    byte[] buffer;
+                    if (format == "UTF8")
+                    {
+                        buffer = Encoding.UTF8.GetBytes(message);
+                        writer.WriteBytes(buffer);
+
+                        await writer.StoreAsync();
+                        Text.Text += ">>Send message: " + message + "\n";
+                    }
+                    if (format == "ASCII")
+                    {
+                        buffer = Encoding.ASCII.GetBytes(message);
+                        writer.WriteBytes(buffer);
+
+                        await writer.StoreAsync();
+                        Text.Text += ">>Send message: " + message + "\n";
+
+                    }
+                    if (format == "Unicode")
+                    {
+                        buffer = Encoding.Unicode.GetBytes(message);
+                        writer.WriteBytes(buffer);
+
+                        await writer.StoreAsync();
+                        Text.Text += ">>Send message: " + message + "\n";
+
+                    }
+                    if (format == "hex")
+                    {
+                        int dec = Convert.ToInt32(message, 16);
+                        // buffer = Encoding.Unicode.GetBytes(message);
+                        writer.WriteInt32(dec);
+
+                        await writer.StoreAsync();
+                        Text.Text += ">>Send message: " + message + "\n";
+
+                    }
                 }
-                if (format == "ASCII")
+                catch(Exception)
                 {
-                    buffer = Encoding.ASCII.GetBytes(message);
-                    writer.WriteBytes(buffer);
-
-                    await writer.StoreAsync();
-                    Text.Text += ">>Send message: " + message + "\n";
 
                 }
-                if (format == "Unicode")
-                {
-                    buffer = Encoding.Unicode.GetBytes(message);
-                    writer.WriteBytes(buffer);
 
-                    await writer.StoreAsync();
-                    Text.Text += ">>Send message: " + message + "\n";
 
-                }
-             
-             
             }
 
 
@@ -189,26 +208,34 @@ namespace App10Blutuz
                 // isAdvertising = false;
                 // provider = null;
                 //  listener.Dispose();
-                
-              
-                   
-               
-                socket = args.Socket;
-                writer = new DataWriter(socket.OutputStream);
-                reader = new DataReader(socket.InputStream);
-                inStream = socket.InputStream.AsStreamForRead();
-                writer.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
-                reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
-                Debug.WriteLine("Connection device.");
-                var remoteDevice = await BluetoothDevice.FromHostNameAsync(socket.Information.RemoteHostName);
-                naame = remoteDevice.Name;
-                DateTime dateTime = new DateTime();
-                dateTime = DateTime.Now;
-                await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Text.Text += dateTime.ToString()+">>"+">>Connection device: " + remoteDevice.Name+"\n"; });
-                Debug.WriteLine("Connection device."+ remoteDevice.Name);
-                Debug.WriteLine("Connection established.");
-               listeningTask = new Task(() => StartListeringBute());
-               listeningTask.Start();
+
+
+                try
+                {
+
+
+
+                    socket = args.Socket;
+                    writer = new DataWriter(socket.OutputStream);
+                    reader = new DataReader(socket.InputStream);
+                    inStream = socket.InputStream.AsStreamForRead();
+                    writer.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
+                    reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
+                    Debug.WriteLine("Connection device.");
+                    var remoteDevice = await BluetoothDevice.FromHostNameAsync(socket.Information.RemoteHostName);
+                    naame = remoteDevice.Name;
+                    DateTime dateTime = new DateTime();
+                    dateTime = DateTime.Now;
+                    await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Text.Text += dateTime.ToString() + ">>" + ">>Connection device: " + remoteDevice.Name + "\n"; });
+                    Debug.WriteLine("Connection device." + remoteDevice.Name);
+                    Debug.WriteLine("Connection established.");
+                    listeningTask = new Task(() => StartListeringBute());
+                    listeningTask.Start();
+                }
+                catch(Exception)
+                {
+
+                }
                 // Notify connection received.
             }
            public string naame = String.Empty;
@@ -254,7 +281,7 @@ namespace App10Blutuz
                         // string message = reader.ReadString(readLength);
                         byte[] fb = new byte[readLength];
                         reader.ReadBytes(fb);
-                        string message=   Encoding.UTF8.GetString(fb, 0, fb.Length);
+                        string message= Encoding.UTF8.GetString(fb, 0, fb.Length);
                         await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Text.Text += ">>"+ naame+">>" + message + "\n"; });
                         // if (DO_RESPONSE) SendMessage("1");
                       /*if (message == "Star")
@@ -307,7 +334,7 @@ namespace App10Blutuz
 
                         byte[] buffer = new byte[1024];
                         bytes = await inStream.ReadAsync(buffer, 0, buffer.Length);
-                    
+                        
 
                         if (bytes > 0 && bytes<1025)
                         {
@@ -363,7 +390,26 @@ namespace App10Blutuz
                                 }
                                 valor = ">>" + naame + ">>" + Encoding.Unicode.GetString(buffer, 0, bytes);
                             }
+                            if (formStrReceiv == "hex")
+                            {
+                                byte d = (byte)(buffer[0]);
+                                int x = (int)d;
+                                if (blankPagePlot != null && v)
+                                {
+                                    //string[] vs = Encoding.Unicode.GetString(buffer, 0, bytes).Split(new char[] { ' ', ',', ' ', ':' });
+                                    
+                                  
+                                   // for (int i = 0; i < vs.Length; i++)
+                                    {
+                                       // if (Int32.TryParse(vs[i], out int j) || Double.TryParse(vs[i], out double t))
+                                        {
+                                            blankPagePlot.PlotModel.addPoint(Convert.ToDouble(d));
+                                        }
+                                    }
 
+                                }
+                                valor = ">>" + naame + ">>" + x.ToString("x");
+                            }
                             await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
                                 DateTime dateTime = new DateTime();
@@ -379,29 +425,20 @@ namespace App10Blutuz
                             while (bytes > 0)
                             {
 
-                                // List<byte> gg = new List<byte>();
-
-                                //  Result.Text = valor + "\t";
-                                // for (int i = 0; i < bytes; i++)
-                                {
-                                    // gg.Add(buffer[i]);
-                                }
+                               
                                 string valor = Encoding.UTF8.GetString(buffer, 0, bytes);
                                 await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                                 {
                                     Text.Text += valor;
                                 });
-                                Debug.WriteLine("2S" + bytes.ToString());
+           
                                  bytes = await inStream.ReadAsync(buffer, 0, buffer.Length);
-                                Debug.WriteLine("3S" + bytes.ToString());
+                               
                                  if (bytes <= 0)
                                 {
 
-                                       await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                                     {
-                                       Text.Text += "\n";
-                                  });
-                                     Debug.WriteLine("4S" + bytes.ToString());
+                                       await Text.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>{Text.Text += "\n";});
+                                    
                                 }
 
 
@@ -422,14 +459,23 @@ namespace App10Blutuz
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             bluetoothConnectionHandler.Text = terminalText;
-           bool b=await bluetoothConnectionHandler.StartServer();
-            if(b)
+            try
             {
-                
-                sostoanie.Text = resourceLoader.GetString("textServerStart");
-                elipsSos.Fill = new SolidColorBrush(Windows.UI.Colors.Green);
-                BStop.IsEnabled = true;
-                BStart.IsEnabled = false;
+
+
+                bool b = await bluetoothConnectionHandler.StartServer();
+                if (b)
+                {
+
+                    sostoanie.Text = resourceLoader.GetString("textServerStart");
+                    elipsSos.Fill = new SolidColorBrush(Windows.UI.Colors.Green);
+                    BStop.IsEnabled = true;
+                    BStart.IsEnabled = false;
+
+                }
+            }
+            catch(Exception)
+            {
 
             }
            
@@ -437,18 +483,36 @@ namespace App10Blutuz
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            bluetoothConnectionHandler.Disconnect();
-            sostoanie.Text = resourceLoader.GetString("textServerStop");
-            elipsSos.Fill = new SolidColorBrush(Windows.UI.Colors.Red);
-            BStop.IsEnabled = false;
-            BStart.IsEnabled = true;
+            try
+            {
+
+
+                bluetoothConnectionHandler.Disconnect();
+                sostoanie.Text = resourceLoader.GetString("textServerStop");
+                elipsSos.Fill = new SolidColorBrush(Windows.UI.Colors.Red);
+                BStop.IsEnabled = false;
+                BStart.IsEnabled = true;
+            }
+            catch(Exception)
+            {
+
+            }
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            if(!String.IsNullOrEmpty(textSend.Text))
+            try
             {
-                bluetoothConnectionHandler.SendMessage(textSend.Text, formStrSend);
+
+
+                if (!String.IsNullOrEmpty(textSend.Text))
+                {
+                    bluetoothConnectionHandler.SendMessage(textSend.Text, formStrSend);
+                }
+            }
+            catch(Exception)
+            {
+
             }
         }
 
@@ -503,35 +567,43 @@ namespace App10Blutuz
         bool v = false;
         private async void AppBarButton_Click_3(object sender, RoutedEventArgs e)
         {
-            blankPagePlot = new BlankPagePlot();
-           
-            appWindow = await AppWindow.TryCreateAsync();
-
-            ElementCompositionPreview.SetAppWindowContent(appWindow, blankPagePlot);
-
-            v = await appWindow.TryShowAsync();
-            if (v)
+            try
             {
 
 
-                blankPagePlot.iniPlot(bluetoothConnectionHandler.naame);
-                blankPagePlot.PlotModel.addSeries();
-                Size size = new Size() { Height = 100, Width = 100 };
-                appWindow.RequestSize(size);
-                appWindow.Closed += delegate
-                {
-                    v = false;
-                    blankPagePlot = null;
-                    appWindow = null;
-                    bluetoothConnectionHandler.blankPagePlot = null;
-                    bluetoothConnectionHandler.v = false;
-                    bluetoothConnectionHandler.appWindow = null;
-                };
-                bluetoothConnectionHandler.blankPagePlot = blankPagePlot;
-                bluetoothConnectionHandler.v = v;
-                bluetoothConnectionHandler.appWindow = appWindow;
-            }
+                blankPagePlot = new BlankPagePlot();
 
+                appWindow = await AppWindow.TryCreateAsync();
+
+                ElementCompositionPreview.SetAppWindowContent(appWindow, blankPagePlot);
+
+                v = await appWindow.TryShowAsync();
+                if (v)
+                {
+
+
+                    blankPagePlot.iniPlot(bluetoothConnectionHandler.naame);
+                    blankPagePlot.PlotModel.addSeries();
+                    Size size = new Size() { Height = 100, Width = 100 };
+                    appWindow.RequestSize(size);
+                    appWindow.Closed += delegate
+                    {
+                        v = false;
+                        blankPagePlot = null;
+                        appWindow = null;
+                        bluetoothConnectionHandler.blankPagePlot = null;
+                        bluetoothConnectionHandler.v = false;
+                        bluetoothConnectionHandler.appWindow = null;
+                    };
+                    bluetoothConnectionHandler.blankPagePlot = blankPagePlot;
+                    bluetoothConnectionHandler.v = v;
+                    bluetoothConnectionHandler.appWindow = appWindow;
+                }
+            }
+            catch(Exception)
+            {
+
+            }
 
         }
 

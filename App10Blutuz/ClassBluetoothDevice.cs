@@ -16,6 +16,7 @@ namespace App10Blutuz
    public class ClassBluetoothDevice
     {
        public RfcommDeviceService rfcommDeviceService { get; set; }
+        public BluetoothLEDevice bluetoothLEDevice { get; set; }
         bool sost = false;
         public string formStrReceiv = "UTF8";
         public string name()
@@ -28,6 +29,7 @@ namespace App10Blutuz
             return String.Empty;
         }
         public string namea { get; set; }
+        public string tip { get; set; }
         public BluetoothDevice bluetoothDeviced { get; set; }
         Windows.Devices.Bluetooth.Rfcomm.RfcommDeviceService _service;
         Windows.Networking.Sockets.StreamSocket _socket;
@@ -124,8 +126,18 @@ namespace App10Blutuz
                         await _socket.OutputStream.WriteAsync(buffer1);
 
                     }
-                    
-                 
+                    if (format == "hex")
+                    {
+                       // var buffer = Encoding.Unicode.GetBytes(ss);
+                       // int dec = Convert.ToInt32(ss, 16);
+                        //var buffer1 = Windows.Security.Cryptography.CryptographicBuffer.CreateFromByteArray(buffer);
+                        // var buffer1=  Encoding.UTF8.GetBytes(ss);
+                        var buffer1 = Windows.Security.Cryptography.CryptographicBuffer.DecodeFromHexString(ss);
+                        await _socket.OutputStream.WriteAsync(buffer1);
+
+                    }
+
+
                     return "Ok";
                 }
                 catch (Exception ex)
@@ -151,6 +163,7 @@ namespace App10Blutuz
                 {
 
                     s = await streamReader.ReadLineAsync();
+                   
 
                     return s;
                 }

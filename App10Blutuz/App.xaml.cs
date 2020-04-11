@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Services.Store.Engagement;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,7 +32,23 @@ namespace App10Blutuz
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
 
+            if (args is ToastNotificationActivatedEventArgs)
+            {
+                var toastActivationArgs = args as ToastNotificationActivatedEventArgs;
+
+                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+                string originalArgs = engagementManager.ParseArgumentsAndTrackAppLaunch(
+                    toastActivationArgs.Argument);
+
+                // Use the originalArgs variable to access the original arguments
+                // that were passed to the app.
+            }
+        }
+     
         /// <summary>
         /// Вызывается при обычном запуске приложения пользователем. Будут использоваться другие точки входа,
         /// например, если приложение запускается для открытия конкретного файла.
