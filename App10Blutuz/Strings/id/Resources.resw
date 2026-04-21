@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>Pengaturan</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Penjualan</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Harga</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Beli aplikasi </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Anda dapat menggunakan aplikasi ini selama</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>more days before the trial period ends.</value>
+  </data>
 </root>

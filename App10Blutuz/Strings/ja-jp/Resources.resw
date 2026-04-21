@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>設定</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>セール</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>価格</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>アプリを購入 </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>試用期間が終了する前に、このアプリをあと</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>日間使用できます。</value>
+  </data>
 </root>

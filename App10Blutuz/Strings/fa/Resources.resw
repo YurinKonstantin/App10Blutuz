@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>تنظیمات</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>فروش</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>قیمت</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>خرید برنامه </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>قبل از پایان دوره آزمایشی می توانید</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>روز دیگر از این برنامه استفاده کنید.</value>
+  </data>
 </root>

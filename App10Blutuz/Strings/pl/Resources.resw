@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>Oprawa</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Sprzedaż</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Cena £</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Kup aplikację </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Z tej aplikacji można korzystać jeszcze przez</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>dni przed końcem okresu próbnego.</value>
+  </data>
 </root>

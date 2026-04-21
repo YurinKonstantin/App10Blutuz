@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>ضبط</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>تخفيض السعر</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>السعر</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>شراء التطبيق </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>يمكنك استخدام هذا التطبيق لمدة</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>من الأيام قبل انتهاء الفترة التجريبية.</value>
+  </data>
 </root>

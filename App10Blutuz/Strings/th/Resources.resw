@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>การตั้งค่า</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>การขาย</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>ราคา</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>ซื้อแอพ </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>คุณสามารถใช้แอพนี้อีก</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>วันก่อนสิ้นสุดระยะเวลาทดลองใช้</value>
+  </data>
 </root>

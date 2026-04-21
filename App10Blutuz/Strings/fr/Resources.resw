@@ -171,4 +171,19 @@
   <data name="TextYou" xml:space="preserve">
     <value>Vous</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Vente</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Prix</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Acheter l'application </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Vous pouvez utiliser cette application pendant </value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>jours supplémentaires avant la fin de la période d'essai.</value>
+  </data>
 </root>

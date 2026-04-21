@@ -192,4 +192,34 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>Setting</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Sale</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Buy app </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>You can use this app for</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>more days before the trial period ends.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>If you have something to tell about the application, we will be happy to hear your wishes. Want to leave a review?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>Not</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>App review</value>
+  </data>
 </root>

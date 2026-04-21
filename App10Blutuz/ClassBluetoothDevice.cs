@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Networking.Sockets;
@@ -126,7 +127,7 @@ namespace App10Blutuz
                         await _socket.OutputStream.WriteAsync(buffer1);
 
                     }
-                    if (format == "hex")
+                    if (format == "Hex")
                     {
                        // var buffer = Encoding.Unicode.GetBytes(ss);
                        // int dec = Convert.ToInt32(ss, 16);
@@ -163,7 +164,7 @@ namespace App10Blutuz
                 {
 
                     s = await streamReader.ReadLineAsync();
-                   
+                  
 
                     return s;
                 }
@@ -179,7 +180,9 @@ namespace App10Blutuz
             }
             else
             {
-                return "No";
+                ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+                
+                return resourceLoader.GetString("textNoConect");
             }
 
         }

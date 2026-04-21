@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>Ayar</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Satış</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Fiyat</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Uygulama satın al </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Deneme süresi bitmeden</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>gün daha bu uygulamayı kullanabilirsiniz.</value>
+  </data>
 </root>

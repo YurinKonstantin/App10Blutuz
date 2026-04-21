@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>Σύνθεση</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Πώληση</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Τιμή</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Αγορά εφαρμογής </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Μπορείτε να χρησιμοποιήσετε αυτήν την εφαρμογή για </value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>ακόμη ημέρες πριν από τη λήξη της δοκιμαστικής περιόδου</value>
+  </data>
 </root>

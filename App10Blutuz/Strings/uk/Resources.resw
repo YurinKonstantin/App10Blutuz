@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>Налаштування</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Продаж</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Ціна</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Придбати додаток </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Ви можете використовувати цю програму ще</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>днів до закінчення випробувального періоду.</value>
+  </data>
 </root>

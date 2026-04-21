@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Services.Store.Engagement;
+using System.Diagnostics;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -156,6 +156,9 @@ namespace App10Blutuz
                             {
                                 //   var service = rfcommServices.Services[0];
                                 //   await _socket.ConnectAsync(service.ConnectionHostName, service.ConnectionServiceName);
+                                //Debug.WriteLine(bluetoothDevice.BluetoothAddress.ToString());
+                               // Debug.WriteLine(bluetoothDevice.ConnectionStatus.ToString());
+                               // Debug.WriteLine(bluetoothDevice.ConnectionStatus.ToString());
                                 classBluetoothDevices.Add(new ClassBluetoothDevice() { namea = dd.Name, bluetoothDeviced = bluetoothDevice, tip="RFCOMM" });
                             }
                         }
@@ -272,7 +275,8 @@ namespace App10Blutuz
             {
                 try
                 {
-              
+                    MessageDialog messageDialog = new MessageDialog(ClassBluetoothDeviceSelect.bluetoothDeviced.ConnectionStatus.ToString());
+                    await messageDialog.ShowAsync();
                 }
                 catch(Exception ex)
                 {
@@ -302,7 +306,9 @@ namespace App10Blutuz
                                     BluetoothLEDevice.GetDeviceSelectorFromPairingState(false),
                                     requestedProperties,
                                     DeviceInformationKind.AssociationEndpoint);
-
+               // deviceWatcher = DeviceInformation.CreateWatcher("(System.Devices.Aep.ProtocolId:=\"{e0cbf06c-cd8b-4647-bb8a-263b43f0f974}\")",
+                                                       //    requestedProperties,
+                                                           //DeviceInformationKind.AssociationEndpoint);
                 // Register event handlers before starting the watcher.
                 // Added, Updated and Removed are required to get all nearby devices
                 //  deviceWatcher.Added += DeviceWatcher_Added;

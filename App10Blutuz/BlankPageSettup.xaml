@@ -10,14 +10,18 @@
 
     <Grid>
         <StackPanel>
-            <ToggleSwitch Name="tglAppTheme" Grid.Column="1" x:Uid="ToggleTheme" Margin="8" VerticalAlignment="Top"
+            <ToggleSwitch Name="tglAppTheme" Grid.Column="1" x:Uid="ToggleTheme" Margin="18" VerticalAlignment="Top"
               Header="Theme"
               OffContent="Light"
               OnContent="Dark"
               IsOn="False"
               Toggled="ToggleSwitch_Toggled" />
-            <TextBlock x:Name="textlic" Margin="8,16,8,8"/>
-            <Button Content="Buy app" x:Name="butBya" Click="butBya_Click"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" x:Name="trial"  Visibility="Collapsed">
+                <TextBlock x:Name="textlic" Foreground="Red" FontSize="16" Margin="18"/>
+                <Button Click="Button_Click_1" Margin="8,0">
+                    <TextBlock>Buy app (<Run x:Name="PurchasePrice">Price unknown</Run>)</TextBlock>
+                </Button>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

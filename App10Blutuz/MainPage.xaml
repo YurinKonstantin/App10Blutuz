@@ -9,20 +9,22 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <NavigationView x:Name="NavView" Loaded="NavView_Loaded"
-                         ItemInvoked="NavView_ItemInvoked"
-                         BackRequested="NavView_BackRequested" IsBackButtonVisible="Collapsed">
-            <NavigationView.MenuItems>
-                <NavigationViewItem x:Name="A" Tag="A" x:Uid="NavigA" >
+        <NavigationView x:Name="NavView" Loaded="NavView_Loaded"  
+                         ItemInvoked="NavView_ItemInvoked" 
+                         BackRequested="NavView_BackRequested" IsBackButtonVisible="Collapsed" >
+          
+            <NavigationView.MenuItems >
+                <NavigationViewItem x:Name="A" Tag="A" x:Uid="NavigA" FontSize="18">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets"  Glyph="&#xE702;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="BlankPageServer" Tag="BlankPageServer" x:Uid="NavigB" Content="Bluetooth сервер">
+                <NavigationViewItem x:Name="BlankPageServer" Tag="BlankPageServer" x:Uid="NavigB" Content="Bluetooth сервер" FontSize="18">
                     <NavigationViewItem.Icon>
                 
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE774;"/>
@@ -30,7 +32,7 @@
                    
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem  x:Name="BlankPageScaner" Tag="BlankPageScaner" x:Uid="NavigC" Content="Сканер Bluetooth">
+                <NavigationViewItem  x:Name="BlankPageScaner" Tag="BlankPageScaner" x:Uid="NavigC" Content="Сканер Bluetooth" FontSize="18">
                     <NavigationViewItem.Icon>
                        
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE773;"/>
@@ -43,9 +45,14 @@
                    NavigationFailed="ContentFrame_NavigationFailed"/>
             
         </NavigationView>
-        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" x:Name="trial" HorizontalAlignment="Center"  Visibility="Collapsed">
+        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" x:Name="trial" HorizontalAlignment="Center" Visibility="Collapsed" >
             <TextBlock x:Name="textlic" Foreground="Red" FontSize="16" Margin="18"/>
-            <Button Click="Button_Click_11" Content="Buy App" Margin="8,0"/>
+            <Button Click="Button_Click_11"  Margin="8,0" >
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Uid="ButBay"></TextBlock>
+                    <TextBlock x:Name="PurchasePrice" Text="Price unknown"/>
+                </StackPanel>
+            </Button>
         </StackPanel>
     </Grid>
 </Page>

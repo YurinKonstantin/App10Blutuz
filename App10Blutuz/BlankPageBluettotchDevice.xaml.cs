@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Services.Store.Engagement;
+using System.Text;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -141,6 +142,61 @@ namespace App10Blutuz
                 {
 
                     var output = await device.ReadString().ConfigureAwait(false);
+                    byte[] bytes = Encoding.Default.GetBytes(output);
+                    if (device.formStrReceiv == "None")
+                    {
+                       
+                    }
+                    if (device.formStrReceiv== "UTF8")
+                    {
+                        try
+                        {
+
+
+                            output = Encoding.UTF8.GetString(bytes);
+                        }
+                        catch(Exception ex)
+                        {
+                            output = "Error";
+                        }
+                    }
+                    if(device.formStrReceiv == "ASCII")
+                    {
+                        try
+                        {
+
+                            output = Encoding.ASCII.GetString(bytes);
+                        }
+                        catch (Exception ex)
+                        {
+                            output = "Error";
+                        }
+                    }
+                    if (device.formStrReceiv == "Unicode")
+                    {
+                        try
+                        {
+
+                            output = Encoding.Unicode.GetString(bytes);
+                        }
+                        catch (Exception ex)
+                        {
+                            output = "Error";
+                        }
+                    }
+                    if (device.formStrReceiv == "Hex")
+                    {
+                        try
+                        {
+
+                            int x = Convert.ToInt32(output);
+                        output = x.ToString("X");
+                        }
+                        catch (Exception ex)
+                        {
+                            output = "Error";
+                        }
+                    }
                     await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         DateTime dateTime = new DateTime();
@@ -158,6 +214,7 @@ namespace App10Blutuz
 
                         }
                         classMessages.Add(new ClassMessage() { message = device.namea + " " + output, dateTime = dateTime, tip = device.namea });
+
                         terminalText.Text += dateTime.ToString() + ">>" + device.namea + " >> " + output + "\n";
                     });
                 }
@@ -194,8 +251,12 @@ namespace App10Blutuz
 
         private void MenuFlyoutItem_Click_1(object sender, RoutedEventArgs e)
         {
-            device.formStrReceiv = ((MenuFlyoutItem)sender).Tag.ToString();
-            DropRecive.Content = ((MenuFlyoutItem)sender).Tag.ToString();
+            if(device!=null)
+            {
+                device.formStrReceiv = ((MenuFlyoutItem)sender).Tag.ToString();
+                DropRecive.Content = ((MenuFlyoutItem)sender).Tag.ToString();
+            }
+           
         }
 
         private void AppBarButton_Click_1(object sender, RoutedEventArgs e)
@@ -296,6 +357,11 @@ namespace App10Blutuz
         private void AppBarButton_Click_5(object sender, RoutedEventArgs e)
         {
             spl.IsPaneOpen = !spl.IsPaneOpen;
+        }
+
+        private void AppBarButton_Click_6(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(BlankPageScaner));
         }
     }
 }

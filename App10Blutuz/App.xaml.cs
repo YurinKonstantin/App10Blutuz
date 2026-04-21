@@ -6,8 +6,10 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -48,7 +50,19 @@ namespace App10Blutuz
                 // that were passed to the app.
             }
         }
-     
+        public void Run(IBackgroundTaskInstance taskInstance)
+        {
+            var details = taskInstance.TriggerDetails as ToastNotificationActionTriggerDetail;
+
+            if (details != null)
+            {
+                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+                string originalArgs = engagementManager.ParseArgumentsAndTrackAppLaunch(details.Argument);
+
+                // Use the originalArgs variable to access the original arguments
+                // that were passed to the app.
+            }
+        }
         /// <summary>
         /// Вызывается при обычном запуске приложения пользователем. Будут использоваться другие точки входа,
         /// например, если приложение запускается для открытия конкретного файла.

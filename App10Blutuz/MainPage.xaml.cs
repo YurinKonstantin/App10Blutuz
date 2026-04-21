@@ -17,6 +17,8 @@ using Windows.UI.Xaml.Navigation;
 using Microsoft.Services.Store.Engagement;
 using Windows.Services.Store;
 using System.Collections.Generic;
+using Windows.ApplicationModel.Resources;
+using Windows.Storage;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x419
 
@@ -37,6 +39,7 @@ namespace App10Blutuz
 
 
         }
+        ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
 
@@ -46,10 +49,22 @@ namespace App10Blutuz
             try
             {
                 InitializeLicense();
+                updateReviewStatus();
+                checkReviews();
             }
             catch (Exception ex)
             {
 
+                Debug.WriteLine(ex.Message);
+            }
+            try
+            {
+                StoreServicesEngagementManager engagementManager = StoreServicesEngagementManager.GetDefault();
+                await engagementManager.RegisterNotificationChannelAsync();
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
 
         }
@@ -70,16 +85,34 @@ namespace App10Blutuz
                     // For more info, see https://aka.ms/storecontext-for-desktop.
                 }
 
-
                 appLicense = await context.GetAppLicenseAsync();
+
                 if (appLicense.IsActive)
                 {
                     if (appLicense.IsTrial)
                     {
                         int remainingTrialTime = (appLicense.ExpirationDate - DateTime.Now).Days;
                         trial.Visibility = Visibility.Visible;
+
+                        StoreProductResult result = await context.GetStoreProductForCurrentAppAsync();
+                        if (result.ExtendedError == null)
+                        {
+                            if (result.Product.Price.IsOnSale)
+                            {
+                                
+                                PurchasePrice.Text = " " + resourceLoader.GetString("Sale") + " " + result.Product.Price.FormattedPrice;
+                            }
+                            else
+                            {
+                                PurchasePrice.Text = " " + resourceLoader.GetString("Price") + " " + result.Product.Price.FormattedBasePrice;
+                            }
+
+
+
+                        }
                         //Debug.WriteLine($"This is the trial version. Expiration date: {appLicense.ExpirationDate}");
-                        textlic.Text = $"You can use this app for {remainingTrialTime} more days before the trial period ends.";
+
+                        textlic.Text = resourceLoader.GetString("Text1") +" "+  remainingTrialTime +" "+ resourceLoader.GetString("Text2");
                         // StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                         // logger.Log("isTrialEvent");
                         //  textBlock.Text = $"This is the trial version. Expiration date: {appLicense.ExpirationDate}";
@@ -89,7 +122,8 @@ namespace App10Blutuz
                     else
                     {
                         textlic.Text = "You have a full license.";
-                        trial.Visibility = Visibility.Collapsed;
+                        
+                       trial.Visibility = Visibility.Collapsed;
                         // StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                         //  logger.Log("NotTrialEvent");
 
@@ -98,8 +132,9 @@ namespace App10Blutuz
                 }
                 else
                 {
-                    trial.Visibility = Visibility.Collapsed;
-                    textlic.Text = "You don't have a license. The trial time can't be determined.";
+                   
+                      trial.Visibility = Visibility.Collapsed;
+   
                     //StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
                     //  logger.Log("NotActiveEvent");
                 }
@@ -112,6 +147,8 @@ namespace App10Blutuz
                 trial.Visibility = Visibility.Collapsed;
             }
         }
+
+   
 
         private async void context_OfflineLicensesChanged(StoreContext sender, object args)
         {
@@ -127,8 +164,7 @@ namespace App10Blutuz
                 {
                     if (appLicense.IsTrial)
                     {
-                        Debug.WriteLine($"This is the trial version. Expiration date: {appLicense.ExpirationDate}");
-                        textlic.Text = $"This is the trial version. Expiration date: {appLicense.ExpirationDate}";
+                        InitializeLicense();
                         trial.Visibility = Visibility.Visible;
                         // Show the features that are available during trial only.
                     }
@@ -145,21 +181,7 @@ namespace App10Blutuz
                 trial.Visibility = Visibility.Collapsed;
             }
         }
-        private async void Button_Click_11(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-
-
-                // StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
-                // logger.Log("butByaEvent");
-                await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://pdp/?ProductId=9N5H75QWBHLL"));
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
+      
         public sealed class BluetoothConnectionHandler
         {
             RfcommServiceProvider provider;
@@ -433,13 +455,18 @@ namespace App10Blutuz
 
                 case "BlankPageScaner":
                     NavView.IsPaneOpen = false;
-                    NavView.SelectedItem = null;
+                  //  NavView.SelectedItem = null;
                     ContentFrame.Navigate(typeof(BlankPageScaner));
                     break;
                 case "BlankPageServer":
                     NavView.IsPaneOpen = false;
-                    NavView.SelectedItem = null;
+                  //  NavView.SelectedItem = null;
                     ContentFrame.Navigate(typeof(BlankPageServer));
+                    break;
+                case "A":
+                    NavView.IsPaneOpen = false;
+                   // NavView.SelectedItem = null;
+                    ContentFrame.Navigate(typeof(BlankPageBluettotchDevice));
                     break;
 
 
@@ -486,8 +513,186 @@ namespace App10Blutuz
             }
             return navigated;
         }
-    
+
+        private async void Button_Click_11(object sender, RoutedEventArgs e)
+        {
+            try
+            {
 
 
-}
+                // StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                // logger.Log("butByaEvent");
+                StoreProductResult productResult = await context.GetStoreProductForCurrentAppAsync();
+                if (productResult.ExtendedError != null)
+                {
+                    // The user may be offline or there might be some other server failure
+
+
+                    return;
+                }
+                StoreServicesCustomEventLogger logger = StoreServicesCustomEventLogger.GetDefault();
+                logger.Log("butByaEvent");
+                StorePurchaseResult result = await productResult.Product.RequestPurchaseAsync();
+                if (result.ExtendedError != null)
+                {
+                    MessageDialog messageDialog = new MessageDialog($"Purchase failed: ExtendedError: {result.ExtendedError.Message}");
+                    await messageDialog.ShowAsync();
+
+                    return;
+                }
+
+                switch (result.Status)
+                {
+                    case StorePurchaseStatus.AlreadyPurchased:
+                        MessageDialog messageDialog = new MessageDialog($"You already bought this app and have a fully-licensed version.");
+                        await messageDialog.ShowAsync();
+
+                        break;
+
+                    case StorePurchaseStatus.Succeeded:
+                        InitializeLicense();
+                        break;
+
+                    case StorePurchaseStatus.NotPurchased:
+                        messageDialog = new MessageDialog("Product was not purchased, it may have been canceled.");
+                        await messageDialog.ShowAsync();
+
+                        break;
+
+                    case StorePurchaseStatus.NetworkError:
+                        messageDialog = new MessageDialog("Product was not purchased due to a Network Error.");
+                        await messageDialog.ShowAsync();
+
+                        break;
+
+                    case StorePurchaseStatus.ServerError:
+                        messageDialog = new MessageDialog("Product was not purchased due to a Server Error.");
+                        await messageDialog.ShowAsync();
+
+                        break;
+
+                    default:
+                        messageDialog = new MessageDialog("Product was not purchased due to an Unknown Error.");
+                        await messageDialog.ShowAsync();
+
+                        break;
+                }
+                // await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://pdp/?ProductId=9PHH2VDQWBG7"));
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        private int reviewBarrier = 5;
+        int NowreviewBarrier = 0;
+        bool showOt = false;
+        private async void checkReviews()
+        {
+
+
+            if (showOt && (NowreviewBarrier == reviewBarrier))
+            {
+                var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+              
+                ContentDialog deleteFileDialog = new ContentDialog
+                {
+                    Title = resourceLoader.GetString("ShowTitle"),
+                    Content = resourceLoader.GetString("ShowContent"),
+                    PrimaryButtonText = resourceLoader.GetString("ShowPrimaryText"),
+                    SecondaryButtonText = resourceLoader.GetString("ShowSecondaryText"),
+                    CloseButtonText = resourceLoader.GetString("ShowCloseText")
+
+                };
+
+                ContentDialogResult result = await deleteFileDialog.ShowAsync();
+
+                // Delete the file if the user clicked the primary button.
+                /// Otherwise, do nothing.
+                if (result == ContentDialogResult.Primary)
+                {
+                    bool result1 = await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-windows-store://review/?ProductId=9N5H75QWBHLL"));
+                    if (result1)
+                    {
+                        ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                        Windows.Storage.ApplicationDataCompositeValue composite = (ApplicationDataCompositeValue)roamingSettings.Values["RoamingFontInfo"];
+                        composite["Reviewed"] = "false";
+                        composite["reviewBarrier"] = 0;
+                        roamingSettings.Values["RoamingFontInfo"] = composite;
+                        Debug.WriteLine("Yess false");
+                    }
+
+                }
+                if (result == ContentDialogResult.Secondary)
+                {
+                    ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                    Windows.Storage.ApplicationDataCompositeValue composite = (ApplicationDataCompositeValue)roamingSettings.Values["RoamingFontInfo"];
+                    composite["Reviewed"] = "true";
+                    composite["reviewBarrier"] = 0;
+                    roamingSettings.Values["RoamingFontInfo"] = composite;
+                    Debug.WriteLine("Yess true");
+                }
+                else
+                {
+                    ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                    Windows.Storage.ApplicationDataCompositeValue composite = (ApplicationDataCompositeValue)roamingSettings.Values["RoamingFontInfo"];
+                    composite["Reviewed"] = "false";
+                    composite["reviewBarrier"] = 0;
+                    roamingSettings.Values["RoamingFontInfo"] = composite;
+                    Debug.WriteLine("nooo false");
+                }
+
+
+
+            }
+        }
+        private void updateReviewStatus()
+        {
+
+            try
+            {
+
+
+                ApplicationDataContainer roamingSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                Windows.Storage.ApplicationDataCompositeValue composite = (ApplicationDataCompositeValue)roamingSettings.Values["RoamingFontInfo"];
+                if (composite != null)
+                {
+                    showOt = Convert.ToBoolean(composite["Reviewed"]);
+                    Debug.WriteLine(showOt.ToString());
+                    NowreviewBarrier = (int)composite["reviewBarrier"];
+                    Debug.WriteLine(NowreviewBarrier.ToString());
+
+                    if (Convert.ToBoolean(showOt))
+                    {
+                        NowreviewBarrier++;
+                        composite["Reviewed"] = "true";
+                        composite["reviewBarrier"] = NowreviewBarrier;
+                        roamingSettings.Values["RoamingFontInfo"] = composite;
+                    }
+                }
+
+                else
+                {
+
+
+                    // Save a composite setting that will be roamed between devices
+                    composite = new Windows.Storage.ApplicationDataCompositeValue();
+                    Debug.WriteLine("creat");
+                    composite["Reviewed"] = "true";
+                    composite["reviewBarrier"] = 0;
+                    roamingSettings.Values["RoamingFontInfo"] = composite;
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+            // load a composite setting that roams between devices
+
+
+        }
+    }
 }

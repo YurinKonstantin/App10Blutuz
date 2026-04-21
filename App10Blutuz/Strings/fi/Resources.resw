@@ -192,4 +192,19 @@
   <data name="TSet.Text" xml:space="preserve">
     <value>asetus</value>
   </data>
+  <data name="Sale" xml:space="preserve">
+    <value>myynti</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Hinta</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Osta sovellus </value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Voit käyttää tätä sovellusta vielä</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>päivää ennen koeajan päättymistä.</value>
+  </data>
 </root>
