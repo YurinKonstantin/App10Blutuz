@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>Добавить устройство</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Bluetooth устройства:</value>
+  </data>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Bluetooth клиент</value>
+  </data>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Bluetooth сервер</value>
+  </data>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Сканер Bluetooth</value>
+  </data>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>Обзор приложения</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>Старт СЕРВЕР</value>
@@ -137,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>Далее</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Bluetooth устройства:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Bluetooth клиент</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Bluetooth сервер</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Сканер Bluetooth</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>Обновить</value>
@@ -170,5 +170,56 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>Вы</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Диаграмма</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="TRec.Text" xml:space="preserve">
+    <value>Формат полученного сообщения</value>
+  </data>
+  <data name="TSent.Text" xml:space="preserve">
+    <value>Формат отправки сообщения</value>
+  </data>
+  <data name="TSet.Text" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Распродажа</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Цена</value>
+  </data>
+  <data name="ButBay.Text" xml:space="preserve">
+    <value>Купить приложение</value>
+  </data>
+  <data name="Text1" xml:space="preserve">
+    <value>Вы можете использовать это приложение</value>
+  </data>
+  <data name="Text2" xml:space="preserve">
+    <value>Осталось еще несколько дней до окончания испытательного срока.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>Если у вас есть что сказать о приложении, мы будем рады услышать ваши пожелания. Хотите оставить отзыв?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Позже</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>Далее</value>
   </data>
 </root>

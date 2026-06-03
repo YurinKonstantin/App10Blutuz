@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>Cihaz ekle</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Bluetooth cihazları:</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>Sil</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Bluetooth istemcisi</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>Grafik</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Bluetooth sunucusu</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>Kayıt etmek</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Bluetooth tarayıcı</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>Ayar</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>Uygulama İncelemesi</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>aşlat</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>Devam et</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Bluetooth cihazları:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Bluetooth istemcisi</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Bluetooth sunucusu</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Bluetooth tarayıcı</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>Yenile</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>Sen</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Grafik</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Kayıt etmek</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>Ayar</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>Alınan Mesaj Biçimi</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>gün daha bu uygulamayı kullanabilirsiniz.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>Uygulama hakkında herhangi bir geri bildiriminiz varsa, sizden duymak isteriz. Yorum bırakmak ister misiniz?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>HAYIR</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>Evet</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Daha sonra</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>Sonraki</value>
   </data>
 </root>

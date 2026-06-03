@@ -97,7 +97,7 @@
             </Button.Resources>
 
             <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
-                <TextBlock Text="Далее" Margin="6, 6, 6, 6"/>
+                <TextBlock Text="Далее" Margin="6, 6, 6, 6" x:Uid="hupDalee1"/>
             </StackPanel>
 
         </Button>

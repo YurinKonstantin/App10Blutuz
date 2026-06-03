@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>Ambientazione</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Dispositivi Bluetooth:</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>Elimina</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Client Bluetooth</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>Grafico</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Server Bluetooth</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>Salva</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Scanner Bluetooth</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>Ambientazione</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>Recensione dell'app</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>Inizio</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>Continua</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Dispositivi Bluetooth:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Client Bluetooth</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Server Bluetooth</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Scanner Bluetooth</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>Ricaricare</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>Voi</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Grafico</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Salva</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>Ambientazione</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>Formato messaggio ricevuto</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>giorni prima della fine del periodo di prova.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>Se hai qualcosa da dire sull'applicazione, saremo lieti di ascoltare i tuoi suggerimenti. Vuoi lasciare una recensione?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>SÌ</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Dopo</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>Continuare</value>
   </data>
 </root>

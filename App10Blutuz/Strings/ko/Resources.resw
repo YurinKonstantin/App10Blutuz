@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>기기 추가</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>블루투스 기기 :</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>지우다</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>블루투스 클라이언트</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>차트</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>블루투스 서버</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>저장</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>블루투스 스캐너</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>환경</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>앱 리뷰</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>스타트</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>계속하다</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>블루투스 기기 :</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>블루투스 클라이언트</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>블루투스 서버</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>블루투스 스캐너</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>새롭게 하다</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>당신</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>지우다</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>차트</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>환경</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>받은 메시지 형식</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>에이 앱을 사용할 수 있습니다.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>앱에 대한 의견이 있으시면 언제든지 알려주세요. 리뷰를 남겨주시겠어요?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>아니요</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>예</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>나중에</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>다음</value>
   </data>
 </root>

@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>اضف جهاز</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>أجهزة البلوتوث:</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>حذف</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>عميل بلوتوث</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>مخطط</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>خادم البلوتوث</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>حفظ</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>ماسح ضوئي بلوتوث</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>ضبط</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>مراجعة التطبيق</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>بداية</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>استمر</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>أجهزة البلوتوث:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>عميل بلوتوث</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>خادم البلوتوث</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>ماسح ضوئي بلوتوث</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>تحديث</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>أنت</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>مخطط</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>ضبط</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>تنسيق الرسالة المستلمة</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>من الأيام قبل انتهاء الفترة التجريبية.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>إذا كان لديك أي ملاحظات حول التطبيق، فسيسعدنا سماعها. هل ترغب في كتابة مراجعة؟</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>لا</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>نعم</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>لاحقاً</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>التالي</value>
   </data>
 </root>

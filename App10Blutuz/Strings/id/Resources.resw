@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>Tambahkan Perangkat</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Perangkat Bluetooth:</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>Menghapus</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Klien Bluetooth</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>Grafik</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Server Bluetooth</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>Menyimpan</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Pemindai Bluetooth</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>Pengaturan</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>Ulasan aplikasi</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>Mulailah</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>Terus</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Perangkat Bluetooth:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Klien Bluetooth</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Server Bluetooth</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Pemindai Bluetooth</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>Menyegarkan</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>Kamu</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Menghapus</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Grafik</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Menyimpan</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>Pengaturan</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>Format Pesan yang Diterima</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>more days before the trial period ends.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>Jika Anda memiliki sesuatu untuk disampaikan mengenai aplikasi ini, kami akan senang mendengar keinginan Anda. Ingin memberikan ulasan?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>Bukan</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>Ya</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Nanti</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>Continue</value>
   </data>
 </root>

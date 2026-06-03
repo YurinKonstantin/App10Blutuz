@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>डिवाइस जोडे</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>ब्लूटूथ डिवाइस:</value>
+  </data>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>ब्लूटूथ क्लाइंट</value>
+  </data>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>ब्लूटूथ सर्वर</value>
+  </data>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>ब्लूटूथ स्कैनर</value>
+  </data>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>ऐप समीक्षा</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>शुरू</value>
@@ -137,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>जारी रखें</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>ब्लूटूथ डिवाइस:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>ब्लूटूथ क्लाइंट</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>ब्लूटूथ सर्वर</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>ब्लूटूथ स्कैनर</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>ताज़ा करना</value>
@@ -171,6 +171,27 @@
   <data name="TextYou" xml:space="preserve">
     <value>आप</value>
   </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>मिटाना</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>चार्ट</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>बचाना</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>सेटिंग</value>
+  </data>
+  <data name="TRec.Text" xml:space="preserve">
+    <value>प्राप्त संदेश प्रारूप</value>
+  </data>
+  <data name="TSent.Text" xml:space="preserve">
+    <value>संदेश भेजने का प्रारूप</value>
+  </data>
+  <data name="TSet.Text" xml:space="preserve">
+    <value>सेटिंग</value>
+  </data>
   <data name="Sale" xml:space="preserve">
     <value>बिक्री</value>
   </data>
@@ -185,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>और दिनों के लिए इस ऐप का उपयोग कर सकते हैं।</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>अगर आपके पास एप्लिकेशन के बारे में बताने के लिए कुछ है, तो हमें आपकी इच्छाएं सुनकर खुशी होगी। रिव्यू देना चाहते हैं?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>नहीं</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>हाँ</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>बाद में</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>जारी रखना</value>
   </data>
 </root>

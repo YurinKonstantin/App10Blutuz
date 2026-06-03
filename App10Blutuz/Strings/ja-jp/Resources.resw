@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>デバイスを追加</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Bluetoothデバイス：</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>削除する</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Bluetoothクライアント</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>チャート</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Bluetoothサーバー</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>セーブ</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Bluetoothスキャナー</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>設定</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>アプリレビュー</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>開始</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>継続する</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Bluetoothデバイス：</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Bluetoothクライアント</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Bluetoothサーバー</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Bluetoothスキャナー</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>リフレッシュ</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>君は</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>削除する</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>チャート</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>セーブ</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>設定</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>受信メッセージ形式</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>日間使用できます。</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>アプリに関するご意見・ご感想がありましたら、ぜひお聞かせください。レビューを残してみませんか？</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>いいえ</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>はい</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>後で</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>次</value>
   </data>
 </root>

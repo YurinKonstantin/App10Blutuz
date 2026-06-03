@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>Ajouter un appareil</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Appareils Bluetooth:</value>
+  </data>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Client Bluetooth</value>
+  </data>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Serveur Bluetooth</value>
+  </data>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Scanner Bluetooth</value>
+  </data>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>Avis sur l'application</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>Début</value>
@@ -137,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>Continuer</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Appareils Bluetooth:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Client Bluetooth</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Serveur Bluetooth</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Scanner Bluetooth</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>Rafraîchir</value>
@@ -171,6 +171,27 @@
   <data name="TextYou" xml:space="preserve">
     <value>Vous</value>
   </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Graphique</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Sauvegarder</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>Paramètre</value>
+  </data>
+  <data name="TRec.Text" xml:space="preserve">
+    <value>Format du message reçu</value>
+  </data>
+  <data name="TSent.Text" xml:space="preserve">
+    <value>Format d'envoi de message</value>
+  </data>
+  <data name="TSet.Text" xml:space="preserve">
+    <value>Paramètre</value>
+  </data>
   <data name="Sale" xml:space="preserve">
     <value>Vente</value>
   </data>
@@ -185,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>jours supplémentaires avant la fin de la période d'essai.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>Si vous avez des commentaires concernant l'application, nous serons ravis de connaître votre avis. Vous souhaitez laisser un commentaire ?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>Pas</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Plus tard</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>Continuer</value>
   </data>
 </root>

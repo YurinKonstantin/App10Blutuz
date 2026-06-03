@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>添加設備</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>藍牙設備：</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>刪除</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>藍牙客戶端</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>圖表</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>藍牙服務器</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>保存</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>藍牙掃描儀</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>設置</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>應用評測</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>開始</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>繼續</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>藍牙設備：</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>藍牙客戶端</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>藍牙服務器</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>藍牙掃描儀</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>刷新</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>您</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>圖表</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>設置</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>收到的消息格式</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>天使用此應用。</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>如果您對這款應用程式有任何回饋意見，歡迎告訴我們。想留下評論嗎？</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>不</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>是的</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>之後</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>下一個</value>
   </data>
 </root>

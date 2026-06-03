@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>Lisää laite</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Bluetooth-laitteet:</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>Poistaa</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Bluetooth-asiakas</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>Kartoittaa</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Bluetooth-palvelin</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>Tallentaa</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Bluetooth-skanneri</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>asetus</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>Sovelluksen arvostelu</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>alkaa</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>Jatkaa</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Bluetooth-laitteet:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Bluetooth-asiakas</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Bluetooth-palvelin</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Bluetooth-skanneri</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>virkistää</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>Sinä</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Poistaa</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Kartoittaa</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Tallentaa</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>asetus</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>Vastaanotetun viestin muoto</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>päivää ennen koeajan päättymistä.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>Jos sinulla on jotain kerrottavaa sovelluksesta, kuulemme mielellämme toiveistasi. Haluatko jättää arvostelun?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>Ei</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>Kyllä</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Myöhemmin</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>Jatkaa</value>
   </data>
 </root>

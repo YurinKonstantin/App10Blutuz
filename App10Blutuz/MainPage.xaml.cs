@@ -31,11 +31,13 @@ namespace App10Blutuz
     {
         public MainPage()
         {
-          //  Windows.ApplicationModel.Resources.Core.ResourceContext.SetGlobalQualifierValue("Language", "uk");
+           // Windows.ApplicationModel.Resources.Core.ResourceContext.SetGlobalQualifierValue("Language", "hi");
             this.InitializeComponent();
             FrameworkElement root = (FrameworkElement)Window.Current.Content;
+            
             root.RequestedTheme = AppSettings.Theme;
-          
+            
+
 
 
         }

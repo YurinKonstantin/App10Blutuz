@@ -117,20 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>افزودن دستگاه</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>دستگاه های بلوتوث:</value>
   </data>
-  <data name="BDelete.Label" xml:space="preserve">
-    <value>حذف</value>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>مشتری بلوتوث</value>
   </data>
-  <data name="BPlot.Label" xml:space="preserve">
-    <value>چارت سازمانی</value>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>سرور بلوتوث</value>
   </data>
-  <data name="BSave.Label" xml:space="preserve">
-    <value>صرفه جویی</value>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>اسکنر بلوتوث</value>
   </data>
-  <data name="BSet.Label" xml:space="preserve">
-    <value>تنظیمات</value>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>بررسی برنامه</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>شروع کنید</value>
@@ -149,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>ادامه هید</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>دستگاه های بلوتوث:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>مشتری بلوتوث</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>سرور بلوتوث</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>اسکنر بلوتوث</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>تازه کردن</value>
@@ -182,6 +170,18 @@
   </data>
   <data name="TextYou" xml:space="preserve">
     <value>شما</value>
+  </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>چارت سازمانی</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>صرفه جویی</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>تنظیمات</value>
   </data>
   <data name="TRec.Text" xml:space="preserve">
     <value>قالب پیام دریافت شد</value>
@@ -206,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>روز دیگر از این برنامه استفاده کنید.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>If you have something to tell about the application, we will be happy to hear your wishes. Want to leave a review?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>نه</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>بله</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>بعدا</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>ادامه</value>
   </data>
 </root>

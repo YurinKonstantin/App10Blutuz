@@ -117,8 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="addDevice.Label" xml:space="preserve">
-    <value>Gerät hinzufügen</value>
+  <data name="ListDev.Header" xml:space="preserve">
+    <value>Bluetooth-Geräte:</value>
+  </data>
+  <data name="NavigA.Content" xml:space="preserve">
+    <value>Bluetooth-Client</value>
+  </data>
+  <data name="NavigB.Content" xml:space="preserve">
+    <value>Bluetooth-Server</value>
+  </data>
+  <data name="NavigC.Content" xml:space="preserve">
+    <value>Bluetooth-Scanner</value>
+  </data>
+  <data name="ShowTitle" xml:space="preserve">
+    <value>App-Rezension</value>
   </data>
   <data name="BStart.Content" xml:space="preserve">
     <value>Start</value>
@@ -137,18 +149,6 @@
   </data>
   <data name="hupDalee.Content" xml:space="preserve">
     <value>Fortsetzen</value>
-  </data>
-  <data name="ListDev.Header" xml:space="preserve">
-    <value>Bluetooth-Geräte:</value>
-  </data>
-  <data name="NavigA.Content" xml:space="preserve">
-    <value>Bluetooth-Client</value>
-  </data>
-  <data name="NavigB.Content" xml:space="preserve">
-    <value>Bluetooth-Server</value>
-  </data>
-  <data name="NavigC.Content" xml:space="preserve">
-    <value>Bluetooth-Scanner</value>
   </data>
   <data name="refDevice.Label" xml:space="preserve">
     <value>Aktualisierung</value>
@@ -171,6 +171,27 @@
   <data name="TextYou" xml:space="preserve">
     <value>Du</value>
   </data>
+  <data name="BDelete.Label" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="BPlot.Label" xml:space="preserve">
+    <value>Diagramm</value>
+  </data>
+  <data name="BSave.Label" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="BSet.Label" xml:space="preserve">
+    <value>Einstellung</value>
+  </data>
+  <data name="TRec.Text" xml:space="preserve">
+    <value>Format der empfangenen Nachricht</value>
+  </data>
+  <data name="TSent.Text" xml:space="preserve">
+    <value>Nachrichtenformat senden</value>
+  </data>
+  <data name="TSet.Text" xml:space="preserve">
+    <value>Einstellung</value>
+  </data>
   <data name="Sale" xml:space="preserve">
     <value>Verkauf</value>
   </data>
@@ -185,5 +206,20 @@
   </data>
   <data name="Text2" xml:space="preserve">
     <value>weitere Tage vor Ablauf des Testzeitraums verwenden.</value>
+  </data>
+  <data name="ShowContent" xml:space="preserve">
+    <value>Wenn Sie uns etwas zur Anwendung mitteilen möchten, freuen wir uns über Ihre Wünsche. Möchten Sie eine Bewertung abgeben?</value>
+  </data>
+  <data name="ShowCloseText" xml:space="preserve">
+    <value>Nicht</value>
+  </data>
+  <data name="ShowPrimaryText" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="ShowSecondaryText" xml:space="preserve">
+    <value>Später</value>
+  </data>
+  <data name="hupDalee1.Text" xml:space="preserve">
+    <value>Nächste</value>
   </data>
 </root>

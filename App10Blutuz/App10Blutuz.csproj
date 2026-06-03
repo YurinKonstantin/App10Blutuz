@@ -216,10 +216,8 @@
     <None Include="App10Blutuz_TemporaryKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
+    <PRIResource Include="Strings\ru-RU\Resources.resw" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />
-    <PRIResource Include="Strings\uk\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
     <PRIResource Include="Strings\th\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
@@ -245,7 +243,6 @@
     <PRIResource Include="Strings\ko\Resources.resw" />
     <PRIResource Include="Strings\zh-CN\Resources.resw" />
     <PRIResource Include="Strings\zh\Resources.resw" />
-    <PRIResource Include="Strings\nl\Resources.resw" />
     <PRIResource Include="Strings\ja-jp\Resources.resw" />
     <PRIResource Include="Strings\ja\Resources.resw" />
     <PRIResource Include="Strings\it\Resources.resw" />
@@ -300,9 +297,6 @@
     <PackageReference Include="OxyPlot.Windows">
       <Version>1.0.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\ru-RU\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\Resources.resw" />
