@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="BluetoothManager.AnalyzerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BluetoothManager"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="30">
+      
+        <!-- СЛОЙ 1: ЭКРАН ПРОДАЖИ (Показывается, если НЕ куплено) -->
+        <StackPanel x:Name="PurchasePanel" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" MaxWidth="500" Visibility="Collapsed">
+            <!-- Иконка и Главные заголовки -->
+            <FontIcon Glyph="&#xEB4A;" FontSize="60" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <TextBlock x:Uid="AnalyzerTitle" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <TextBlock x:Uid="AnalyzerSubtitle" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" TextAlignment="Center"/>
+
+            <!-- Карточка с объяснением причин блокировки и преимуществ PRO -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+            BorderThickness="1" 
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+            CornerRadius="8" 
+            Padding="16" 
+            Margin="0,10,0,10">
+                <StackPanel Spacing="10">
+                    <!-- Текст-предупреждение о бесплатной версии -->
+                    <TextBlock x:Uid="AnalyzerPromoText" FontSize="13" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+
+                    <!-- Список PRO возможностей -->
+                    <StackPanel Spacing="4" Margin="0,5,0,0">
+                        <TextBlock x:Uid="AnalyzerFeature1" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock x:Uid="AnalyzerFeature2" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock x:Uid="AnalyzerFeature3" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Кнопка покупки -->
+            <Button x:Name="UnlockProButton" x:Uid="UnlockProButton" Click="UnlockProButton_Click" 
+            Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Center" Height="40" Padding="32,0,32,0"/>
+        </StackPanel>
+
+        <!-- СЛОЙ 2: РАБОЧИЙ АНАЛИЗАТОР LE (Разблокируется после покупки) -->
+        <Grid x:Name="AnalyzerPanel" Visibility="Collapsed" RowDefinitions="Auto, Auto, *">
+            <!-- Заголовок -->
+            <TextBlock x:Name="AnalyzerTitle"  FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <!-- Панель выбора BLE устройства -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" Margin="0,0,0,20">
+                <ComboBox x:Name="BleDeviceComboBox" SelectionChanged="BleDeviceComboBox_SelectionChanged" PlaceholderText="Выберите BLE устройство..." Width="250" DisplayMemberPath="Name"/>
+                <Button x:Name="ScanBleButton" x:Uid="BtnScanBle" Click="ScanBleButton_Click" Style="{StaticResource AccentButtonStyle}"/>
+                <ProgressRing x:Name="AnalyzerProgress" IsActive="False" Width="20" Height="20"/>
+            </StackPanel>
+
+            <!-- Двухколоночный инспектор -->
+
+            <Grid Grid.Row="2" ColumnDefinitions="*, 1.5*" >
+                <Border Grid.Column="0" 
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+            BorderThickness="1" 
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+            CornerRadius="8" 
+            Margin="0,0,8,0" 
+            Padding="12">
+                    <Grid RowDefinitions="Auto, *">
+                        <TextBlock x:Name="AnalyzerHeader" FontSize="14" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Margin="4,0,0,12"/>
+                   
+
+                            <!--ЛЕВАЯ КОЛОНКА: Список GATT-сервисов-->
+                        <ListView x:Name="ServicesListView" Grid.Row="1"
+                  SelectionChanged="ServicesListView_SelectionChanged"
+                  BorderThickness="1" 
+                            Background="Transparent"
+                           CornerRadius="8" Margin="0,0,10,0" Padding="8"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  ScrollViewer.VerticalScrollMode="Auto">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:BleServiceModel">
+                                        <StackPanel Padding="4,8,4,8" Spacing="2" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}">
+                                            <TextBlock Text="{x:Bind Name}" FontWeight="Bold" FontSize="14"/>
+                                            <TextBlock Text="{x:Bind Uuid}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                      
+                    </Grid>
+                </Border>
+
+                <!--ПРАВАЯ КОЛОНКА: Список характеристик выбранного сервиса--> 
+                <Border Grid.Column="1" 
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+            BorderThickness="1" 
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+            CornerRadius="8" 
+            Margin="8,0,0,0" 
+            Padding="12">
+                    <Grid RowDefinitions="Auto, *">
+                        <TextBlock x:Name="CharacteristicsHeader" FontSize="14" FontWeight="SemiBold" 
+                                   Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Margin="4,0,0,12"/>
+
+
+                        <ListView x:Name="CharacteristicsListView" Grid.Row="1" SelectionChanged="CharacteristicsListView_SelectionChanged"
+                  BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" 
+                                  CornerRadius="8" Margin="10,0,0,0" Padding="8"  Background="Transparent">
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="local:BleCharacteristicModel">
+                                        <Border BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" CornerRadius="4" Padding="10" Margin="0,4,0,4" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                            <Grid RowDefinitions="Auto, Auto, Auto">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold" FontSize="14"/>
+                                                    <Border Background="{ThemeResource ControlFillColorSecondaryBrush}" CornerRadius="4" Padding="4,1,4,1" VerticalAlignment="Center">
+                                                        <TextBlock Text="{x:Bind Properties}" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    </Border>
+                                                </StackPanel>
+                                                <TextBlock Grid.Row="1" Text="{x:Bind Uuid}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,4"/>
+
+                                                <!--Вывод текущего значения характеристики-->
+                                                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="5">
+                                                    <TextBlock Text="Значение:" FontSize="12" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    <TextBlock Text="{x:Bind Value, Mode=OneWay}" FontSize="12" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                       
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

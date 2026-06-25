@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ScanButton.Content" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="StatusTextBlock.Text" xml:space="preserve">
+    <value>Status: Disconnected</value>
+  </data>
+  <data name="InputTextBox.PlaceholderText" xml:space="preserve">
+    <value>Enter text to send...</value>
+  </data>
+  <data name="TerminalLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>Data exchange log will appear here...</value>
+  </data>
+  <data name="SendButton.Content" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="NavDevices.Content" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="NavAnalyzer.Content" xml:space="preserve">
+    <value>LE Analyzer</value>
+  </data>
+  <data name="MsgBtErrorTitle" xml:space="preserve">
+    <value>Bluetooth Error</value>
+  </data>
+  <data name="MsgBtErrorContent" xml:space="preserve">
+    <value>Bluetooth adapter was not found on this device.</value>
+  </data>
+  <data name="StatusPaired" xml:space="preserve">
+    <value>Paired</value>
+  </data>
+  <data name="StatusAvailable" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="ScanErrorTitle" xml:space="preserve">
+    <value>Scan Error</value>
+  </data>
+  <data name="MsgCompatErrorTitle" xml:space="preserve">
+    <value>Compatibility Error</value>
+  </data>
+  <data name="MsgCompatErrorContent" xml:space="preserve">
+    <value>Your Bluetooth adapter does not support the required operation standards.</value>
+  </data>
+  <data name="MsgBtOffTitle" xml:space="preserve">
+    <value>Bluetooth is Off</value>
+  </data>
+  <data name="MsgBtOffContent" xml:space="preserve">
+    <value>Please enable Bluetooth in Windows system settings.</value>
+  </data>
+  <data name="MsgInitErrorTitle" xml:space="preserve">
+    <value>Initialization Error</value>
+  </data>
+  <data name="MsgInitErrorContent" xml:space="preserve">
+    <value>Failed to check Bluetooth status:</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>Status: Connecting...</value>
+  </data>
+  <data name="StatusConnectedTo" xml:space="preserve">
+    <value>Status: Connected to</value>
+  </data>
+  <data name="StatusConnError" xml:space="preserve">
+    <value>Status: Connection error</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>Status: Disconnected</value>
+  </data>
+  <data name="MsgConnErrorTitle" xml:space="preserve">
+    <value>Connection Error</value>
+  </data>
+  <data name="LogOutput" xml:space="preserve">
+    <value>[OUTPUT]</value>
+  </data>
+  <data name="LogInput" xml:space="preserve">
+    <value>[INPUT]</value>
+  </data>
+  <data name="LogSendError" xml:space="preserve">
+    <value>[SEND ERROR]</value>
+  </data>
+  <data name="LogConnLost" xml:space="preserve">
+    <value>[CONNECTION LOST]</value>
+  </data>
+  <data name="ErrorNoSppProfile" xml:space="preserve">
+    <value>The device does not support the standard serial port profile (RFCOMM/SPP).</value>
+  </data>
+  <data name="ErrorDeviceAccess" xml:space="preserve">
+    <value>Failed to access the device.</value>
+  </data>
+  <data name="ScanButtonStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="StartServerButton.Content" xml:space="preserve">
+    <value>Start Server</value>
+  </data>
+  <data name="StopServerButton.Content" xml:space="preserve">
+    <value>Stop Server</value>
+  </data>
+  <data name="StatusServerListening" xml:space="preserve">
+    <value>Server: Listening for connections...</value>
+  </data>
+  <data name="StatusServerConnected" xml:space="preserve">
+    <value>Server: Client connected!</value>
+  </data>
+  <data name="StatusServerStopped" xml:space="preserve">
+    <value>Server: Stopped</value>
+  </data>
+  <data name="ScanButtonStart" xml:space="preserve">
+    <value>Scan</value>
+  </data>
+  <data name="ShowUnknownSwitch.Header" xml:space="preserve">
+    <value>Show unknown devices</value>
+  </data>
+  <data name="UnknownDeviceLabel" xml:space="preserve">
+    <value>[Unknown Device]</value>
+  </data>
+  <data name="BtnConnect" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="RadarVeryClose" xml:space="preserve">
+    <value>🔥 Very Close</value>
+  </data>
+  <data name="RadarInRadius" xml:space="preserve">
+    <value>⚡ Within Range</value>
+  </data>
+  <data name="RadarFarAway" xml:space="preserve">
+    <value>❄️ Far Away (Weak Signal)</value>
+  </data>
+  <data name="AnalyzerTitle" xml:space="preserve">
+    <value>Bluetooth LE Analyzer (PRO)</value>
+  </data>
+  <data name="AnalyzerSubtitle" xml:space="preserve">
+    <value>Inspection of device GATT characteristics and descriptors</value>
+  </data>
+  <data name="UnlockProButton.Content" xml:space="preserve">
+    <value>Unlock PRO Version</value>
+  </data>
+  <data name="ProPurchaseSuccessTitle" xml:space="preserve">
+    <value>Success!</value>
+  </data>
+  <data name="ProPurchaseSuccessContent" xml:space="preserve">
+    <value>PRO version successfully activated. All features unlocked!</value>
+  </data>
+  <data name="ProPurchaseFailTitle" xml:space="preserve">
+    <value>Purchase Error</value>
+  </data>
+  <data name="ProPurchaseFailContent" xml:space="preserve">
+    <value>Failed to complete the purchase. Please try again.</value>
+  </data>
+  <data name="AnalyzerPromoText.Text" xml:space="preserve">
+    <value>This module is designed for advanced diagnostics of Bluetooth Low Energy (BLE) devices. The free version is limited to the basic text terminal.</value>
+  </data>
+  <data name="AnalyzerFeature1.Text" xml:space="preserve">
+    <value>• Discover and read hidden GATT services and characteristics</value>
+  </data>
+  <data name="AnalyzerFeature2.Text" xml:space="preserve">
+    <value>• Modify and send BLE packet descriptors</value>
+  </data>
+  <data name="AnalyzerFeature3.Text" xml:space="preserve">
+    <value>• Log and continuously capture low-level traffic</value>
+  </data>
+  <data name="BtnScanBle.Content" xml:space="preserve">
+    <value>Find BLE Devices</value>
+  </data>
+  <data name="ValueLabel.Text" xml:space="preserve">
+    <value>Value:</value>
+  </data>
+  <data name="BleComboPlaceholder" xml:space="preserve">
+    <value>Select BLE Device...</value>
+  </data>
+  <data name="ErrorBleScanTitle" xml:space="preserve">
+    <value>Scan Error</value>
+  </data>
+  <data name="ErrorGattTitle" xml:space="preserve">
+    <value>GATT Error</value>
+  </data>
+  <data name="ErrorConnBleTitle" xml:space="preserve">
+    <value>BLE Connection Error</value>
+  </data>
+  <data name="ErrorNoBleDevice" xml:space="preserve">
+    <value>Failed to establish connection with the BLE device.</value>
+  </data>
+  <data name="CharClickToRead" xml:space="preserve">
+    <value>Click to read</value>
+  </data>
+  <data name="CharWriteOnlyError" xml:space="preserve">
+    <value>Error: Write / Notify only</value>
+  </data>
+  <data name="CharEmptyBuffer" xml:space="preserve">
+    <value>Empty data buffer</value>
+  </data>
+  <data name="CharReadError" xml:space="preserve">
+    <value>Read error. Status:</value>
+  </data>
+  <data name="AppTitle" xml:space="preserve">
+    <value>BlueIDE: Bluetooth Terminal and BLE Scanner Analyzer</value>
+  </data>
+  <data name="ServerLockTitle" xml:space="preserve">
+    <value>Available in BlueIDE PRO</value>
+  </data>
+  <data name="ServerLockContent" xml:space="preserve">
+    <value>The built-in Bluetooth echo server allows you to simulate wireless boards directly inside your PC for loopback testing. Would you like to unlock the PRO version and all advanced tools?</value>
+  </data>
+  <data name="BtnBuyPro" xml:space="preserve">
+    <value>Buy PRO</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AnalyzerHeader" xml:space="preserve">
+    <value>Available GATT Services</value>
+  </data>
+  <data name="CharacteristicsHeader" xml:space="preserve">
+    <value>Characteristics &amp; Data</value>
+  </data>
+</root>
