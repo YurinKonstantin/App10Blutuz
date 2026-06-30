@@ -13,7 +13,6 @@ namespace BluetoothManager
         private static StoreContext _storeContext;
         // Тестовый или реальный Store ID вашей надстройки из Microsoft Partner Center
         private const string ProStoreId = "9NF72H80049N";
-
         // Для тестирования до публикации вы можете вручную выставить true, 
         // чтобы проверить работу самого Анализатора без реальной оплаты!
         public static bool IsProUser { get; private set; } = false;

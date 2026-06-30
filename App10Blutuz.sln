@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.7.11919.86 stable
+VisualStudioVersion = 18.7.11919.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App10Blutuz", "App10Blutuz\App10Blutuz.csproj", "{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothManager", "BluetoothManager\BluetoothManager.csproj", "{52A3A981-3483-4C91-AB6D-EE5A4CE8B697}"
 EndProject
 Global
@@ -19,30 +17,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|ARM.ActiveCfg = Debug|ARM
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|ARM.Build.0 = Debug|ARM
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|ARM.Deploy.0 = Debug|ARM
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|ARM64.Build.0 = Debug|ARM64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|ARM64.Deploy.0 = Debug|ARM64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|x64.ActiveCfg = Debug|x64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|x64.Build.0 = Debug|x64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|x64.Deploy.0 = Debug|x64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|x86.ActiveCfg = Debug|x86
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|x86.Build.0 = Debug|x86
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Debug|x86.Deploy.0 = Debug|x86
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|ARM.ActiveCfg = Release|ARM
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|ARM.Build.0 = Release|ARM
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|ARM.Deploy.0 = Release|ARM
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|ARM64.ActiveCfg = Release|ARM64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|ARM64.Build.0 = Release|ARM64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|ARM64.Deploy.0 = Release|ARM64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|x64.ActiveCfg = Release|x64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|x64.Build.0 = Release|x64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|x64.Deploy.0 = Release|x64
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|x86.ActiveCfg = Release|x86
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|x86.Build.0 = Release|x86
-		{C6591FC5-7596-4AE3-8DC3-E3A96E83D827}.Release|x86.Deploy.0 = Release|x86
 		{52A3A981-3483-4C91-AB6D-EE5A4CE8B697}.Debug|ARM.ActiveCfg = Debug|x64
 		{52A3A981-3483-4C91-AB6D-EE5A4CE8B697}.Debug|ARM.Build.0 = Debug|x64
 		{52A3A981-3483-4C91-AB6D-EE5A4CE8B697}.Debug|ARM.Deploy.0 = Debug|x64

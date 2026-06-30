@@ -56,7 +56,8 @@ namespace BluetoothManager
             
             this.Loaded -= DevicesPage_Loaded;
             await CheckBluetoothAvailabilityAsync();
-           
+          
+
         }
 
         // Вставьте сюда методы:
@@ -119,6 +120,7 @@ namespace BluetoothManager
         }
         private async void ScanButton_Click(object sender, RoutedEventArgs e)
         {
+           
             // 1. Проверяем доступность Bluetooth
             if (!await CheckBluetoothAvailabilityAsync())
             {
@@ -247,6 +249,8 @@ namespace BluetoothManager
 
                 _dataWriter.WriteString(messageWithLine);
                 await _dataWriter.StoreAsync(); // Принудительно отправляем данные в буфер Bluetooth
+                _successfulPacketsCount++; // Увеличиваем счетчик при каждой успешной отправке
+                CheckAndPromptRating();    // Проверяем, не пора ли попросить отзыв
 
                 string logOutputPrefix = _resourceLoader.GetString("LogOutput");
                 TerminalLogTextBox.Text += $"{logOutputPrefix}: {message}\n";
@@ -279,6 +283,7 @@ namespace BluetoothManager
                     if (bytesRead > 0)
                     {
                         string incomingMessage = _dataReader.ReadString(bytesRead);
+                        _successfulPacketsCount++; // Увеличиваем счетчик при каждом входящем пакете от Arduino
 
                         // Перенаправляем вывод в UI-поток WinUI 3
                         DispatcherQueue.TryEnqueue(() =>
@@ -727,6 +732,26 @@ namespace BluetoothManager
                     $"[SERVER {logInput}]: MAVLINK_PACKET_RECEIVED: ID=42;LEN=16\n" +
                     $"[SERVER {logInput}]: PING_HEARTBEAT\n" +
                     $"[SERVER]: ECHO RESPONSE SENT -> PONG_HEARTBEAT_ACK\n";
+            }
+        }
+        // Счетчик успешных пакетов для вызова оценки
+        private int _successfulPacketsCount = 0;
+        private bool _ratingPromptedThisSession = false;
+
+        private void CheckAndPromptRating()
+        {
+            // Если в этой сессии еще не просили и набралось 20 успешных транзакций
+            if (!_ratingPromptedThisSession && _successfulPacketsCount >= 1)
+            {
+                _ratingPromptedThisSession = true;
+
+                // Запускаем асинхронный вызов окна во вспомогательном потоке UI
+                DispatcherQueue.TryEnqueue(async () =>
+                {
+                    // Небольшая пауза в 2 секунды, чтобы пользователь успел дочитать свой лог
+                    await System.Threading.Tasks.Task.Delay(2000);
+                    await RateManager.PromptRatingAsync();
+                });
             }
         }
     }

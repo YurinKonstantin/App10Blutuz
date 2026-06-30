@@ -221,6 +221,8 @@ namespace BluetoothManager
                 string content = _resourceLoader.GetString("ProPurchaseSuccessContent");
                 await ShowMessageDialogAsync(title, content);
                 UpdateUiState(); // Разблокируем интерфейс
+                                 // 🎯 МОМЕНТ ТРИУМФА PRO: Пользователь счастлив, просим оценку!
+                await RateManager.PromptRatingAsync();
             }
             else
             {
