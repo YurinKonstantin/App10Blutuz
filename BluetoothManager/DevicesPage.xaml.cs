@@ -1,758 +1,1429 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using BluetoothManager.Demo_Mode;
+using BluetoothManager.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.ApplicationModel.Resources;
-using Windows.Devices.Enumeration;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Rfcomm;
-using Windows.Networking.Sockets;
-using Windows.Storage.Streams;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using Windows.Devices.Enumeration;
 
 namespace BluetoothManager
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class DevicesPage : Page
-    {// Глобальный кэш для хранения ВСЕХ найденных устройств в эфире
-        private readonly System.Collections.Generic.List<BluetoothDeviceModel> _allDiscoveredDevices = new();
+    {
+        private readonly List<BluetoothDeviceModel> _allDiscoveredDevices = new();
+        private readonly HashSet<string> _favorites = FavoritesStore.Load();
+        private readonly ResourceLoader _res = new();
+        private readonly DeviceWatcherService _watcher = new();
+        private readonly RfcommTerminalSession _session = new();
+        private readonly RfcommServerSession _server = new();
+        private readonly TrafficLogStore _log = new();
+        private readonly ObservableCollection<PresetChip> _presetChips = new();
+        private readonly ObservableCollection<string> _historyItems = new();
+        private readonly ObservableCollection<string> _serviceItems = new();
 
-        public ObservableCollection<BluetoothDeviceModel> Devices { get; set; } = new();
-        private readonly ResourceLoader _resourceLoader = new();
+        public ObservableCollection<BluetoothDeviceModel> Devices { get; } = new();
 
-        private BluetoothAdapter _bluetoothAdapter;
-        private DeviceWatcher _deviceWatcher;
+        private BluetoothAdapter? _bluetoothAdapter;
+        private string? _pendingReconnectId;
+        private int _historyIndex = -1;
+        private List<string> _history = new();
+        private bool _narrowLayout;
+        private bool _uiReady;
+        private bool _syncingSettings;
+        private bool _syncingHistory;
+        private bool _initialLoadDone;
+        private int _tourStep = -1;
 
-        // Поля клиента
-        private BluetoothDevice _connectedDevice;
-        private RfcommDeviceService _rfcommService;
-        private DataWriter _dataWriter;
-        private DataReader _dataReader;
-        private bool _isListening = false;
-
-        // Поля сервера
-        private RfcommServiceProvider _rfcommProvider;
-        private StreamSocketListener _socketListener;
-        private StreamSocket _serverClientSocket;
-        private DataWriter _serverDataWriter;
-        private DataReader _serverDataReader;
-        private bool _isServerRunning = false;
-       
         public DevicesPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             DeviceListView.ItemsSource = Devices;
-            this.Loaded += DevicesPage_Loaded;
+            TerminalLogList.ItemsSource = _log.Entries;
+            PresetsRepeater.ItemsSource = _presetChips;
+            HistoryCombo.ItemsSource = _historyItems;
+            ServiceCombo.ItemsSource = _serviceItems;
+            Loaded += DevicesPage_Loaded;
+            AppSettings.SettingsChanged += OnSettingsChanged;
+
+            _watcher.DeviceAdded += OnDeviceAdded;
+            _watcher.DeviceUpdated += OnDeviceUpdated;
+            _watcher.DeviceRemoved += OnDeviceRemoved;
+            _watcher.BleAdvertisementReceived += OnBleAdvertisement;
+            _watcher.EnumerationCompleted += () => DispatcherQueue.TryEnqueue(() => ScanProgress.IsActive = false);
+            _watcher.Stopped += () => DispatcherQueue.TryEnqueue(() =>
+            {
+                ScanProgress.IsActive = false;
+                ScanButton.Content = _res.GetString("ScanButtonStart") ?? "Scan";
+            });
+
+            _session.DataReceived += bytes => DispatcherQueue.TryEnqueue(() =>
+            {
+                string msg = RfcommTerminalSession.FormatIncomingBytes(bytes);
+                AppendTerminal(TrafficDirection.Rx, msg, bytes.Length);
+            });
+            _session.ConnectionLost += msg => DispatcherQueue.TryEnqueue(async () =>
+            {
+                AppendTerminal(TrafficDirection.Info, $"{_res.GetString("LogConnLost")}: {msg}");
+                await HandleDisconnectAsync(tryReconnect: true);
+            });
+            _session.Disconnected += () => DispatcherQueue.TryEnqueue(() => UpdateConnectionUi(false));
+
+            _server.StatusChanged += status => DispatcherQueue.TryEnqueue(() => UpdateServerStatus(status));
+            _server.DataReceived += (clientId, bytes) => DispatcherQueue.TryEnqueue(() =>
+            {
+                string msg = RfcommTerminalSession.FormatIncomingBytes(bytes);
+                AppendTerminal(TrafficDirection.Rx, $"[SERVER {clientId}] {msg}", bytes.Length);
+            });
+            _server.ClientConnected += id => DispatcherQueue.TryEnqueue(() =>
+                AppendTerminal(TrafficDirection.Info, $"[SERVER] Client {id} connected (total {_server.ClientCount})"));
+            _server.ClientDisconnected += id => DispatcherQueue.TryEnqueue(() =>
+                AppendTerminal(TrafficDirection.Info, $"[SERVER] Client {id} disconnected"));
+
+            _log.Changed += () => DispatcherQueue.TryEnqueue(() =>
+            {
+                RefreshByteCount();
+                UpdateTerminalEmptyState();
+                ScrollTerminalToEnd();
+            });
         }
 
         private async void DevicesPage_Loaded(object sender, RoutedEventArgs e)
         {
-            
-            this.Loaded -= DevicesPage_Loaded;
-            await CheckBluetoothAvailabilityAsync();
-          
+            if (!_initialLoadDone)
+            {
+                _initialLoadDone = true;
+                HexToggle.IsOn = AppSettings.SendAsHex;
+                SortCombo.SelectedIndex = (int)AppSettings.SortMode;
+                ApplyCompactDensity();
+                ReloadPresets();
+                ReloadHistory();
+                EnsureDefaultRfcommService();
+                InitTeachingTipCopy();
+                _uiReady = true;
+                ApplyFilterAndSort();
+                UpdateTerminalEmptyState();
+                await CheckBluetoothAvailabilityAsync();
+                UpdateEmptyState();
+            }
 
+            SyncConnectionHub();
+            await TryShowDevicesTourAsync();
         }
 
-        // Вставьте сюда методы:
-        private async Task<bool> CheckBluetoothAvailabilityAsync()
+        private async Task TryShowDevicesTourAsync()
+        {
+            if (!TeachingTourHelper.ShouldShowDevicesTour || _tourStep >= 0) return;
+            await TeachingTourHelper.DelayForLayoutAsync();
+            if (!TeachingTourHelper.ShouldShowDevicesTour || _tourStep >= 0) return;
+            StartTeachingTour();
+        }
+
+        private void InitTeachingTipCopy()
+        {
+            string next = _res.GetString("TipNext") ?? "Next";
+            string skip = _res.GetString("TipSkip") ?? "Skip";
+            string done = _res.GetString("TipDone") ?? "Got it";
+
+            TipScan.Title = _res.GetString("TipScanTitle") ?? "Scan for devices";
+            TipScan.Subtitle = _res.GetString("TipScanSubtitle") ?? "Start a scan to find Classic and BLE devices nearby.";
+            TipScan.ActionButtonContent = next;
+            TipScan.CloseButtonContent = skip;
+
+            TipDevices.Title = _res.GetString("TipDevicesTitle") ?? "Pair and connect";
+            TipDevices.Subtitle = _res.GetString("TipDevicesSubtitle") ?? "Use Pair if needed, then Connect for the SPP terminal.";
+            TipDevices.ActionButtonContent = next;
+            TipDevices.CloseButtonContent = skip;
+
+            TipTerminal.Title = _res.GetString("TipTerminalTitle") ?? "Send commands";
+            TipTerminal.Subtitle = _res.GetString("TipTerminalSubtitle") ?? "Type here and press Send. TX/RX traffic appears in the log above.";
+            TipTerminal.ActionButtonContent = next;
+            TipTerminal.CloseButtonContent = skip;
+
+            TipSession.Title = _res.GetString("TipSessionTitle") ?? "Session stays alive";
+            TipSession.Subtitle = _res.GetString("TipSessionSubtitle") ?? "Switching tabs keeps your RFCOMM connection. Status is shown here and in the nav pane.";
+            TipSession.ActionButtonContent = done;
+            TipSession.CloseButtonContent = skip;
+        }
+
+        /// <summary>Starts or restarts the Devices TeachingTip sequence.</summary>
+        public void StartTeachingTour()
+        {
+            InitTeachingTipCopy();
+            _tourStep = 0;
+            ShowTourStep();
+        }
+
+        private void ShowTourStep()
+        {
+            TipScan.IsOpen = false;
+            TipDevices.IsOpen = false;
+            TipTerminal.IsOpen = false;
+            TipSession.IsOpen = false;
+
+            switch (_tourStep)
+            {
+                case 0: TipScan.IsOpen = true; break;
+                case 1: TipDevices.IsOpen = true; break;
+                case 2: TipTerminal.IsOpen = true; break;
+                case 3: TipSession.IsOpen = true; break;
+                default:
+                    TeachingTourHelper.MarkDevicesTourDone();
+                    _tourStep = -1;
+                    break;
+            }
+        }
+
+        private void Tip_Next(TeachingTip sender, object args)
+        {
+            sender.IsOpen = false;
+            _tourStep++;
+            ShowTourStep();
+        }
+
+        private void Tip_Skip(TeachingTip sender, object args)
+        {
+            TipScan.IsOpen = false;
+            TipDevices.IsOpen = false;
+            TipTerminal.IsOpen = false;
+            TipSession.IsOpen = false;
+            TeachingTourHelper.MarkDevicesTourDone();
+            _tourStep = -1;
+        }
+
+        private void SyncConnectionHub()
+        {
+            UpdateConnectionUi(_session.IsConnected);
+            if (_server.IsRunning)
+                UpdateServerStatus(_server.ClientCount > 0 ? "connected" : "listening");
+        }
+
+        private void OnSettingsChanged(object? sender, EventArgs e)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (!_uiReady) return;
+                _syncingSettings = true;
+                try
+                {
+                    HexToggle.IsOn = AppSettings.SendAsHex;
+                    if (SortCombo.SelectedIndex != (int)AppSettings.SortMode)
+                        SortCombo.SelectedIndex = (int)AppSettings.SortMode;
+                    ApplyCompactDensity();
+                    ApplyFilterAndSort();
+                }
+                finally
+                {
+                    _syncingSettings = false;
+                }
+            });
+        }
+
+        private void ApplyCompactDensity()
+        {
+            bool compact = AppSettings.CompactDensity;
+            DeviceListView.ItemTemplate = (DataTemplate)Resources[
+                compact ? "DeviceCardCompactTemplate" : "DeviceCardTemplate"];
+            ScanToolbar.Spacing = compact ? 6 : 8;
+            TerminalToolbar.Spacing = compact ? 4 : 6;
+            StatusChipRow.Spacing = compact ? 6 : 8;
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            bool narrow = e.NewSize.Width < 900;
+            if (narrow == _narrowLayout) return;
+            _narrowLayout = narrow;
+
+            if (narrow)
+            {
+                LeftCol.Width = new GridLength(1, GridUnitType.Star);
+                RightCol.Width = new GridLength(0);
+                TopRow.Height = new GridLength(1, GridUnitType.Star);
+                BottomRow.Height = new GridLength(1, GridUnitType.Star);
+                Grid.SetColumn(DevicesPanel, 0);
+                Grid.SetRow(DevicesPanel, 0);
+                Grid.SetColumn(TerminalPanel, 0);
+                Grid.SetRow(TerminalPanel, 1);
+                TerminalPanel.Margin = new Thickness(0, 12, 0, 0);
+                DevicesPanel.Margin = new Thickness(0);
+            }
+            else
+            {
+                LeftCol.Width = new GridLength(2, GridUnitType.Star);
+                RightCol.Width = new GridLength(3, GridUnitType.Star);
+                TopRow.Height = new GridLength(1, GridUnitType.Star);
+                BottomRow.Height = new GridLength(0);
+                Grid.SetColumn(DevicesPanel, 0);
+                Grid.SetRow(DevicesPanel, 0);
+                Grid.SetColumn(TerminalPanel, 1);
+                Grid.SetRow(TerminalPanel, 0);
+                TerminalPanel.Margin = new Thickness(12, 0, 0, 0);
+                DevicesPanel.Margin = new Thickness(0, 0, 12, 0);
+            }
+        }
+
+        private async Task<bool> CheckBluetoothAvailabilityAsync(bool showDialog = false)
         {
             try
             {
-                // Получаем радиомодуль по умолчанию
                 _bluetoothAdapter = await BluetoothAdapter.GetDefaultAsync();
-
                 if (_bluetoothAdapter == null)
                 {
                     ScanButton.IsEnabled = false;
-
-                    string title = _resourceLoader.GetString("MsgBtErrorTitle");
-                    string content = _resourceLoader.GetString("MsgBtErrorContent");
-
-                    await ShowMessageDialogAsync(title, content);
+                    ShowBluetoothUnavailable(
+                        ResHelper.Get(_res, "MsgBtErrorTitle", "Bluetooth unavailable"),
+                        ResHelper.Get(_res, "MsgBtErrorContent", "No Bluetooth adapter was found on this device."));
+                    if (showDialog)
+                        await DialogHelper.ShowAsync(
+                            ResHelper.Get(_res, "MsgBtErrorTitle", "Bluetooth unavailable"),
+                            ResHelper.Get(_res, "MsgBtErrorContent", "No Bluetooth adapter was found on this device."));
                     return false;
                 }
 
                 if (!_bluetoothAdapter.IsCentralRoleSupported && !_bluetoothAdapter.IsPeripheralRoleSupported)
                 {
                     ScanButton.IsEnabled = false;
-
-                    string title = _resourceLoader.GetString("MsgCompatErrorTitle");
-                    string content = _resourceLoader.GetString("MsgCompatErrorContent");
-
-                    await ShowMessageDialogAsync(title, content);
+                    ShowBluetoothUnavailable(
+                        ResHelper.Get(_res, "MsgCompatErrorTitle", "Not supported"),
+                        ResHelper.Get(_res, "MsgCompatErrorContent", "This Bluetooth adapter is not compatible."));
+                    if (showDialog)
+                        await DialogHelper.ShowAsync(
+                            ResHelper.Get(_res, "MsgCompatErrorTitle", "Not supported"),
+                            ResHelper.Get(_res, "MsgCompatErrorContent", "This Bluetooth adapter is not compatible."));
                     return false;
                 }
 
-                // Проверяем, включен ли тумблер Bluetooth в Windows
-                var radio = await _bluetoothAdapter.GetRadioAsync();
+                Windows.Devices.Radios.Radio? radio = null;
+                try
+                {
+                    radio = await _bluetoothAdapter.GetRadioAsync();
+                }
+                catch (Exception)
+                {
+                    // GetRadioAsync can throw COMException when radio stack is missing/unavailable.
+                    radio = null;
+                }
+
                 if (radio == null || radio.State != Windows.Devices.Radios.RadioState.On)
                 {
                     ScanButton.IsEnabled = false;
-
-                    string title = _resourceLoader.GetString("MsgBtOffTitle");
-                    string content = _resourceLoader.GetString("MsgBtOffContent");
-
-                    await ShowMessageDialogAsync(title, content);
+                    ShowBluetoothUnavailable(
+                        ResHelper.Get(_res, "MsgBtOffTitle", "Bluetooth is off"),
+                        ResHelper.Get(_res, "MsgBtOffContent", "Turn on Bluetooth in Windows settings, then try again."));
+                    if (showDialog)
+                        await DialogHelper.ShowAsync(
+                            ResHelper.Get(_res, "MsgBtOffTitle", "Bluetooth is off"),
+                            ResHelper.Get(_res, "MsgBtOffContent", "Turn on Bluetooth in Windows settings, then try again."));
                     return false;
                 }
 
-                // Все проверки пройдены успешно
                 ScanButton.IsEnabled = true;
+                ClearBluetoothUnavailable();
                 return true;
             }
             catch (Exception ex)
             {
                 ScanButton.IsEnabled = false;
-
-                string title = _resourceLoader.GetString("MsgInitErrorTitle");
-                string baseContent = _resourceLoader.GetString("MsgInitErrorContent");
-
-                await ShowMessageDialogAsync(title, $"{baseContent} {ex.Message}");
+                string title = ResHelper.Get(_res, "MsgInitErrorTitle", "Bluetooth error");
+                string detail = string.IsNullOrWhiteSpace(ex.Message)
+                    ? ResHelper.Get(_res, "MsgInitErrorContent", "Could not initialize Bluetooth.")
+                    : $"{ResHelper.Get(_res, "MsgInitErrorContent", "Could not initialize Bluetooth.")} {ex.Message}";
+                ShowBluetoothUnavailable(title, detail);
+                if (showDialog)
+                    await DialogHelper.ShowAsync(title, detail);
                 return false;
             }
         }
+
+        private void ShowBluetoothUnavailable(string title, string message)
+        {
+            // Hide adapter errors during Store screenshot tour / demo capture
+            if (TeachingTourHelper.SuppressTips || StoreScreenshotTour.IsRunning)
+            {
+                ClearBluetoothUnavailable();
+                return;
+            }
+
+            if (App.MainWindow is MainWindow main)
+                main.ShowShellWarning(title, message);
+        }
+
+        private void ClearBluetoothUnavailable()
+        {
+            if (App.MainWindow is MainWindow main)
+                main.ClearShellWarning();
+        }
+
         private async void ScanButton_Click(object sender, RoutedEventArgs e)
         {
-           
-            // 1. Проверяем доступность Bluetooth
-            if (!await CheckBluetoothAvailabilityAsync())
+            if (!await CheckBluetoothAvailabilityAsync(showDialog: true)) return;
+
+            if (_watcher.IsRunning)
             {
+                _watcher.Stop(unsubscribe: false);
+                ScanProgress.IsActive = false;
+                ScanButton.Content = _res.GetString("ScanButtonStart") ?? "Scan";
                 return;
             }
 
-            // 2. Если сканирование уже идет — останавливаем его
-            if (_deviceWatcher != null && (_deviceWatcher.Status == DeviceWatcherStatus.Started || _deviceWatcher.Status == DeviceWatcherStatus.EnumerationCompleted))
-            {
-                StopScanning();
-                return;
-            }
-
-            // Очищаем список перед новым поиском
             Devices.Clear();
             _allDiscoveredDevices.Clear();
             ScanProgress.IsActive = true;
+            ScanButton.Content = _res.GetString("ScanButtonStop") ?? "Stop";
+            _watcher.Start();
+            UpdateEmptyState();
+        }
 
-            // Меняем текст кнопки на "Остановить" (заберите из ресурсов или оставьте локализованную строку)
-            ScanButton.Content = _resourceLoader.GetString("ScanButtonStop") ?? "Stop";
-
-            // 3. Создаем универсальный AQS-селектор для Windows 11 Desktop (Классический + BLE)
-            // Этот фильтр гарантированно работает в WinUI 3 для AssociationEndpoint
-            string aqsFilter = "System.Devices.Aep.ProtocolId:=\"{e0cbf06c-cd8b-4647-bb8a-263b43f0f974}\" OR System.Devices.Aep.ProtocolId:=\"{bb7bb05e-cc72-411b-a17b-738b10a971d5}\"";
-
-            string[] requestedProperties = new string[]
+        private void OnDeviceAdded(DeviceInformation device)
+        {
+            DispatcherQueue.TryEnqueue(() =>
             {
-        "System.Devices.Aep.IsConnected",
-        "System.Devices.Aep.IsPaired",
-        "System.Devices.Aep.SignalStrength"
+                try { AddOrUpdateDevice(device); }
+                catch { }
+            });
+        }
+
+        private void AddOrUpdateDevice(DeviceInformation device)
+        {
+            if (string.IsNullOrEmpty(device.Id)) return;
+            if (_allDiscoveredDevices.Any(d => d.Id == device.Id)) return;
+
+            string mac = "";
+            if (device.Properties.TryGetValue("System.Devices.Aep.DeviceAddress", out var macObj) && macObj != null)
+                mac = NormalizeMac(macObj.ToString() ?? "");
+            if (string.IsNullOrEmpty(mac))
+                mac = TryExtractMacFromId(device.Id);
+
+            BluetoothDeviceModel? existingByMac = null;
+            if (!string.IsNullOrEmpty(mac))
+            {
+                existingByMac = _allDiscoveredDevices.FirstOrDefault(d =>
+                    string.Equals(NormalizeMac(d.MacAddress), mac, StringComparison.OrdinalIgnoreCase));
+            }
+
+            string unknown = ResHelper.Get(_res, "UnknownDeviceLabel", "[Unknown Device]");
+            string deviceName = !string.IsNullOrWhiteSpace(device.Name) ? device.Name : unknown;
+            string idLower = device.Id.ToLowerInvariant();
+            string bType = idLower.Contains("bluetoothle") || idLower.Contains("{bb7bb05e") ? "BLE" : "Classic";
+
+            int? rssi = null;
+            if (device.Properties.TryGetValue("System.Devices.Aep.SignalStrength", out var rssiObj) && rssiObj != null)
+            {
+                try { rssi = Convert.ToInt32(rssiObj); } catch { }
+            }
+
+            bool isPaired = false;
+            try { isPaired = device.Pairing.IsPaired; }
+            catch
+            {
+                if (device.Properties.TryGetValue("System.Devices.Aep.IsPaired", out var p) && p is bool b)
+                    isPaired = b;
+            }
+
+            if (existingByMac != null && existingByMac.Id.StartsWith("ble-adv:", StringComparison.Ordinal))
+            {
+                existingByMac.Id = device.Id;
+                if (!string.IsNullOrWhiteSpace(device.Name))
+                    existingByMac.Name = deviceName;
+                existingByMac.BluetoothType = bType;
+                existingByMac.MacAddress = string.IsNullOrEmpty(mac) ? existingByMac.MacAddress : mac;
+                existingByMac.IsPaired = isPaired;
+                existingByMac.Type = isPaired
+                    ? ResHelper.Get(_res, "StatusPaired", "Paired")
+                    : ResHelper.Get(_res, "StatusAvailable", "Available");
+                existingByMac.CanConnect = bType != "BLE";
+                existingByMac.ConnectButtonText = ResHelper.Get(_res, "BtnConnect", "Connect");
+                existingByMac.IsFavorite = _favorites.Contains(device.Id);
+                if (rssi.HasValue) existingByMac.Rssi = rssi;
+                existingByMac.LastSeen = DateTimeOffset.Now;
+                if (_uiReady && PassesCurrentFilter(existingByMac) && !Devices.Contains(existingByMac))
+                    Devices.Add(existingByMac);
+                UpdateEmptyState();
+                return;
+            }
+
+            if (existingByMac != null && !existingByMac.Id.StartsWith("ble-adv:", StringComparison.Ordinal))
+            {
+                if (!string.IsNullOrWhiteSpace(device.Name) &&
+                    existingByMac.Name.StartsWith("[", StringComparison.Ordinal))
+                    existingByMac.Name = deviceName;
+                if (rssi.HasValue) existingByMac.Rssi = rssi;
+                if (isPaired) existingByMac.IsPaired = true;
+                existingByMac.LastSeen = DateTimeOffset.Now;
+                return;
+            }
+
+            var model = new BluetoothDeviceModel
+            {
+                Name = deviceName,
+                Id = device.Id,
+                BluetoothType = bType,
+                MacAddress = mac,
+                Type = isPaired
+                    ? ResHelper.Get(_res, "StatusPaired", "Paired")
+                    : ResHelper.Get(_res, "StatusAvailable", "Available"),
+                IsPaired = isPaired,
+                Rssi = rssi,
+                ConnectButtonText = ResHelper.Get(_res, "BtnConnect", "Connect"),
+                CanConnect = bType != "BLE",
+                IsFavorite = _favorites.Contains(device.Id),
+                LastSeen = DateTimeOffset.Now
             };
 
-            // Создаем watcher для динамического отслеживания устройств вокруг
-            _deviceWatcher = DeviceInformation.CreateWatcher(
-                aqsFilter,
-                requestedProperties,
-                DeviceInformationKind.AssociationEndpoint);
-
-            // 4. Подписываемся на события watcher'а
-            _deviceWatcher.Added += DeviceWatcher_Added;
-            _deviceWatcher.Updated += DeviceWatcher_Updated;
-            _deviceWatcher.Removed += DeviceWatcher_Removed;
-            _deviceWatcher.EnumerationCompleted += DeviceWatcher_EnumerationCompleted;
-            _deviceWatcher.Stopped += DeviceWatcher_Stopped;
-
-            // Start!
-            _deviceWatcher.Start();
+            _allDiscoveredDevices.Add(model);
+            if (!_uiReady) return;
+            if (PassesCurrentFilter(model))
+                Devices.Add(model);
+            UpdateEmptyState();
         }
-        private void StopScanning()
-        {
-            if (_deviceWatcher != null)
-            {
-                _deviceWatcher.Stop();
-            }
-        }
-        // - Все методы DeviceWatcher_...
-        private async void Connect_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is string deviceId)
-            {
-                button.IsEnabled = false;
-                StatusTextBlock.Text = _resourceLoader.GetString("StatusConnecting");
 
+        private void OnBleAdvertisement(BleAdvertisementHit hit)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
                 try
                 {
-                    // 1. Получаем объект Bluetooth-устройства
-                    _connectedDevice = await BluetoothDevice.FromIdAsync(deviceId);
+                    string mac = NormalizeMac(hit.MacAddress);
+                    if (string.IsNullOrEmpty(mac)) return;
 
-                    if (_connectedDevice == null)
+                    var existing = _allDiscoveredDevices.FirstOrDefault(d =>
+                        string.Equals(NormalizeMac(d.MacAddress), mac, StringComparison.OrdinalIgnoreCase));
+
+                    if (existing != null)
                     {
-                        throw new Exception(_resourceLoader.GetString("ErrorDeviceAccess"));
+                        existing.Rssi = hit.Rssi;
+                        existing.LastSeen = DateTimeOffset.Now;
+                        if (!string.IsNullOrEmpty(hit.LocalName) &&
+                            existing.Name.StartsWith("[", StringComparison.Ordinal))
+                        {
+                            existing.Name = hit.LocalName;
+                            if (!_uiReady) return;
+                            if (PassesCurrentFilter(existing) && !Devices.Contains(existing))
+                                Devices.Add(existing);
+                            else if (!PassesCurrentFilter(existing))
+                            {
+                                int idx = Devices.IndexOf(existing);
+                                if (idx >= 0) Devices.RemoveAt(idx);
+                            }
+                        }
+                        return;
                     }
 
-                    // 2. Запрашиваем RFCOMM службы (SPP профиль для COM-порта)
-                    var rfcommServices = await _connectedDevice.GetRfcommServicesAsync(BluetoothCacheMode.Uncached);
-
-                    if (rfcommServices.Services.Count == 0)
+                    string unknown = ResHelper.Get(_res, "UnknownDeviceLabel", "[Unknown Device]");
+                    string name = string.IsNullOrEmpty(hit.LocalName) ? unknown : hit.LocalName;
+                    var model = new BluetoothDeviceModel
                     {
-                        throw new Exception(_resourceLoader.GetString("ErrorNoSppProfile"));
-                    }
+                        Name = name,
+                        Id = $"ble-adv:{mac}",
+                        BluetoothType = "BLE",
+                        MacAddress = mac,
+                        RawBluetoothAddress = hit.BluetoothAddress,
+                        Type = ResHelper.Get(_res, "StatusAvailable", "Available"),
+                        IsPaired = false,
+                        Rssi = hit.Rssi,
+                        ConnectButtonText = ResHelper.Get(_res, "BtnConnect", "Connect"),
+                        CanConnect = false,
+                        IsFavorite = false,
+                        LastSeen = DateTimeOffset.Now
+                    };
 
-                    _rfcommService = rfcommServices.Services[0];
-
-                    // 3. Создаем сокет и асинхронно подключаемся
-                    Windows.Networking.Sockets.StreamSocket socket = new Windows.Networking.Sockets.StreamSocket();
-                    await socket.ConnectAsync(_rfcommService.ConnectionHostName, _rfcommService.ConnectionServiceName);
-
-                    // 4. Настраиваем потоки ввода/вывода
-                    _dataWriter = new DataWriter(socket.OutputStream);
-                    _dataReader = new DataReader(socket.InputStream);
-                    _dataReader.InputStreamOptions = InputStreamOptions.Partial; // Читаем пакеты по мере их готовности
-
-                    // Выводим локализованный статус успешного подключения
-                    string statusConnectedBase = _resourceLoader.GetString("StatusConnectedTo");
-                    StatusTextBlock.Text = $"{statusConnectedBase} {_connectedDevice.Name}";
-
-                    InputTextBox.IsEnabled = true;
-                    SendButton.IsEnabled = true;
-
-                    // 5. Запускаем безопасный фоновый поток чтения данных
-                    if (!_isListening)
-                    {
-                        _isListening = true;
-                        _ = ListenForIncomingDataAsync();
-                    }
+                    _allDiscoveredDevices.Add(model);
+                    if (!_uiReady) return;
+                    if (PassesCurrentFilter(model))
+                        Devices.Add(model);
+                    UpdateEmptyState();
                 }
-                catch (Exception ex)
+                catch { }
+            });
+        }
+
+        private void OnDeviceUpdated(DeviceInformationUpdate update)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                try
                 {
-                    StatusTextBlock.Text = _resourceLoader.GetString("StatusConnError");
-                    string errorTitle = _resourceLoader.GetString("MsgConnErrorTitle");
-                    await ShowMessageDialogAsync(errorTitle, ex.Message);
-                    button.IsEnabled = true;
+                    var model = _allDiscoveredDevices.FirstOrDefault(d => d.Id == update.Id);
+                    if (model == null) return;
+
+                    bool nameChanged = false;
+                    if (update.Properties.TryGetValue("System.ItemNameDisplay", out var nameObj) &&
+                        nameObj is string name && !string.IsNullOrWhiteSpace(name))
+                    {
+                        if (!string.Equals(model.Name, name, StringComparison.Ordinal))
+                        {
+                            model.Name = name;
+                            nameChanged = true;
+                        }
+                    }
+
+                    if (update.Properties.TryGetValue("System.Devices.Aep.SignalStrength", out var rssiObj) && rssiObj != null)
+                        model.Rssi = Convert.ToInt32(rssiObj);
+
+                    if (update.Properties.TryGetValue("System.Devices.Aep.DeviceAddress", out var macObj) && macObj != null)
+                    {
+                        string mac = NormalizeMac(macObj.ToString() ?? "");
+                        if (!string.IsNullOrEmpty(mac))
+                            model.MacAddress = mac;
+                    }
+
+                    if (update.Properties.TryGetValue("System.Devices.Aep.IsPaired", out var pairedObj) && pairedObj is bool paired)
+                    {
+                        model.IsPaired = paired;
+                        model.Type = paired
+                            ? ResHelper.Get(_res, "StatusPaired", "Paired")
+                            : ResHelper.Get(_res, "StatusAvailable", "Available");
+                    }
+
+                    model.LastSeen = DateTimeOffset.Now;
+
+                    if (nameChanged && _uiReady)
+                    {
+                        if (PassesCurrentFilter(model) && !Devices.Contains(model))
+                            Devices.Add(model);
+                        else if (!PassesCurrentFilter(model))
+                        {
+                            int idx = Devices.IndexOf(model);
+                            if (idx >= 0) Devices.RemoveAt(idx);
+                        }
+                        UpdateEmptyState();
+                    }
                 }
+                catch { }
+            });
+        }
+
+        private static string NormalizeMac(string mac)
+        {
+            if (string.IsNullOrWhiteSpace(mac)) return "";
+            string hex = mac.Replace("-", "").Replace(":", "").Replace(".", "").Trim().ToUpperInvariant();
+            if (hex.Length != 12 || hex.Any(c => c is < '0' or > '9' and (< 'A' or > 'F')))
+                return mac.Replace("-", ":").Trim().ToUpperInvariant();
+            return string.Join(":", Enumerable.Range(0, 6).Select(i => hex.Substring(i * 2, 2)));
+        }
+
+        private static string TryExtractMacFromId(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return "";
+            var match = System.Text.RegularExpressions.Regex.Match(
+                id, @"([0-9A-Fa-f]{2}[:\-]){5}[0-9A-Fa-f]{2}");
+            return match.Success ? NormalizeMac(match.Value) : "";
+        }
+        private void OnDeviceRemoved(DeviceInformationUpdate update)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                _allDiscoveredDevices.RemoveAll(d => d.Id == update.Id);
+                for (int i = Devices.Count - 1; i >= 0; i--)
+                {
+                    if (Devices[i].Id == update.Id) Devices.RemoveAt(i);
+                }
+                UpdateEmptyState();
+            });
+        }
+
+        private bool PassesCurrentFilter(BluetoothDeviceModel d)
+        {
+            string query = SearchBox?.Text?.Trim() ?? "";
+            string unknown = ResHelper.Get(_res, "UnknownDeviceLabel", "Unknown");
+            bool showUnknown = ShowUnknownToggle?.IsOn ?? true;
+
+            bool namedOk = d.Name != unknown || showUnknown;
+            if (!namedOk) return false;
+            if (string.IsNullOrEmpty(query)) return true;
+            return (d.Name?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                   (d.MacAddress?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false);
+        }
+
+        private void ApplyFilterAndSort()
+        {
+            // SortCombo/ShowUnknownToggle fire during InitializeComponent before EmptyStatePanel exists
+            if (!_uiReady || EmptyStatePanel == null || DeviceListView == null) return;
+
+            IEnumerable<BluetoothDeviceModel> filtered = _allDiscoveredDevices.Where(PassesCurrentFilter);
+
+            filtered = AppSettings.SortMode switch
+            {
+                DeviceSortMode.Name => filtered.OrderByDescending(d => d.IsFavorite).ThenBy(d => d.Name),
+                DeviceSortMode.RecentlySeen => filtered.OrderByDescending(d => d.IsFavorite).ThenByDescending(d => d.LastSeen),
+                _ => filtered.OrderByDescending(d => d.IsFavorite).ThenByDescending(d => d.Rssi ?? -999)
+            };
+
+            var list = filtered.ToList();
+            string? selectedId = (DeviceListView.SelectedItem as BluetoothDeviceModel)?.Id;
+            SyncDeviceList(list);
+            if (selectedId != null)
+                DeviceListView.SelectedItem = Devices.FirstOrDefault(d => d.Id == selectedId);
+            UpdateEmptyState();
+        }
+
+        /// <summary>
+        /// Rebuilds the visible list without Clear() when possible, so existing rows stay in place.
+        /// </summary>
+        private void SyncDeviceList(List<BluetoothDeviceModel> desired)
+        {
+            for (int i = Devices.Count - 1; i >= 0; i--)
+            {
+                if (!desired.Contains(Devices[i]))
+                    Devices.RemoveAt(i);
+            }
+
+            for (int i = 0; i < desired.Count; i++)
+            {
+                var item = desired[i];
+                int current = Devices.IndexOf(item);
+                if (current < 0)
+                    Devices.Insert(Math.Min(i, Devices.Count), item);
+                else if (current != i)
+                    Devices.Move(current, i);
             }
         }
-        // Метод отправки данных
-        private async void SendButton_Click(object sender, RoutedEventArgs e)
+
+        private void UpdateEmptyState()
         {
-            string message = InputTextBox.Text;
-            if (string.IsNullOrWhiteSpace(message) || _dataWriter == null) return;
+            if (EmptyStatePanel == null) return;
+            EmptyStatePanel.Visibility = Devices.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void UpdateTerminalEmptyState()
+        {
+            if (TerminalEmptyState == null) return;
+            bool empty = _log.Entries.Count == 0 && !_session.IsConnected && !_server.IsRunning;
+            TerminalEmptyState.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void ScrollTerminalToEnd()
+        {
+            if (TerminalLogList.Items.Count == 0) return;
+            TerminalLogList.ScrollIntoView(TerminalLogList.Items[^1]);
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => ApplyFilterAndSort();
+
+        private void SortCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_uiReady || _syncingSettings) return;
+            if (SortCombo.SelectedItem is ComboBoxItem item && item.Tag is string tag)
+            {
+                AppSettings.SortMode = tag switch
+                {
+                    "Name" => DeviceSortMode.Name,
+                    "Recent" => DeviceSortMode.RecentlySeen,
+                    _ => DeviceSortMode.Rssi
+                };
+                AppSettings.NotifyChanged();
+                ApplyFilterAndSort();
+            }
+        }
+
+        private void ShowUnknownToggle_Toggled(object sender, RoutedEventArgs e) => ApplyFilterAndSort();
+
+        private void HexToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!_uiReady || _syncingSettings) return;
+            AppSettings.SendAsHex = HexToggle.IsOn;
+            AppSettings.NotifyChanged();
+        }
+
+        private void Favorite_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn || btn.Tag is not string id) return;
+            bool added = FavoritesStore.Toggle(id);
+            if (added) _favorites.Add(id); else _favorites.Remove(id);
+            var model = _allDiscoveredDevices.FirstOrDefault(d => d.Id == id);
+            if (model != null) model.IsFavorite = added;
+            ApplyFilterAndSort();
+        }
+
+        private async void Pair_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn || btn.Tag is not string id) return;
+            btn.IsEnabled = false;
+            try
+            {
+                var info = await DeviceInformation.CreateFromIdAsync(id);
+                if (info == null)
+                {
+                    await DialogHelper.ShowAsync(_res.GetString("MsgConnErrorTitle"), _res.GetString("ErrorDeviceAccess"));
+                    return;
+                }
+
+                if (info.Pairing.IsPaired)
+                {
+                    var result = await info.Pairing.UnpairAsync();
+                    if (result.Status != DeviceUnpairingResultStatus.Unpaired &&
+                        result.Status != DeviceUnpairingResultStatus.AlreadyUnpaired)
+                    {
+                        await DialogHelper.ShowAsync(_res.GetString("PairErrorTitle"), result.Status.ToString());
+                    }
+                }
+                else
+                {
+                    var result = await info.Pairing.PairAsync();
+                    if (result.Status != DevicePairingResultStatus.Paired &&
+                        result.Status != DevicePairingResultStatus.AlreadyPaired)
+                    {
+                        await DialogHelper.ShowAsync(_res.GetString("PairErrorTitle"),
+                            $"{_res.GetString("PairErrorContent")} {result.Status}");
+                    }
+                }
+
+                var model = _allDiscoveredDevices.FirstOrDefault(d => d.Id == id);
+                if (model != null)
+                {
+                    model.IsPaired = info.Pairing.IsPaired;
+                    model.Type = model.IsPaired ? _res.GetString("StatusPaired") : _res.GetString("StatusAvailable");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DialogHelper.ShowAsync(_res.GetString("PairErrorTitle"), ex.Message);
+            }
+            finally
+            {
+                btn.IsEnabled = true;
+            }
+        }
+
+        private async void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button || button.Tag is not string deviceId) return;
+            button.IsEnabled = false;
+            StatusTextBlock.Text = _res.GetString("StatusConnecting");
 
             try
             {
-                // Добавляем перенос строки (стандарт для работы с AT-командами и микроконтроллерами)
-                string messageWithLine = message + "\n";
+                await LoadServicesForDeviceAsync(deviceId);
+                int serviceIndex = ServiceCombo.SelectedIndex >= 0 ? ServiceCombo.SelectedIndex : 0;
 
-                _dataWriter.WriteString(messageWithLine);
-                await _dataWriter.StoreAsync(); // Принудительно отправляем данные в буфер Bluetooth
-                _successfulPacketsCount++; // Увеличиваем счетчик при каждой успешной отправке
-                CheckAndPromptRating();    // Проверяем, не пора ли попросить отзыв
+                await _session.ConnectAsync(deviceId, serviceIndex);
+                AppSettings.LastConnectedDeviceId = deviceId;
+                _pendingReconnectId = deviceId;
 
-                string logOutputPrefix = _resourceLoader.GetString("LogOutput");
-                TerminalLogTextBox.Text += $"{logOutputPrefix}: {message}\n";
+                StatusTextBlock.Text = $"{_res.GetString("StatusConnectedTo")} {_session.ConnectedDeviceName}";
+                UpdateConnectionUi(true);
+                AppendTerminal(TrafficDirection.Info, StatusTextBlock.Text);
+                await RateManager.RegisterMeaningfulEngageAsync();
+            }
+            catch (Exception ex)
+            {
+                _session.Disconnect(silent: true);
+                StatusTextBlock.Text = _res.GetString("StatusConnError");
+                string msg = ex.Message switch
+                {
+                    "device_access" => _res.GetString("ErrorDeviceAccess"),
+                    "no_spp" => _res.GetString("ErrorNoSppProfile"),
+                    _ => ex.Message
+                };
+                await DialogHelper.ShowAsync(_res.GetString("MsgConnErrorTitle"), msg);
+            }
+            finally
+            {
+                button.IsEnabled = true;
+            }
+        }
+
+        private async Task LoadServicesForDeviceAsync(string deviceId)
+        {
+            _serviceItems.Clear();
+            try
+            {
+                using var device = await BluetoothDevice.FromIdAsync(deviceId);
+                if (device == null)
+                {
+                    EnsureDefaultRfcommService();
+                    return;
+                }
+
+                var names = new List<string>();
+                await CollectRfcommNamesAsync(device, names, BluetoothCacheMode.Uncached);
+                if (names.Count == 0)
+                    await CollectRfcommNamesAsync(device, names, BluetoothCacheMode.Cached);
+
+                if (!names.Any(n => n.Contains("SPP", StringComparison.OrdinalIgnoreCase) ||
+                                    n.Contains("Serial", StringComparison.OrdinalIgnoreCase)))
+                {
+                    try
+                    {
+                        var spp = await device.GetRfcommServicesForIdAsync(
+                            RfcommServiceId.SerialPort, BluetoothCacheMode.Cached);
+                        AppendRfcommNames(spp, names);
+                    }
+                    catch { }
+                }
+
+                if (names.Count == 0)
+                {
+                    EnsureDefaultRfcommService();
+                    return;
+                }
+
+                foreach (var name in names)
+                    _serviceItems.Add(name);
+                ServiceCombo.SelectedIndex = 0;
+            }
+            catch
+            {
+                EnsureDefaultRfcommService();
+            }
+        }
+
+        private static async Task CollectRfcommNamesAsync(
+            BluetoothDevice device, List<string> names, BluetoothCacheMode cacheMode)
+        {
+            try
+            {
+                var result = await device.GetRfcommServicesAsync(cacheMode);
+                AppendRfcommNames(result, names);
+            }
+            catch { }
+        }
+
+        private static void AppendRfcommNames(RfcommDeviceServicesResult? result, List<string> names)
+        {
+            if (result?.Services == null) return;
+            foreach (var svc in result.Services)
+            {
+                string name;
+                try
+                {
+                    name = svc.ServiceId == RfcommServiceId.SerialPort
+                        ? ResHelper.Get("ServiceSppDefault", "Serial Port (SPP)")
+                        : svc.ServiceId.AsString();
+                }
+                catch
+                {
+                    name = "RFCOMM";
+                }
+
+                if (names.Any(n => n.EndsWith(name, StringComparison.OrdinalIgnoreCase)))
+                    continue;
+                names.Add($"[{names.Count}] {name}");
+            }
+        }
+
+        private void EnsureDefaultRfcommService()
+        {
+            if (_serviceItems.Count == 0)
+                _serviceItems.Add("[0] " + ResHelper.Get("ServiceSppDefault", "Serial Port (SPP)"));
+            if (ServiceCombo.SelectedIndex < 0 && _serviceItems.Count > 0)
+                ServiceCombo.SelectedIndex = 0;
+        }
+
+        private async void DeviceListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DeviceListView.SelectedItem is BluetoothDeviceModel model && model.CanConnect)
+                await LoadServicesForDeviceAsync(model.Id);
+        }
+
+        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            _pendingReconnectId = null;
+            _ = HandleDisconnectAsync(tryReconnect: false);
+        }
+
+        private async Task HandleDisconnectAsync(bool tryReconnect)
+        {
+            _session.Disconnect(silent: true);
+            UpdateConnectionUi(false);
+            StatusTextBlock.Text = _res.GetString("StatusDisconnected");
+
+            if (tryReconnect && AppSettings.AutoReconnect && !string.IsNullOrEmpty(_pendingReconnectId))
+            {
+                AppendTerminal(TrafficDirection.Info, _res.GetString("StatusReconnecting") ?? "Reconnecting...");
+                await Task.Delay(1500);
+                try
+                {
+                    await _session.ConnectAsync(_pendingReconnectId!, 0);
+                    StatusTextBlock.Text = $"{_res.GetString("StatusConnectedTo")} {_session.ConnectedDeviceName}";
+                    UpdateConnectionUi(true);
+                    AppendTerminal(TrafficDirection.Info, StatusTextBlock.Text);
+                }
+                catch (Exception ex)
+                {
+                    AppendTerminal(TrafficDirection.Info, $"Reconnect failed: {ex.Message}");
+                }
+            }
+        }
+
+        private void UpdateConnectionUi(bool connected)
+        {
+            bool canSend = connected || _server.ClientCount > 0;
+            SendButton.IsEnabled = canSend;
+            DisconnectButton.IsEnabled = connected;
+            ConnectionDot.Fill = ThemeHelper.GetBrush(
+                connected ? "StatusConnectedBrush" : "StatusDisconnectedBrush");
+            ConnectionStatusHub.Set(connected, connected ? _session.ConnectedDeviceName : null);
+            UpdateTerminalEmptyState();
+        }
+
+        private async void SendButton_Click(object sender, RoutedEventArgs e)
+        {
+            string message = InputTextBox.Text;
+            if (string.IsNullOrWhiteSpace(message)) return;
+
+            try
+            {
+                byte[] payload;
+                bool asHex = HexToggle.IsOn || AppSettings.SendAsHex;
+                if (asHex)
+                {
+                    if (!RfcommTerminalSession.TryParseHex(message, out payload))
+                    {
+                        AppendTerminal(TrafficDirection.Info, _res.GetString("ErrorInvalidHex") ?? "Invalid hex");
+                        return;
+                    }
+                }
+                else
+                {
+                    payload = System.Text.Encoding.UTF8.GetBytes(message + AppSettings.GetLineEndingString());
+                }
+
+                if (_session.IsConnected)
+                    await _session.SendAsync(payload);
+                else if (_server.IsRunning)
+                    await _server.BroadcastAsync(asHex ? BitConverter.ToString(payload).Replace("-", " ") : message + AppSettings.GetLineEndingString());
+                else
+                    return;
+
+                CommandPresetStore.PushHistory(message);
+                ReloadHistory();
+                AppendTerminal(TrafficDirection.Tx, message, payload.Length);
                 InputTextBox.Text = string.Empty;
             }
             catch (Exception ex)
             {
-                string logErrorPrefix = _resourceLoader.GetString("LogSendError");
-                TerminalLogTextBox.Text += $"{logErrorPrefix}: {ex.Message}\n";
+                AppendTerminal(TrafficDirection.Info, $"{_res.GetString("LogSendError")}: {ex.Message}");
             }
         }
-        // Отправка по нажатию Enter в поле ввода
+
         private void InputTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 SendButton_Click(this, new RoutedEventArgs());
+                e.Handled = true;
             }
-        }
-        // Асинхронное фоновое чтение входящего потока
-        private async System.Threading.Tasks.Task ListenForIncomingDataAsync()
-        {
-            try
+            else if (e.Key == Windows.System.VirtualKey.Up)
             {
-                while (_isListening && _dataReader != null)
+                if (_history.Count == 0) return;
+                _historyIndex = Math.Min(_history.Count - 1, _historyIndex + 1);
+                InputTextBox.Text = _history[_historyIndex];
+                InputTextBox.SelectionStart = InputTextBox.Text.Length;
+                e.Handled = true;
+            }
+            else if (e.Key == Windows.System.VirtualKey.Down)
+            {
+                if (_historyIndex <= 0)
                 {
-                    // Асинхронно ожидаем данные из Bluetooth-потока (буфер до 1024 байт)
-                    uint bytesRead = await _dataReader.LoadAsync(1024);
-
-                    if (bytesRead > 0)
-                    {
-                        string incomingMessage = _dataReader.ReadString(bytesRead);
-                        _successfulPacketsCount++; // Увеличиваем счетчик при каждом входящем пакете от Arduino
-
-                        // Перенаправляем вывод в UI-поток WinUI 3
-                        DispatcherQueue.TryEnqueue(() =>
-                        {
-                            string logInputPrefix = _resourceLoader.GetString("LogInput");
-                            TerminalLogTextBox.Text += $"{logInputPrefix}: {incomingMessage}";
-                        });
-                    }
+                    _historyIndex = -1;
+                    InputTextBox.Text = "";
                 }
-            }
-            catch (Exception ex)
-            {
-                // Если устройство отключили или пропало питание — корректно обрабатываем обрыв связи
-                DispatcherQueue.TryEnqueue(() =>
+                else
                 {
-                    string logConnLostPrefix = _resourceLoader.GetString("LogConnLost");
-                    TerminalLogTextBox.Text += $"{logConnLostPrefix}: {ex.Message}\n";
-                    StatusTextBlock.Text = _resourceLoader.GetString("StatusDisconnected");
-                    InputTextBox.IsEnabled = false;
-                    SendButton.IsEnabled = false;
-                });
-                _isListening = false;
+                    _historyIndex--;
+                    InputTextBox.Text = _history[_historyIndex];
+                }
+                e.Handled = true;
             }
         }
+
         private async void StartServerButton_Click(object sender, RoutedEventArgs e)
         {
-            // 1. ИСПРАВЛЕНИЕ: Проверяем коммерческую лицензию пользователя
             if (!LicenseManager.IsProUser)
             {
-                // Перед показом окна принудительно обновляем статус лицензии на случай, если покупка уже была сделана
                 await LicenseManager.CheckLicenseAsync();
-
                 if (!LicenseManager.IsProUser)
                 {
-                    // Формируем красивое окно предложения покупки
-                    ContentDialog buyServerDialog = new ContentDialog
+                    var dialog = new ContentDialog
                     {
-                        Title = _resourceLoader.GetString("ServerLockTitle") ?? "PRO Feature",
-                        Content = _resourceLoader.GetString("ServerLockContent"),
-                        PrimaryButtonText = _resourceLoader.GetString("BtnBuyPro") ?? "Buy PRO",
-                        CloseButtonText = _resourceLoader.GetString("Cancel") ?? "Cancel",
-                        XamlRoot = App.MainWindow.Content.XamlRoot // Привязка к визуальному дереву WinUI 3
+                        Title = _res.GetString("ServerLockTitle") ?? "PRO Feature",
+                        Content = _res.GetString("ServerLockContent"),
+                        PrimaryButtonText = _res.GetString("BtnBuyPro") ?? "Buy PRO",
+                        CloseButtonText = _res.GetString("Cancel") ?? "Cancel",
+                        XamlRoot = App.MainWindow.Content.XamlRoot
                     };
-
-                    var dialogResult = await buyServerDialog.ShowAsync();
-
-                    // Если пользователь нажал "Купить PRO"
-                    if (dialogResult == ContentDialogResult.Primary)
-                    {
-                        bool purchaseSuccess = await LicenseManager.RequestPurchaseAsync();
-
-                        if (purchaseSuccess)
-                        {
-                            string successTitle = _resourceLoader.GetString("ProPurchaseSuccessTitle");
-                            string successContent = _resourceLoader.GetString("ProPurchaseSuccessContent");
-                            await ShowMessageDialogAsync(successTitle, successContent);
-                            // Покупка успешна, код идет дальше к запуску сервера!
-                        }
-                        else
-                        {
-                            // Пользователь отменил оплату или произошла ошибка сети
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        // Пользователь просто закрыл окно
-                        return;
-                    }
+                    var result = await dialog.ShowAsync();
+                    if (result != ContentDialogResult.Primary) return;
+                    if (!await LicenseManager.RequestPurchaseAsync()) return;
+                    await DialogHelper.ShowAsync(_res.GetString("ProPurchaseSuccessTitle"), _res.GetString("ProPurchaseSuccessContent"));
+                    await RateManager.RegisterMeaningfulEngageAsync();
                 }
             }
 
-
-            // 2. БАЗОВАЯ ЛОГИКА ЗАПУСКА СЕРВЕРА (Выполняется только для PRO пользователей)
-
-            if (!await CheckBluetoothAvailabilityAsync()) return;
+            if (!await CheckBluetoothAvailabilityAsync(showDialog: true)) return;
 
             try
             {
                 StartServerButton.IsEnabled = false;
-
-                // 1. Создаем провайдер службы RFCOMM со стандартным UUID SerialPort
-                _rfcommProvider = await RfcommServiceProvider.CreateAsync(RfcommServiceId.SerialPort);
-
-                // 2. Создаем сокет-слушатель для входящих соединений
-                _socketListener = new StreamSocketListener();
-                _socketListener.ConnectionReceived += SocketListener_ConnectionReceived;
-
-                // Привязываем слушатель к локальному Bluetooth-имени службы
-                await _socketListener.BindServiceNameAsync(
-                    _rfcommProvider.ServiceId.AsString(),
-                    SocketProtectionLevel.BluetoothEncryptionAllowNullAuthentication);
-
-                // 3. Начинаем трансляцию (Advertising) SDP-записи, чтобы другие устройства увидели наш ПК
-                _rfcommProvider.StartAdvertising(_socketListener);
-
-                _isServerRunning = true;
+                await _server.StartAsync();
                 StopServerButton.IsEnabled = true;
-                ServerStatusTextBlock.Text = _resourceLoader.GetString("StatusServerListening");
-                TerminalLogTextBox.Text += $"[SERVER]: {_resourceLoader.GetString("StatusServerListening")}\n";
+                AppendTerminal(TrafficDirection.Info, $"[SERVER]: {_res.GetString("StatusServerListening")}");
             }
             catch (Exception ex)
             {
                 StartServerButton.IsEnabled = true;
-                await ShowMessageDialogAsync("Server Error", ex.Message);
+                await DialogHelper.ShowAsync(_res.GetString("ServerErrorTitle") ?? "Server Error", ex.Message);
             }
         }
-        // Срабатывает в фоновом потоке, когда внешнее устройство подключается к нашему серверу на ПК
-        private async void SocketListener_ConnectionReceived(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args)
-        {
-            _serverClientSocket = args.Socket;
 
-            // Останавливаем трансляцию, так как клиент уже занял порт (опционально для SPP)
-            _rfcommProvider.StopAdvertising();
-
-            _serverDataWriter = new DataWriter(_serverClientSocket.OutputStream);
-            _serverDataReader = new DataReader(_serverClientSocket.InputStream);
-            _serverDataReader.InputStreamOptions = InputStreamOptions.Partial;
-
-            DispatcherQueue.TryEnqueue(() =>
-            {
-                ServerStatusTextBlock.Text = _resourceLoader.GetString("StatusServerConnected");
-                TerminalLogTextBox.Text += $"[SERVER]: {_resourceLoader.GetString("StatusServerConnected")}\n";
-
-                // Разрешаем отправку данных из ПК обратно подключившемуся клиенту
-                InputTextBox.IsEnabled = true;
-                SendButton.IsEnabled = true;
-            });
-
-            // Запускаем чтение данных от клиента
-            try
-            {
-                while (_isServerRunning && _serverDataReader != null)
-                {
-                    uint bytesRead = await _serverDataReader.LoadAsync(1024);
-                    if (bytesRead > 0)
-                    {
-                        string incomingMessage = _serverDataReader.ReadString(bytesRead);
-
-                        DispatcherQueue.TryEnqueue(() =>
-                        {
-                            string logInput = _resourceLoader.GetString("LogInput");
-                            TerminalLogTextBox.Text += $"[SERVER {logInput}]: {incomingMessage}";
-
-                            // ЭХО-РЕЖИМ для теста: отправляем эти же данные обратно клиенту автоматичеки
-                            _ = EchoServerResponseAsync(incomingMessage);
-                        });
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                DispatcherQueue.TryEnqueue(() =>
-                {
-                    TerminalLogTextBox.Text += $"[SERVER]: Connection lost. {ex.Message}\n";
-                    ServerStatusTextBlock.Text = _resourceLoader.GetString("StatusDisconnected");
-                });
-            }
-        }
-        private async Task EchoServerResponseAsync(string message)
-        {
-            if (_serverDataWriter == null) return;
-            try
-            {
-                _serverDataWriter.WriteString($"ECHO: {message}");
-                await _serverDataWriter.StoreAsync();
-            }
-            catch { }
-        }
         private void StopServerButton_Click(object sender, RoutedEventArgs e)
         {
-            _isServerRunning = false;
-
-            if (_rfcommProvider != null)
-            {
-                try
-                {
-                    // Безопасно останавливаем вещание. 
-                    // Если оно уже было остановлено при подключении клиента, метод просто пропустит этот шаг.
-                    _rfcommProvider.StopAdvertising();
-                }
-                catch (InvalidOperationException)
-                {
-                    // Игнорируем ошибку, если вещание уже было прекращено системой или кодом подключения
-                }
-                _rfcommProvider = null;
-            }
-
-            if (_socketListener != null)
-            {
-                _socketListener.Dispose();
-                _socketListener = null;
-            }
-
-            // Закрываем потоки и сокеты работы с клиентом
-            _serverDataWriter?.Dispose();
-            _serverDataWriter = null;
-
-            _serverDataReader?.Dispose();
-            _serverDataReader = null;
-
-            _serverClientSocket?.Dispose();
-            _serverClientSocket = null;
-
-            // Сбрасываем состояние интерфейса
+            _server.Stop();
             StartServerButton.IsEnabled = true;
             StopServerButton.IsEnabled = false;
-            InputTextBox.IsEnabled = false;
-            SendButton.IsEnabled = false;
-            ServerStatusTextBlock.Text = _resourceLoader.GetString("StatusServerStopped");
-
+            UpdateConnectionUi(_session.IsConnected);
+            ServerStatusTextBlock.Text = _res.GetString("StatusServerStopped");
         }
-        private async Task ShowMessageDialogAsync(string title, string content)
-        {
-            // Безопасно берем XamlRoot главного окна приложения, так как страница находится внутри него
-            if (App.MainWindow?.Content?.XamlRoot == null) return;
 
-            ContentDialog dialog = new ContentDialog
+        private void UpdateServerStatus(string status)
+        {
+            ServerStatusTextBlock.Text = status switch
             {
-                Title = title,
-                Content = content,
-                CloseButtonText = "ОК",
-                XamlRoot = App.MainWindow.Content.XamlRoot // Исправлено получение XamlRoot
+                "listening" => _res.GetString("StatusServerListening"),
+                "connected" => $"{_res.GetString("StatusServerConnected")} ({_server.ClientCount})",
+                "stopped" => _res.GetString("StatusServerStopped"),
+                _ => status
             };
-
-            await dialog.ShowAsync();
+            UpdateConnectionUi(_session.IsConnected);
+            UpdateTerminalEmptyState();
         }
-        private async void RootElement_Loaded(object sender, RoutedEventArgs e)
+
+        private void AppendTerminal(TrafficDirection dir, string message, int bytes = 0)
         {
-            // Отписываемся, чтобы событие не срабатывало повторно
-            if (this.Content is FrameworkElement rootElement)
+            _log.Append(dir, message, bytes);
+        }
+
+        private void RefreshByteCount()
+        {
+            ByteCountText.Text = $"TX {_log.TotalBytesTx} / RX {_log.TotalBytesRx} B";
+        }
+
+        private void ClearLog_Click(object sender, RoutedEventArgs e)
+        {
+            _log.Clear();
+            UpdateTerminalEmptyState();
+        }
+
+        private void CopyLog_Click(object sender, RoutedEventArgs e)
+        {
+            var data = new DataPackage();
+            data.SetText(_log.ToPlainText());
+            Clipboard.SetContent(data);
+        }
+
+        private void ReloadPresets()
+        {
+            _presetChips.Clear();
+            foreach (var p in CommandPresetStore.LoadPresets().Take(8))
+                _presetChips.Add(new PresetChip { Id = p.Id, Name = p.Name });
+        }
+
+        private void ReloadHistory()
+        {
+            _history = CommandPresetStore.LoadHistory();
+            _historyIndex = -1;
+            _syncingHistory = true;
+            try
             {
-                rootElement.Loaded -= RootElement_Loaded;
+                _historyItems.Clear();
+                foreach (var h in _history.Take(20))
+                    _historyItems.Add(h);
+                HistoryCombo.SelectedItem = null;
+            }
+            finally
+            {
+                _syncingHistory = false;
+            }
+        }
+
+        private async void PresetChip_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn || btn.Tag is not string id) return;
+            var preset = CommandPresetStore.LoadPresets().FirstOrDefault(p => p.Id == id);
+            if (preset == null) return;
+            InputTextBox.Text = preset.Payload;
+            HexToggle.IsOn = preset.AsHex;
+            if (_session.IsConnected || _server.ClientCount > 0)
+                SendButton_Click(this, new RoutedEventArgs());
+            await Task.CompletedTask;
+        }
+
+        private async void AddPreset_Click(object sender, RoutedEventArgs e)
+        {
+            var nameBox = new TextBox
+            {
+                PlaceholderText = ResHelper.Get(_res, "PresetNamePlaceholder", "Preset name"),
+                Margin = new Thickness(0, 0, 0, 8)
+            };
+            var payloadBox = new TextBox
+            {
+                PlaceholderText = ResHelper.Get(_res, "PresetPayloadPlaceholder", "Command / payload"),
+                Text = InputTextBox.Text ?? ""
+            };
+            var panel = new StackPanel();
+            panel.Children.Add(nameBox);
+            panel.Children.Add(payloadBox);
+
+            var dialog = new ContentDialog
+            {
+                Title = ResHelper.Get(_res, "AddPresetTitle", "Add preset"),
+                Content = panel,
+                PrimaryButtonText = ResHelper.Get(_res, "DialogOk", "OK"),
+                CloseButtonText = ResHelper.Get(_res, "Cancel", "Cancel"),
+                XamlRoot = App.MainWindow.Content.XamlRoot
+            };
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+
+            string payload = payloadBox.Text?.Trim() ?? "";
+            if (string.IsNullOrEmpty(payload))
+            {
+                await DialogHelper.ShowAsync(
+                    ResHelper.Get(_res, "AddPresetTitle", "Add preset"),
+                    ResHelper.Get(_res, "PresetEmptyMessage", "Enter a command to save as a preset."));
+                return;
             }
 
-            // Теперь вызов абсолютно безопасен
-            await CheckBluetoothAvailabilityAsync();
-        }
-
-
-
-        private void DeviceWatcher_Updated(DeviceWatcher sender, DeviceInformationUpdate deviceUpdate)
-        {
-            // Здесь в будущем (в PRO версии) мы будем обновлять уровень сигнала RSSI "на лету"
-        }
-        private void DeviceWatcher_Removed(DeviceWatcher sender, DeviceInformationUpdate deviceUpdate)
-        {
-            // Удаляем устройство из списка, если оно пропало из эфира
-            DispatcherQueue.TryEnqueue(() =>
+            var presets = CommandPresetStore.LoadPresets();
+            presets.Add(new CommandPreset
             {
-                for (int i = 0; i < Devices.Count; i++)
+                Name = string.IsNullOrWhiteSpace(nameBox.Text) ? payload : nameBox.Text.Trim(),
+                Payload = payload,
+                AsHex = HexToggle.IsOn
+            });
+            CommandPresetStore.SavePresets(presets);
+            ReloadPresets();
+        }
+
+        private async void RunMacro_Click(object sender, RoutedEventArgs e)
+        {
+            if (!LicenseManager.IsProUser)
+            {
+                await LicenseManager.CheckLicenseAsync();
+                if (!LicenseManager.IsProUser)
                 {
-                    if (Devices[i].Id == deviceUpdate.Id)
+                    var dialog = new ContentDialog
                     {
-                        Devices.RemoveAt(i);
-                        break;
-                    }
+                        Title = ResHelper.Get(_res, "ServerLockTitle", "Available in BlueIDE PRO"),
+                        Content = ResHelper.Get(_res, "MacroProOnly", "Command macros require BlueIDE PRO."),
+                        PrimaryButtonText = ResHelper.Get(_res, "BtnBuyPro", "Buy PRO"),
+                        CloseButtonText = ResHelper.Get(_res, "Cancel", "Cancel"),
+                        XamlRoot = App.MainWindow.Content.XamlRoot
+                    };
+                    if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+                    if (!await LicenseManager.RequestPurchaseAsync()) return;
+                    await DialogHelper.ShowAsync(
+                        ResHelper.Get(_res, "ProPurchaseSuccessTitle", "Success!"),
+                        ResHelper.Get(_res, "ProPurchaseSuccessContent", "PRO unlocked."));
+                    await RateManager.RegisterMeaningfulEngageAsync();
                 }
-            });
+            }
+
+            var presets = CommandPresetStore.LoadPresets();
+            if (presets.Count == 0)
+            {
+                await DialogHelper.ShowAsync(
+                    ResHelper.Get(_res, "BtnRunMacro.Content", "Run macro"),
+                    ResHelper.Get(_res, "MacroNoPresets", "Add at least one preset before running a macro."));
+                return;
+            }
+
+            if (!_session.IsConnected && _server.ClientCount == 0)
+            {
+                await DialogHelper.ShowAsync(
+                    ResHelper.Get(_res, "BtnRunMacro.Content", "Run macro"),
+                    ResHelper.Get(_res, "MacroNotConnected", "Connect to a device or start the echo server first."));
+                return;
+            }
+
+            foreach (var p in presets)
+            {
+                InputTextBox.Text = p.Payload;
+                HexToggle.IsOn = p.AsHex;
+                SendButton_Click(this, new RoutedEventArgs());
+                if (p.DelayMs > 0) await Task.Delay(p.DelayMs);
+                else await Task.Delay(200);
+            }
         }
 
-        private void DeviceWatcher_EnumerationCompleted(DeviceWatcher sender, object args)
+        private void HistoryCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Первый быстрый опрос завершен (но watcher продолжает искать новые устройства)
-            DispatcherQueue.TryEnqueue(() =>
+            if (_syncingHistory) return;
+            if (HistoryCombo.SelectedItem is string s)
+                InputTextBox.Text = s;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (_uiReady)
             {
+                SyncConnectionHub();
+                _ = TryShowDevicesTourAsync();
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            // Keep RFCOMM session and server alive while the page is cached.
+            // Pause discovery only to reduce background work.
+            if (_watcher.IsRunning)
+            {
+                _watcher.Stop(unsubscribe: false);
                 ScanProgress.IsActive = false;
-            });
+                ScanButton.Content = _res.GetString("ScanButtonStart") ?? "Scan";
+            }
+            base.OnNavigatedFrom(e);
         }
 
-        private void DeviceWatcher_Stopped(DeviceWatcher sender, object args)
+        public void ApplyDemoScene(string sceneFileName)
         {
-            // Срабатывает при полной остановке сканирования
-            DispatcherQueue.TryEnqueue(() =>
+            ClearBluetoothUnavailable();
+
+            string btnConnect = ResHelper.Get(_res, "BtnConnect", "Connect");
+            string statusAvailable = ResHelper.Get(_res, "StatusAvailable", "Available");
+            string statusPaired = ResHelper.Get(_res, "StatusPaired", "Paired");
+
+            _allDiscoveredDevices.Clear();
+            Devices.Clear();
+            _log.Clear();
+
+            var demoDevices = new[]
             {
-                ScanProgress.IsActive = false;
-                ScanButton.Content = _resourceLoader.GetString("ScanButtonStart") ?? "Scan";
-            });
-        }
-        // Срабатывает, когда найдено новое устройство в эфире
+                new BluetoothDeviceModel
+                {
+                    Id = "demo-esp32", Name = "ESP32-Weather-Node", BluetoothType = "BLE",
+                    MacAddress = "34:94:70:AA:BB:CC", Type = statusAvailable, Rssi = -41,
+                    ConnectButtonText = btnConnect, CanConnect = true, IsFavorite = true, BatteryLevel = 87
+                },
+                new BluetoothDeviceModel
+                {
+                    Id = "demo-arduino", Name = "Arduino-Robot-Arm", BluetoothType = "Classic",
+                    MacAddress = "00:14:03:05:5A:11", Type = statusPaired, Rssi = -55,
+                    ConnectButtonText = btnConnect, CanConnect = true, IsPaired = true, IsFavorite = true
+                },
+                new BluetoothDeviceModel
+                {
+                    Id = "demo-nrf", Name = "nRF52840-DK", BluetoothType = "BLE",
+                    MacAddress = "D0:B5:C2:11:22:33", Type = statusAvailable, Rssi = -62,
+                    ConnectButtonText = btnConnect, CanConnect = true, BatteryLevel = 64
+                },
+                new BluetoothDeviceModel
+                {
+                    Id = "demo-hm10", Name = "HM-10-UART", BluetoothType = "BLE",
+                    MacAddress = "A4:C1:38:9F:01:02", Type = statusAvailable, Rssi = -73,
+                    ConnectButtonText = btnConnect, CanConnect = true
+                },
+                new BluetoothDeviceModel
+                {
+                    Id = "demo-hc05", Name = "HC-05-SPP", BluetoothType = "Classic",
+                    MacAddress = "98:D3:31:F5:A0:10", Type = statusPaired, Rssi = -68,
+                    ConnectButtonText = btnConnect, CanConnect = true, IsPaired = true
+                },
+                new BluetoothDeviceModel
+                {
+                    Id = "demo-pixel", Name = "Pixel Buds", BluetoothType = "BLE",
+                    MacAddress = "B8:27:EB:DE:AD:01", Type = statusAvailable, Rssi = -81,
+                    ConnectButtonText = btnConnect, CanConnect = false, BatteryLevel = 42
+                },
+            };
 
-        private void DeviceWatcher_Added(DeviceWatcher sender, DeviceInformation device)
-        {
-            DispatcherQueue.TryEnqueue(() =>
+            foreach (var d in demoDevices)
+                _allDiscoveredDevices.Add(d);
+            ApplyFilterAndSort();
+
+            // In-memory presets (do not overwrite user store)
+            _presetChips.Clear();
+            _presetChips.Add(new PresetChip { Id = "d1", Name = "AT" });
+            _presetChips.Add(new PresetChip { Id = "d2", Name = "STATUS" });
+            _presetChips.Add(new PresetChip { Id = "d3", Name = "0x01 0xFF" });
+            _presetChips.Add(new PresetChip { Id = "d4", Name = "PING" });
+
+            bool hex = sceneFileName.StartsWith("03-", StringComparison.Ordinal);
+            HexToggle.IsOn = hex;
+            InputTextBox.Text = hex ? "01 03 00 00 00 0A" : "STATUS";
+            InputTextBox.IsEnabled = true;
+            SendButton.IsEnabled = true;
+
+            bool serverScene = sceneFileName.StartsWith("05-", StringComparison.Ordinal);
+            if (serverScene)
             {
-                // 1. Проверяем, нет ли уже устройства с таким ID в нашем основном кэше
-                foreach (var existingDevice in _allDiscoveredDevices)
-                {
-                    if (existingDevice.Id == device.Id) return;
-                }
-
-                bool hasName = !string.IsNullOrEmpty(device.Name);
-                string deviceName = hasName ? device.Name : _resourceLoader.GetString("UnknownDeviceLabel");
-
-                // Определяем тип (Classic или BLE)
-                string bType = device.Id.Contains("BluetoothLE") ? "BLE" : "Classic";
-
-                // Извлекаем MAC-адрес
-                string mac = "";
-                if (device.Properties.TryGetValue("System.Devices.Aep.DeviceAddress", out var macObj) && macObj != null)
-                {
-                    mac = macObj.ToString();
-                }
-
-                // Извлекаем RSSI
-                int? rssiValue = null;
-                if (device.Properties.TryGetValue("System.Devices.Aep.SignalStrength", out var rssiObj) && rssiObj != null)
-                {
-                    rssiValue = Convert.ToInt32(rssiObj);
-                }
-
-                bool isPaired = device.Pairing.IsPaired;
-                string deviceStatus = isPaired
-                    ? _resourceLoader.GetString("StatusPaired")
-                    : _resourceLoader.GetString("StatusAvailable");
-
-                string subTitle = hasName ? deviceStatus : $"{deviceStatus} ({mac})";
-
-                // Создаем новую модель устройства
-                var newDevice = new BluetoothDeviceModel
-                {
-                    Name = deviceName,
-                    Id = device.Id,
-                    BluetoothType = bType,
-                    MacAddress = mac,
-                    Type = subTitle,
-                    Rssi = rssiValue,
-                     ConnectButtonText = _resourceLoader.GetString("BtnConnect") ?? "Connect"
-                };
-
-                // 2. Всегда сохраняем устройство в наш скрытый кэш
-                _allDiscoveredDevices.Add(newDevice);
-
-                // 3. На экран выводим только если оно с именем ИЛИ если включен тумблер
-                if (hasName || ShowUnknownToggle.IsOn)
-                {
-                    Devices.Add(newDevice);
-                }
-            });
-        }
-
-        private void ShowUnknownToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (sender is ToggleSwitch toggle)
+                UpdateServerStatus("connected");
+                StartServerButton.IsEnabled = false;
+                StopServerButton.IsEnabled = true;
+                AppendTerminal(TrafficDirection.Info, "[SERVER]: " + (ResHelper.Get(_res, "StatusServerListening", "Listening")));
+                AppendTerminal(TrafficDirection.Info, "[SERVER] Client 1 connected (total 1)");
+                AppendTerminal(TrafficDirection.Rx, "[SERVER 1] PING", 4);
+                AppendTerminal(TrafficDirection.Tx, "PONG", 4);
+                StatusTextBlock.Text = ResHelper.Get(_res, "StatusDisconnected", "Disconnected");
+                DisconnectButton.IsEnabled = false;
+                ConnectionDot.Fill = ThemeHelper.GetBrush("StatusDisconnectedBrush");
+                ConnectionStatusHub.Clear();
+            }
+            else
             {
-                string unknownLabel = _resourceLoader.GetString("UnknownDeviceLabel");
+                StartServerButton.IsEnabled = true;
+                StopServerButton.IsEnabled = false;
+                UpdateServerStatus("stopped");
 
-                if (toggle.IsOn)
+                string connectedTo = ResHelper.Get(_res, "StatusConnectedTo", "Connected to");
+                StatusTextBlock.Text = $"{connectedTo} ESP32-Weather-Node";
+                DisconnectButton.IsEnabled = true;
+                ConnectionDot.Fill = ThemeHelper.GetBrush("StatusConnectedBrush");
+                ConnectionStatusHub.Set(true, "ESP32-Weather-Node");
+
+                AppendTerminal(TrafficDirection.Info, StatusTextBlock.Text);
+                if (hex)
                 {
-                    // Если включили: добавляем на экран из кэша те устройства, которых там еще нет
-                    foreach (var device in _allDiscoveredDevices)
-                    {
-                        if (device.Name == unknownLabel && !Devices.Contains(device))
-                        {
-                            Devices.Add(device);
-                        }
-                    }
+                    AppendTerminal(TrafficDirection.Tx, "01 03 00 00 00 0A", 6);
+                    AppendTerminal(TrafficDirection.Rx, "01 03 14 00 64 00 C8", 7);
+                    AppendTerminal(TrafficDirection.Tx, "01 FF AA 55", 4);
+                    AppendTerminal(TrafficDirection.Rx, "ACK 55 AA", 6);
                 }
                 else
                 {
-                    // Если выключили: мгновенно убираем с экрана все безымянные устройства
-                    for (int i = Devices.Count - 1; i >= 0; i--)
-                    {
-                        if (Devices[i].Name == unknownLabel)
-                        {
-                            Devices.RemoveAt(i);
-                        }
-                    }
+                    AppendTerminal(TrafficDirection.Tx, "STATUS", 6);
+                    AppendTerminal(TrafficDirection.Rx, "OK temp=23.4 humidity=41", 24);
+                    AppendTerminal(TrafficDirection.Tx, "AT+NAME?", 8);
+                    AppendTerminal(TrafficDirection.Rx, "+NAME:ESP32-Weather-Node", 24);
                 }
             }
+
+            if (sceneFileName.StartsWith("02-", StringComparison.Ordinal))
+            {
+                ScanProgress.IsActive = true;
+                ScanButton.Content = ResHelper.Get(_res, "ScanButtonStop", "Stop");
+            }
+            else
+            {
+                ScanProgress.IsActive = false;
+                ScanButton.Content = ResHelper.Get(_res, "ScanButtonStart", "Scan");
+            }
+
+            RefreshByteCount();
+            UpdateTerminalEmptyState();
         }
 
         public void LoadDemoDataForScreenshots(int step)
-        {
-            Devices.Clear();
-            _allDiscoveredDevices.Clear();
-
-            string btnText = _resourceLoader.GetString("BtnConnect") ?? "Connect";
-
-            if (step == 1)
-            {
-                // 📸 СКРИНШОТ 1: Лавина устройств вокруг и активный Радар
-                StatusTextBlock.Text = _resourceLoader.GetString("StatusDisconnected");
-                InputTextBox.IsEnabled = false;
-                SendButton.IsEnabled = false;
-                TerminalLogTextBox.Text = string.Empty;
-                ServerStatusTextBlock.Text = string.Empty;
-
-                Devices.Add(new BluetoothDeviceModel { Name = "ESP32-Weather-Node", BluetoothType = "BLE", MacAddress = "34:94:70:AA:BB:CC", Type = _resourceLoader.GetString("StatusAvailable"), Rssi = -41, ConnectButtonText = btnText });
-                Devices.Add(new BluetoothDeviceModel { Name = "Arduino-Robot-Arm", BluetoothType = "Classic", MacAddress = "00:14:03:05:5A:11", Type = _resourceLoader.GetString("StatusPaired"), Rssi = -55, ConnectButtonText = btnText });
-                Devices.Add(new BluetoothDeviceModel { Name = "PulseOximeter-Pro", BluetoothType = "BLE", MacAddress = "E7:2C:48:91:04:7F", Type = _resourceLoader.GetString("StatusAvailable"), Rssi = -68, ConnectButtonText = btnText });
-                Devices.Add(new BluetoothDeviceModel { Name = "STM32-CNC-Controller", BluetoothType = "Classic", MacAddress = "00:80:E1:14:BC:99", Type = _resourceLoader.GetString("StatusPaired"), Rssi = -74, ConnectButtonText = btnText });
-                Devices.Add(new BluetoothDeviceModel { Name = "Smart-Glow-Lamp", BluetoothType = "BLE", MacAddress = "A4:C1:38:D2:11:55", Type = _resourceLoader.GetString("StatusAvailable"), Rssi = -82, ConnectButtonText = btnText });
-                Devices.Add(new BluetoothDeviceModel { Name = _resourceLoader.GetString("UnknownDeviceLabel"), BluetoothType = "BLE", MacAddress = "7C:2A:DB:88:43:21", Type = _resourceLoader.GetString("StatusAvailable"), Rssi = -89, ConnectButtonText = btnText });
-                Devices.Add(new BluetoothDeviceModel { Name = "Beacon-Navigator-X", BluetoothType = "BLE", MacAddress = "FF:EE:DD:CC:BB:AA", Type = _resourceLoader.GetString("StatusAvailable"), Rssi = -95, ConnectButtonText = btnText });
-            }
-            else if (step == 2)
-            {
-                // 📸 СКРИНШОТ 2: Интенсивный двунаправленный обмен данными (Терминал)
-                // Имитируем, что мы подключены к Робо-руке и управляем сервоприводами
-                StatusTextBlock.Text = $"{_resourceLoader.GetString("StatusConnectedTo")} Arduino-Robot-Arm";
-                InputTextBox.IsEnabled = true;
-                SendButton.IsEnabled = true;
-                ServerStatusTextBlock.Text = string.Empty;
-
-                // Наполняем левый список сопряженными устройствами, чтобы экран не пустовал
-                Devices.Add(new BluetoothDeviceModel { Name = "Arduino-Robot-Arm", BluetoothType = "Classic", MacAddress = "00:14:03:05:5A:11", Type = _resourceLoader.GetString("StatusPaired"), Rssi = -48, ConnectButtonText = btnText });
-                Devices.Add(new BluetoothDeviceModel { Name = "STM32-CNC-Controller", BluetoothType = "Classic", MacAddress = "00:80:E1:14:BC:99", Type = _resourceLoader.GetString("StatusPaired"), Rssi = -72, ConnectButtonText = btnText });
-
-                var logOutput = _resourceLoader.GetString("LogOutput") ?? "[OUTPUT]";
-                var logInput = _resourceLoader.GetString("LogInput") ?? "[INPUT]";
-
-                TerminalLogTextBox.Text =
-                    $"{logOutput}: INIT_SERIAL_SPP\n" +
-                    $"{logInput}: AT_BPS_115200_OK\n" +
-                    $"{logOutput}: SET_MOTOR_X=145\n" +
-                    $"{logInput}: MOTOR_X_ACK_POSITION=145\n" +
-                    $"{logOutput}: GET_ANALOG_SENSORS\n" +
-                    $"{logInput}: A0=1024;A1=512;A2=0;PRESSURE_METER=84%\n" +
-                    $"{logOutput}: SYSTEM_STATUS_CHECK\n" +
-                    $"{logInput}: STATUS=OPERATIONAL;VOLTAGE=4.98V;TEMP=32.4C\n" +
-                    $"{logOutput}: SET_MOTOR_Y=90\n" +
-                    $"{logInput}: MOTOR_Y_ACK_POSITION=90\n" +
-                    $"{logOutput}: STREAM_TELEMETRY_START\n" +
-                    $"{logInput}: [RAW_DATA] 0xFF 0xAA 0x01 0x23 0x45 0x00 0x1A\n";
-            }
-            else if (step == 3)
-            {
-                // 📸 СКРИНШОТ 3: Мощный локальный Bluetooth-Сервер (PRO)
-                // Имитируем, что наш ПК развернул сервер и к нему успешно прицепилась внешняя плата
-                StatusTextBlock.Text = _resourceLoader.GetString("StatusDisconnected");
-                ServerStatusTextBlock.Text = _resourceLoader.GetString("StatusServerConnected") ?? "Server: Client Connected!";
-                InputTextBox.IsEnabled = true;
-                SendButton.IsEnabled = true;
-
-                Devices.Add(new BluetoothDeviceModel { Name = "Arduino-Robot-Arm", BluetoothType = "Classic", MacAddress = "00:14:03:05:5A:11", Type = _resourceLoader.GetString("StatusPaired"), Rssi = -50, ConnectButtonText = btnText });
-
-                var logInput = _resourceLoader.GetString("LogInput") ?? "[INPUT]";
-
-                TerminalLogTextBox.Text =
-                    $"[SERVER]: {_resourceLoader.GetString("StatusServerListening")}\n" +
-                    $"[SERVER]: {_resourceLoader.GetString("StatusServerConnected")}\n" +
-                    $"[SERVER {logInput}]: CLIENT_HELLO_IDENTITY: REMOTE_CONTROLLER_v2\n" +
-                    $"[SERVER {logInput}]: REQ_FIRMWARE_VERSION\n" +
-                    $"[SERVER]: ECHO RESPONSE SENT -> BlueIDE_v1.0.0_WinUI3\n" +
-                    $"[SERVER {logInput}]: MAVLINK_PACKET_RECEIVED: ID=42;LEN=16\n" +
-                    $"[SERVER {logInput}]: PING_HEARTBEAT\n" +
-                    $"[SERVER]: ECHO RESPONSE SENT -> PONG_HEARTBEAT_ACK\n";
-            }
-        }
-        // Счетчик успешных пакетов для вызова оценки
-        private int _successfulPacketsCount = 0;
-        private bool _ratingPromptedThisSession = false;
-
-        private void CheckAndPromptRating()
-        {
-            // Если в этой сессии еще не просили и набралось 20 успешных транзакций
-            if (!_ratingPromptedThisSession && _successfulPacketsCount >= 1)
-            {
-                _ratingPromptedThisSession = true;
-
-                // Запускаем асинхронный вызов окна во вспомогательном потоке UI
-                DispatcherQueue.TryEnqueue(async () =>
-                {
-                    // Небольшая пауза в 2 секунды, чтобы пользователь успел дочитать свой лог
-                    await System.Threading.Tasks.Task.Delay(2000);
-                    await RateManager.PromptRatingAsync();
-                });
-            }
-        }
+            => ApplyDemoScene(step <= 1 ? "01-devices-terminal.png" : "02-ble-scan.png");
     }
 }
+
+
+
+
+
+
+
+
+

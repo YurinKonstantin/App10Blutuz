@@ -1,31 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 
 namespace BluetoothManager
 {
-    // Модель для GATT-Сервиса (Левая колонка)
     public class BleServiceModel
     {
-        public string Name { get; set; }        // Имя сервиса (например, Device Information)
-        public string Uuid { get; set; }        // Полный GUID / UUID сервиса
-        public GattDeviceService Service { get; set; } // Ссылка на сам системный объект
+        public string Name { get; set; } = "";
+        public string Uuid { get; set; } = "";
+        public GattDeviceService? Service { get; set; }
+        public ObservableCollection<BleCharacteristicModel> Characteristics { get; } = new();
         public string DisplayText => $"{Name}\n{Uuid}";
+        public override string ToString() => Name;
     }
 
-    // Модель для GATT-Характеристики (Правая колонка)
     public class BleCharacteristicModel : INotifyPropertyChanged
     {
-        private string _value;
-        public string Name { get; set; }        // Имя характеристики (например, Battery Level)
-        public string Uuid { get; set; }        // UUID характеристики
-        public string Properties { get; set; }  // Права доступа (Read, Write, Notify)
-                                                // Добавляем полноценное свойство с уведомлением интерфейса
+        private string _value = "";
+        private bool _isSubscribed;
+
+        public string Name { get; set; } = "";
+        public string Uuid { get; set; } = "";
+        public string Properties { get; set; } = "";
         public string Value
         {
             get => _value;
@@ -34,17 +32,55 @@ namespace BluetoothManager
                 if (_value != value)
                 {
                     _value = value;
-                    OnPropertyChanged(); // Мгновенно обновляет текст в XAML карточке!
+                    OnPropertyChanged();
                 }
             }
         }
-        public GattCharacteristic Characteristic { get; set; } // Ссылка на объект системы
-                                                               // Реализация интерфейса для динамического обновления UI
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+
+        public bool IsSubscribed
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            get => _isSubscribed;
+            set
+            {
+                _isSubscribed = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(SubscribeButtonText));
+            }
         }
 
+        public string SubscribeButtonText => IsSubscribed
+            ? ResHelper.Get("BtnUnsubscribe", "Unsubscribe")
+            : ResHelper.Get("BtnSubscribe.Content", "Subscribe");
+
+        public bool CanRead { get; set; }
+        public bool CanWrite { get; set; }
+        public bool CanNotify { get; set; }
+
+        public GattCharacteristic? Characteristic { get; set; }
+        public ObservableCollection<BleDescriptorModel> Descriptors { get; } = new();
+
+        public override string ToString() => Name;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    public class BleDescriptorModel : INotifyPropertyChanged
+    {
+        private string _value = "";
+
+        public string Name { get; set; } = "";
+        public string Uuid { get; set; } = "";
+        public string Value
+        {
+            get => _value;
+            set { _value = value; OnPropertyChanged(); }
+        }
+        public GattDescriptor? Descriptor { get; set; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

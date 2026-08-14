@@ -1,28 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.Services.Store;
 using WinRT.Interop;
 
 namespace BluetoothManager
 {
+    public enum ProAccessKind
+    {
+        Free = 0,
+        Trial = 1,
+        Purchased = 2
+    }
+
     public static class LicenseManager
     {
         private static StoreContext _storeContext;
-        // Тестовый или реальный Store ID вашей надстройки из Microsoft Partner Center
         private const string ProStoreId = "9NF72H80049N";
-        // Для тестирования до публикации вы можете вручную выставить true, 
-        // чтобы проверить работу самого Анализатора без реальной оплаты!
-        public static bool IsProUser { get; private set; } = false;
+        public const int TrialDurationDays = 14;
+
+        public static bool IsProUser { get; private set; }
+        public static ProAccessKind AccessKind { get; private set; } = ProAccessKind.Free;
+        public static int TrialDaysRemaining { get; private set; }
+        public static bool IsTrialActive => AccessKind == ProAccessKind.Trial;
+        public static bool IsTrialExpired =>
+            AccessKind == ProAccessKind.Free && !string.IsNullOrEmpty(AppSettings.TrialStartedUtc);
 
         private static void InitializeContext()
         {
             if (_storeContext == null)
             {
                 _storeContext = StoreContext.GetDefault();
-                // Важно для WinUI 3: привязываем контекст магазина к главному окну
                 var windowHandle = WindowNative.GetWindowHandle(App.MainWindow);
                 InitializeWithWindow.Initialize(_storeContext, windowHandle);
             }
@@ -35,17 +43,20 @@ namespace BluetoothManager
                 InitializeContext();
                 StoreAppLicense appLicense = await _storeContext.GetAppLicenseAsync();
 
-                if (appLicense != null && appLicense.AddOnLicenses.TryGetValue(ProStoreId, out var license))
+                if (appLicense != null &&
+                    appLicense.AddOnLicenses.TryGetValue(ProStoreId, out var license) &&
+                    license.IsActive)
                 {
-                    IsProUser = license.IsActive;
+                    ApplyPurchased();
                     return;
                 }
-                IsProUser = false; // По умолчанию
             }
             catch
             {
-                IsProUser = false;
+                // Offline / Store errors must not wipe an active trial.
             }
+
+            ApplyTrialOrFree();
         }
 
         public static async Task<bool> RequestPurchaseAsync()
@@ -58,7 +69,7 @@ namespace BluetoothManager
                 if (result.Status == StorePurchaseStatus.Succeeded ||
                     result.Status == StorePurchaseStatus.AlreadyPurchased)
                 {
-                    IsProUser = true;
+                    ApplyPurchased();
                     return true;
                 }
                 return false;
@@ -68,7 +79,60 @@ namespace BluetoothManager
                 return false;
             }
         }
+
+        private static void ApplyPurchased()
+        {
+            AccessKind = ProAccessKind.Purchased;
+            IsProUser = true;
+            TrialDaysRemaining = 0;
+        }
+
+        private static void ApplyTrialOrFree()
+        {
+            EnsureTrialStarted();
+
+            if (!TryGetTrialStart(out DateTimeOffset start))
+            {
+                AccessKind = ProAccessKind.Free;
+                IsProUser = false;
+                TrialDaysRemaining = 0;
+                return;
+            }
+
+            var end = start.AddDays(TrialDurationDays);
+            var remaining = (end - DateTimeOffset.UtcNow).TotalDays;
+
+            if (remaining > 0)
+            {
+                AccessKind = ProAccessKind.Trial;
+                IsProUser = true;
+                TrialDaysRemaining = Math.Max(1, (int)Math.Ceiling(remaining));
+            }
+            else
+            {
+                AccessKind = ProAccessKind.Free;
+                IsProUser = false;
+                TrialDaysRemaining = 0;
+            }
+        }
+
+        private static void EnsureTrialStarted()
+        {
+            if (!string.IsNullOrEmpty(AppSettings.TrialStartedUtc))
+                return;
+
+            AppSettings.TrialStartedUtc = DateTimeOffset.UtcNow.ToString("o", CultureInfo.InvariantCulture);
+        }
+
+        private static bool TryGetTrialStart(out DateTimeOffset start)
+        {
+            start = default;
+            string raw = AppSettings.TrialStartedUtc;
+            if (string.IsNullOrEmpty(raw))
+                return false;
+
+            return DateTimeOffset.TryParse(raw, CultureInfo.InvariantCulture,
+                DateTimeStyles.RoundtripKind, out start);
+        }
     }
-
-
 }

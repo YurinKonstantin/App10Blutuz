@@ -54,6 +54,8 @@
     <None Remove="AnalyzerPage.xaml" />
     <None Remove="Assets\appicon.ico" />
     <None Remove="DevicesPage.xaml" />
+    <None Remove="SettingsPage.xaml" />
+    <None Remove="Styles.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,6 +87,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="DevicesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

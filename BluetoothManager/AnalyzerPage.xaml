@@ -6,132 +6,218 @@
     xmlns:local="using:BluetoothManager"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Required">
 
-    <Grid Padding="30">
-      
-        <!-- СЛОЙ 1: ЭКРАН ПРОДАЖИ (Показывается, если НЕ куплено) -->
-        <StackPanel x:Name="PurchasePanel" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" MaxWidth="500" Visibility="Collapsed">
-            <!-- Иконка и Главные заголовки -->
-            <FontIcon Glyph="&#xEB4A;" FontSize="60" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-            <TextBlock x:Uid="AnalyzerTitle" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-            <TextBlock x:Uid="AnalyzerSubtitle" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" TextAlignment="Center"/>
-
-            <!-- Карточка с объяснением причин блокировки и преимуществ PRO -->
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
-            BorderThickness="1" 
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-            CornerRadius="8" 
-            Padding="16" 
-            Margin="0,10,0,10">
-                <StackPanel Spacing="10">
-                    <!-- Текст-предупреждение о бесплатной версии -->
-                    <TextBlock x:Uid="AnalyzerPromoText" FontSize="13" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
-
-                    <!-- Список PRO возможностей -->
-                    <StackPanel Spacing="4" Margin="0,5,0,0">
-                        <TextBlock x:Uid="AnalyzerFeature1" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                        <TextBlock x:Uid="AnalyzerFeature2" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                        <TextBlock x:Uid="AnalyzerFeature3" FontSize="13" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+    <Page.Resources>
+        <DataTemplate x:Key="BleDeviceItemTemplate" x:DataType="local:BluetoothDeviceModel">
+            <Border Style="{StaticResource DeviceCardBorderCompactStyle}">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Spacing="0" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" FontWeight="SemiBold" FontSize="13"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   TextTrimming="CharacterEllipsis">
+                            <Run Text="{x:Bind MacAddress}"/>
+                            <Run Text=" · BLE"/>
+                        </TextBlock>
                     </StackPanel>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0" Spacing="2">
+                        <TextBlock Text="{x:Bind RssiString, Mode=OneWay}" FontSize="11" FontWeight="SemiBold"
+                                   HorizontalAlignment="Right"/>
+                        <TextBlock Text="{x:Bind BatteryString, Mode=OneWay}" FontSize="10"
+                                   Visibility="{x:Bind HasBattery, Mode=OneWay}"
+                                   Foreground="{ThemeResource BrandAccentBrush}"
+                                   HorizontalAlignment="Right"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Padding="12" RowDefinitions="Auto,*">
+        <Border x:Name="TrialBanner" Visibility="Collapsed"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="0,0,0,8">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="2" VerticalAlignment="Center">
+                    <TextBlock x:Name="TrialBannerTitleText" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="TrialBannerMessageText" TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                </StackPanel>
+                <Button x:Name="TrialBuyButton" Grid.Column="1" Margin="12,0,0,0"
+                        VerticalAlignment="Center" Style="{StaticResource AccentButtonStyle}"
+                        Click="TrialInfoBar_BuyClick"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+        <StackPanel x:Name="PurchasePanel" VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Spacing="16" MaxWidth="520" Visibility="Collapsed">
+            <FontIcon Glyph="&#xEB4A;" FontSize="60" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <TextBlock x:Name="PurchaseTitle" x:Uid="AnalyzerTitle" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="PurchaseSubtitle" x:Uid="AnalyzerSubtitle" FontSize="14"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap"/>
+            <Border Style="{StaticResource PanelCardStyle}" Padding="16">
+                <StackPanel Spacing="8">
+                    <TextBlock x:Name="AnalyzerPromoTextBlock" x:Uid="AnalyzerPromoText" FontSize="13" TextWrapping="Wrap"/>
+                    <TextBlock x:Uid="AnalyzerFeature1" FontSize="13" FontWeight="SemiBold"
+                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                    <TextBlock x:Uid="AnalyzerFeature2" FontSize="13" FontWeight="SemiBold"
+                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                    <TextBlock x:Uid="AnalyzerFeature3" FontSize="13" FontWeight="SemiBold"
+                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
                 </StackPanel>
             </Border>
-
-            <!-- Кнопка покупки -->
-            <Button x:Name="UnlockProButton" x:Uid="UnlockProButton" Click="UnlockProButton_Click" 
-            Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Center" Height="40" Padding="32,0,32,0"/>
+            <Button x:Name="UnlockProButton" x:Uid="UnlockProButton" Click="UnlockProButton_Click"
+                    Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Center" Height="40" Padding="32,0"/>
         </StackPanel>
 
-        <!-- СЛОЙ 2: РАБОЧИЙ АНАЛИЗАТОР LE (Разблокируется после покупки) -->
-        <Grid x:Name="AnalyzerPanel" Visibility="Collapsed" RowDefinitions="Auto, Auto, *">
-            <!-- Заголовок -->
-            <TextBlock x:Name="AnalyzerTitle"  FontSize="22" FontWeight="Bold" Margin="0,0,0,10"/>
+        <Grid x:Name="AnalyzerPanel" Visibility="Collapsed" RowDefinitions="Auto,*,Auto">
+            <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,12">
+                <TextBox x:Name="FilterBox" x:Uid="BleFilterBox" TextChanged="FilterBox_TextChanged"/>
+                <Button x:Name="ScanBleButton" Grid.Column="1" x:Uid="BtnScanBle" Click="ScanBleButton_Click"
+                        Style="{StaticResource AccentButtonStyle}" Margin="8,0,0,0"/>
+                <ProgressRing x:Name="AnalyzerProgress" Grid.Column="2" IsActive="False" Width="20" Height="20" Margin="8,0,0,0"/>
+            </Grid>
 
-            <!-- Панель выбора BLE устройства -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12" Margin="0,0,0,20">
-                <ComboBox x:Name="BleDeviceComboBox" SelectionChanged="BleDeviceComboBox_SelectionChanged" PlaceholderText="Выберите BLE устройство..." Width="250" DisplayMemberPath="Name"/>
-                <Button x:Name="ScanBleButton" x:Uid="BtnScanBle" Click="ScanBleButton_Click" Style="{StaticResource AccentButtonStyle}"/>
-                <ProgressRing x:Name="AnalyzerProgress" IsActive="False" Width="20" Height="20"/>
-            </StackPanel>
-
-            <!-- Двухколоночный инспектор -->
-
-            <Grid Grid.Row="2" ColumnDefinitions="*, 1.5*" >
-                <Border Grid.Column="0" 
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
-            BorderThickness="1" 
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-            CornerRadius="8" 
-            Margin="0,0,8,0" 
-            Padding="12">
-                    <Grid RowDefinitions="Auto, *">
-                        <TextBlock x:Name="AnalyzerHeader" FontSize="14" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Margin="4,0,0,12"/>
-                   
-
-                            <!--ЛЕВАЯ КОЛОНКА: Список GATT-сервисов-->
-                        <ListView x:Name="ServicesListView" Grid.Row="1"
-                  SelectionChanged="ServicesListView_SelectionChanged"
-                  BorderThickness="1" 
-                            Background="Transparent"
-                           CornerRadius="8" Margin="0,0,10,0" Padding="8"
-                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                  ScrollViewer.VerticalScrollMode="Auto">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="local:BleServiceModel">
-                                        <StackPanel Padding="4,8,4,8" Spacing="2" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}">
-                                            <TextBlock Text="{x:Bind Name}" FontWeight="Bold" FontSize="14"/>
-                                            <TextBlock Text="{x:Bind Uuid}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
+            <Grid Grid.Row="1" ColumnDefinitions="0.9*,1*,1.3*" MinHeight="200">
+                <!-- BLE devices list -->
+                <Border Style="{StaticResource PanelCardStyle}" Margin="0,0,8,8">
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock x:Name="BleDevicesHeader" Style="{StaticResource SectionHeaderStyle}"/>
+                        <Grid Grid.Row="1">
+                            <ListView x:Name="BleDeviceListView" SelectionMode="Single"
+                                      ItemTemplate="{StaticResource BleDeviceItemTemplate}"
+                                      SelectionChanged="BleDeviceListView_SelectionChanged">
+                                <ListView.ItemContainerTransitions>
+                                    <TransitionCollection/>
+                                </ListView.ItemContainerTransitions>
                             </ListView>
-                      
+                            <StackPanel x:Name="EmptyBleDevicesState" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                        Spacing="4" Visibility="Visible">
+                                <FontIcon Glyph="&#xE702;" FontSize="32" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock x:Uid="EmptyBleDevicesTitle" Style="{StaticResource EmptyStateTitleStyle}"/>
+                                <TextBlock x:Uid="EmptyBleDevicesSubtitle" Style="{StaticResource EmptyStateSubtitleStyle}"/>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </Border>
 
-                <!--ПРАВАЯ КОЛОНКА: Список характеристик выбранного сервиса--> 
-                <Border Grid.Column="1" 
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
-            BorderThickness="1" 
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
-            CornerRadius="8" 
-            Margin="8,0,0,0" 
-            Padding="12">
-                    <Grid RowDefinitions="Auto, *">
-                        <TextBlock x:Name="CharacteristicsHeader" FontSize="14" FontWeight="SemiBold" 
-                                   Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Margin="4,0,0,12"/>
-
-
-                        <ListView x:Name="CharacteristicsListView" Grid.Row="1" SelectionChanged="CharacteristicsListView_SelectionChanged"
-                  BorderThickness="0" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" 
-                                  CornerRadius="8" Margin="10,0,0,0" Padding="8"  Background="Transparent">
-
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="local:BleCharacteristicModel">
-                                        <Border BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" CornerRadius="4" Padding="10" Margin="0,4,0,4" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
-                                            <Grid RowDefinitions="Auto, Auto, Auto">
-                                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold" FontSize="14"/>
-                                                    <Border Background="{ThemeResource ControlFillColorSecondaryBrush}" CornerRadius="4" Padding="4,1,4,1" VerticalAlignment="Center">
-                                                        <TextBlock Text="{x:Bind Properties}" FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                                    </Border>
-                                                </StackPanel>
-                                                <TextBlock Grid.Row="1" Text="{x:Bind Uuid}" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,2,0,4"/>
-
-                                                <!--Вывод текущего значения характеристики-->
-                                                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="5">
-                                                    <TextBlock Text="Значение:" FontSize="12" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                                    <TextBlock Text="{x:Bind Value, Mode=OneWay}" FontSize="12" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                       
+                <!-- Services tree -->
+                <Border Grid.Column="1" Style="{StaticResource PanelCardStyle}" Margin="8,0,8,8">
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock x:Name="AnalyzerHeader" Style="{StaticResource SectionHeaderStyle}"/>
+                        <Grid Grid.Row="1">
+                            <TreeView x:Name="GattTree" SelectionChanged="GattTree_SelectionChanged"/>
+                            <StackPanel x:Name="EmptyGattState" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                        Spacing="4" Visibility="Visible">
+                                <FontIcon Glyph="&#xE8F1;" FontSize="32" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock x:Uid="EmptyGattTitle" Style="{StaticResource EmptyStateTitleStyle}"/>
+                                <TextBlock x:Uid="EmptyGattSubtitle" Style="{StaticResource EmptyStateSubtitleStyle}"/>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
+                </Border>
+
+                <!-- Characteristic actions -->
+                <Border Grid.Column="2" Style="{StaticResource PanelCardStyle}" Margin="8,0,0,8">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Spacing="4">
+                            <TextBlock x:Name="CharacteristicsHeader" Style="{StaticResource SectionHeaderStyle}"/>
+
+                            <StackPanel x:Name="NoCharSelectedState" Spacing="4" Margin="0,12,0,12">
+                                <TextBlock x:Uid="EmptyCharTitle" Style="{StaticResource EmptyStateTitleStyle}"/>
+                                <TextBlock x:Uid="EmptyCharSubtitle" Style="{StaticResource EmptyStateSubtitleStyle}"/>
+                            </StackPanel>
+
+                            <StackPanel x:Name="CharActionsPanel" Spacing="12" Visibility="Collapsed">
+                                <StackPanel Spacing="2">
+                                    <TextBlock x:Uid="SectionSelectedChar" Style="{StaticResource SectionHeaderStyle}" Margin="0"/>
+                                    <TextBlock x:Name="SelectedCharName" FontWeight="Bold" TextWrapping="Wrap"/>
+                                    <TextBlock x:Name="SelectedCharProps" FontSize="12"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel Spacing="6">
+                                    <TextBlock x:Uid="SectionReadNotify" Style="{StaticResource SectionHeaderStyle}" Margin="0"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button x:Name="ReadBtn" x:Uid="BtnRead" Click="ReadBtn_Click" IsEnabled="False"/>
+                                        <Button x:Name="SubscribeBtn" x:Uid="BtnSubscribe" Click="SubscribeBtn_Click" IsEnabled="False"/>
+                                    </StackPanel>
+                                    <TextBlock x:Uid="ValueLabel" FontSize="12" FontWeight="SemiBold"/>
+                                    <TextBlock x:Name="ValueText" FontSize="13" FontWeight="Bold" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                </StackPanel>
+
+                                <StackPanel Spacing="6">
+                                    <TextBlock x:Uid="SectionWrite" Style="{StaticResource SectionHeaderStyle}" Margin="0"/>
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <ComboBox x:Name="WriteFormatCombo" Width="90" SelectedIndex="0">
+                                            <ComboBoxItem x:Uid="WriteFormatHex"/>
+                                            <ComboBoxItem x:Uid="WriteFormatText"/>
+                                            <ComboBoxItem x:Uid="WriteFormatUint8"/>
+                                        </ComboBox>
+                                        <TextBox x:Name="WriteBox" Grid.Column="1" Margin="8,0,0,0"
+                                                 x:Uid="WriteBox" IsEnabled="False"/>
+                                        <Button x:Name="WriteBtn" Grid.Column="2" x:Uid="BtnWrite" Click="WriteBtn_Click"
+                                                IsEnabled="False" Margin="8,0,0,0" Style="{StaticResource AccentButtonStyle}"/>
+                                    </Grid>
+                                </StackPanel>
+
+                                <StackPanel Spacing="4">
+                                    <TextBlock x:Uid="DescriptorsHeader" Style="{StaticResource SectionHeaderStyle}" Margin="0"/>
+                                    <ListView x:Name="DescriptorsList" MaxHeight="120" SelectionMode="None">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="local:BleDescriptorModel">
+                                                <StackPanel Spacing="2" Padding="4">
+                                                    <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" FontSize="12"/>
+                                                    <TextBlock Text="{x:Bind Uuid}" FontSize="10"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    <TextBlock Text="{x:Bind Value, Mode=OneWay}" FontSize="11"/>
+                                                    <Button x:Uid="BtnWriteCccd" Tag="{x:Bind}"
+                                                            Click="WriteDescriptor_Click" FontSize="11" Padding="8,2"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+
+                                <StackPanel Spacing="4">
+                                    <TextBlock x:Uid="SectionScript" Style="{StaticResource SectionHeaderStyle}" Margin="0"/>
+                                    <TextBox x:Name="ScriptBox" AcceptsReturn="True" TextWrapping="Wrap"
+                                             FontFamily="Consolas" FontSize="11" MinHeight="80"
+                                             x:Uid="ScriptBox"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Border>
             </Grid>
+
+            <!-- Traffic log -->
+            <Grid Grid.Row="2" RowDefinitions="Auto,*" MinHeight="140">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,6">
+                    <TextBlock x:Uid="TrafficLogHeader" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <Button x:Uid="BtnClearLog" Click="ClearTraffic_Click" Padding="8,2"/>
+                    <Button x:Uid="BtnExportTxt" Click="ExportTxt_Click" Padding="8,2"/>
+                    <Button x:Uid="BtnExportCsv" Click="ExportCsv_Click" Padding="8,2"/>
+                    <Button x:Uid="BtnRunScript" Click="RunScript_Click" Padding="8,2" Style="{StaticResource AccentButtonStyle}"/>
+                    <TextBlock x:Name="TrafficByteCount" FontSize="12" VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+                <TextBox x:Name="TrafficLogBox" Grid.Row="1" Style="{StaticResource TerminalLogStyle}" MinHeight="120"/>
+            </Grid>
+        </Grid>
+
+        <TeachingTip x:Name="TipAnalyzer"
+                     Target="{x:Bind ScanBleButton}"
+                     PreferredPlacement="Bottom"
+                     ActionButtonClick="AnalyzerTip_Done"
+                     CloseButtonClick="AnalyzerTip_Done"/>
         </Grid>
     </Grid>
 </Page>

@@ -11,12 +11,12 @@
   <Identity
     Name="38673Yurin.BluetoothDevice"
     Publisher="CN=6DBA1DE5-9EA9-4313-BEA7-F315A6AEEB19"
-    Version="0.0.149.0" />
+    Version="0.0.150.0" />
 
   <mp:PhoneIdentity PhoneProductId="f680ced9-6f7b-4d5f-a8c9-c9e402dd5479" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Bluetooth Device</DisplayName>
+    <DisplayName>BlueIDE</DisplayName>
     <PublisherDisplayName>Yurin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -26,9 +26,16 @@
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26226.0" />
   </Dependencies>
 
+  <!-- First language is the package default (must match DefaultLanguage in the .csproj). -->
   <Resources>
-    <Resource Language="EN-US" />
-    <Resource Language="RU-RU" />
+    <Resource Language="en-US" />
+    <Resource Language="zh-CN" />
+    <Resource Language="es-ES" />
+    <Resource Language="de-DE" />
+    <Resource Language="fr-FR" />
+    <Resource Language="ja-JP" />
+    <Resource Language="pt-BR" />
+    <Resource Language="ru-RU" />
   </Resources>
 
   <Applications>
@@ -36,8 +43,8 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
 		<uap:VisualElements
-    DisplayName="BlueIDE: Bluetooth Terminal and BLE Scanner Analyzer"
-    Description="Professional Bluetooth terminal (RFCOMM/SPP), echo server and low-level BLE GATT analyzer tool."
+    DisplayName="ms-resource:AppTitle"
+    Description="ms-resource:AppDescription"
     BackgroundColor="#0F172A"
     Square150x150Logo="Assets\Square150x150Logo.png"
     Square44x44Logo="Assets\Square44x44Logo.png">

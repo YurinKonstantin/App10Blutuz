@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -234,19 +234,22 @@
   <data name="BtnConnect" xml:space="preserve">
     <value>Connect</value>
   </data>
+  <data name="DisconnectButton.Content" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
   <data name="RadarVeryClose" xml:space="preserve">
-    <value>🔥 Very Close</value>
+    <value>Very Close</value>
   </data>
   <data name="RadarInRadius" xml:space="preserve">
-    <value>⚡ Within Range</value>
+    <value>Within Range</value>
   </data>
   <data name="RadarFarAway" xml:space="preserve">
-    <value>❄️ Far Away (Weak Signal)</value>
+    <value>Far Away (Weak Signal)</value>
   </data>
-  <data name="AnalyzerTitle" xml:space="preserve">
+  <data name="AnalyzerTitle.Text" xml:space="preserve">
     <value>Bluetooth LE Analyzer (PRO)</value>
   </data>
-  <data name="AnalyzerSubtitle" xml:space="preserve">
+  <data name="AnalyzerSubtitle.Text" xml:space="preserve">
     <value>Inspection of device GATT characteristics and descriptors</value>
   </data>
   <data name="UnlockProButton.Content" xml:space="preserve">
@@ -265,7 +268,7 @@
     <value>Failed to complete the purchase. Please try again.</value>
   </data>
   <data name="AnalyzerPromoText.Text" xml:space="preserve">
-    <value>This module is designed for advanced diagnostics of Bluetooth Low Energy (BLE) devices. The free version is limited to the basic text terminal.</value>
+    <value>This module is designed for advanced diagnostics of Bluetooth Low Energy (BLE) devices. After the free PRO trial, unlock PRO to keep full Analyzer access.</value>
   </data>
   <data name="AnalyzerFeature1.Text" xml:space="preserve">
     <value>• Discover and read hidden GATT services and characteristics</value>
@@ -284,6 +287,9 @@
   </data>
   <data name="BleComboPlaceholder" xml:space="preserve">
     <value>Select BLE Device...</value>
+  </data>
+  <data name="BleDevicesHeader" xml:space="preserve">
+    <value>BLE Devices</value>
   </data>
   <data name="ErrorBleScanTitle" xml:space="preserve">
     <value>Scan Error</value>
@@ -329,5 +335,454 @@
   </data>
   <data name="CharacteristicsHeader" xml:space="preserve">
     <value>Characteristics &amp; Data</value>
+  </data>
+  <data name="DialogOk" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ServerErrorTitle" xml:space="preserve">
+    <value>Server Error</value>
+  </data>
+  <data name="BtnPair" xml:space="preserve">
+    <value>Pair</value>
+  </data>
+  <data name="BtnUnpair" xml:space="preserve">
+    <value>Unpair</value>
+  </data>
+  <data name="PairErrorTitle" xml:space="preserve">
+    <value>Pairing Error</value>
+  </data>
+  <data name="PairErrorContent" xml:space="preserve">
+    <value>Pairing failed:</value>
+  </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Filter by name or MAC...</value>
+  </data>
+  <data name="EmptyDevicesTitle.Text" xml:space="preserve">
+    <value>No devices yet</value>
+  </data>
+  <data name="EmptyDevicesSubtitle.Text" xml:space="preserve">
+    <value>Tap Scan to discover Classic and BLE devices nearby.</value>
+  </data>
+  <data name="BtnClearLog.Content" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="BtnCopyLog.Content" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="BtnAddPreset.Content" xml:space="preserve">
+    <value>+ Preset</value>
+  </data>
+  <data name="BtnRunMacro.Content" xml:space="preserve">
+    <value>Run macro</value>
+  </data>
+  <data name="HistoryCombo.PlaceholderText" xml:space="preserve">
+    <value>Command history</value>
+  </data>
+  <data name="SettingsSendAsHex.Header" xml:space="preserve">
+    <value>Send as Hex</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="ThemeSystem.Content" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="ThemeLight.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="ThemeDark.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SettingsCompact.Header" xml:space="preserve">
+    <value>Compact device list</value>
+  </data>
+  <data name="SettingsScannerHeader.Text" xml:space="preserve">
+    <value>Scanner</value>
+  </data>
+  <data name="SettingsSort.Header" xml:space="preserve">
+    <value>Default sort</value>
+  </data>
+  <data name="SortRssi.Content" xml:space="preserve">
+    <value>By RSSI</value>
+  </data>
+  <data name="SortName.Content" xml:space="preserve">
+    <value>By name</value>
+  </data>
+  <data name="SortRecent.Content" xml:space="preserve">
+    <value>Recently seen</value>
+  </data>
+  <data name="SettingsTerminalHeader.Text" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="SettingsLineEnding.Header" xml:space="preserve">
+    <value>Line ending</value>
+  </data>
+  <data name="SettingsAutoReconnect.Header" xml:space="preserve">
+    <value>Auto-reconnect on drop</value>
+  </data>
+  <data name="SettingsPresetsHeader.Text" xml:space="preserve">
+    <value>Command presets</value>
+  </data>
+  <data name="BtnExportPresets.Content" xml:space="preserve">
+    <value>Export presets</value>
+  </data>
+  <data name="BtnImportPresets.Content" xml:space="preserve">
+    <value>Import presets</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="SettingsLicenseTitle.Text" xml:space="preserve">
+    <value>BlueIDE PRO</value>
+  </data>
+  <data name="TrialBannerTitle" xml:space="preserve">
+    <value>PRO trial active</value>
+  </data>
+  <data name="TrialBannerMessage" xml:space="preserve">
+    <value>{0} day(s) left. Buy PRO to keep Analyzer, echo server, and macros after the trial.</value>
+  </data>
+  <data name="TrialEndedTitle" xml:space="preserve">
+    <value>PRO trial ended</value>
+  </data>
+  <data name="TrialEndedContent" xml:space="preserve">
+    <value>Your 14-day PRO trial has ended. Unlock PRO to keep using the BLE Analyzer, echo server, and macros.</value>
+  </data>
+  <data name="LicenseStatusTrial" xml:space="preserve">
+    <value>License: PRO trial ({0} day(s) left)</value>
+  </data>
+  <data name="LicenseStatusPro" xml:space="preserve">
+    <value>License: BlueIDE PRO</value>
+  </data>
+  <data name="LicenseStatusFree" xml:space="preserve">
+    <value>License: Free (trial ended)</value>
+  </data>
+  <data name="SettingsAboutText.Text" xml:space="preserve">
+    <value>BlueIDE — Bluetooth terminal and BLE GATT analyzer for makers and engineers.</value>
+  </data>
+  <data name="BtnRateApp.Content" xml:space="preserve">
+    <value>Rate in Microsoft Store</value>
+  </data>
+  <data name="BtnShowOnboarding.Content" xml:space="preserve">
+    <value>Show welcome tips</value>
+  </data>
+  <data name="ExportSuccessTitle" xml:space="preserve">
+    <value>Exported</value>
+  </data>
+  <data name="ExportSuccessContent" xml:space="preserve">
+    <value>Presets exported successfully.</value>
+  </data>
+  <data name="ImportSuccessTitle" xml:space="preserve">
+    <value>Imported</value>
+  </data>
+  <data name="ImportSuccessContent" xml:space="preserve">
+    <value>Presets imported successfully.</value>
+  </data>
+  <data name="OnboardTitle" xml:space="preserve">
+    <value>Welcome to BlueIDE</value>
+  </data>
+  <data name="OnboardStep1" xml:space="preserve">
+    <value>1. Scan for nearby Classic and BLE devices.</value>
+  </data>
+  <data name="OnboardStep2" xml:space="preserve">
+    <value>2. Pair if needed, then Connect for the SPP terminal.</value>
+  </data>
+  <data name="OnboardStep3" xml:space="preserve">
+    <value>3. Enjoy a 14-day PRO trial (Analyzer, echo server, macros), then buy to keep them.</value>
+  </data>
+  <data name="OnboardGotIt" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="StatusReconnecting" xml:space="preserve">
+    <value>Reconnecting...</value>
+  </data>
+  <data name="ErrorInvalidHex" xml:space="preserve">
+    <value>Invalid hexadecimal input.</value>
+  </data>
+  <data name="AddPresetTitle" xml:space="preserve">
+    <value>Add preset</value>
+  </data>
+  <data name="PresetNamePlaceholder" xml:space="preserve">
+    <value>Preset name</value>
+  </data>
+  <data name="MacroProOnly" xml:space="preserve">
+    <value>Command macros require BlueIDE PRO.</value>
+  </data>
+  <data name="PresetPayloadPlaceholder" xml:space="preserve">
+    <value>Command / payload</value>
+  </data>
+  <data name="PresetEmptyMessage" xml:space="preserve">
+    <value>Enter a command to save as a preset.</value>
+  </data>
+  <data name="MacroNoPresets" xml:space="preserve">
+    <value>Add at least one preset before running a macro.</value>
+  </data>
+  <data name="MacroNotConnected" xml:space="preserve">
+    <value>Connect to a device or start the echo server first.</value>
+  </data>
+  <data name="ServiceSppDefault" xml:space="preserve">
+    <value>Serial Port (SPP)</value>
+  </data>
+  <data name="BtnRead.Content" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="BtnWrite.Content" xml:space="preserve">
+    <value>Write</value>
+  </data>
+  <data name="BtnSubscribe.Content" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="BtnUnsubscribe" xml:space="preserve">
+    <value>Unsubscribe</value>
+  </data>
+  <data name="WriteBox.PlaceholderText" xml:space="preserve">
+    <value>Value to write...</value>
+  </data>
+  <data name="DescriptorsHeader.Text" xml:space="preserve">
+    <value>Descriptors</value>
+  </data>
+  <data name="TrafficLogHeader.Text" xml:space="preserve">
+    <value>Traffic log</value>
+  </data>
+  <data name="BtnExportTxt.Content" xml:space="preserve">
+    <value>Export TXT</value>
+  </data>
+  <data name="BtnExportCsv.Content" xml:space="preserve">
+    <value>Export CSV</value>
+  </data>
+  <data name="BtnRunScript.Content" xml:space="preserve">
+    <value>Run script</value>
+  </data>
+  <data name="BleFilterBox.PlaceholderText" xml:space="preserve">
+    <value>Filter name/MAC/UUID...</value>
+  </data>
+  <data name="SvcBattery" xml:space="preserve">
+    <value>Battery Service</value>
+  </data>
+  <data name="SvcDeviceInfo" xml:space="preserve">
+    <value>Device Information</value>
+  </data>
+  <data name="SvcHeartRate" xml:space="preserve">
+    <value>Heart Rate</value>
+  </data>
+  <data name="SvcHid" xml:space="preserve">
+    <value>Human Interface Device</value>
+  </data>
+  <data name="SvcGenericAccess" xml:space="preserve">
+    <value>Generic Access</value>
+  </data>
+  <data name="SvcGenericAttribute" xml:space="preserve">
+    <value>Generic Attribute</value>
+  </data>
+  <data name="SvcCustom" xml:space="preserve">
+    <value>Custom Service</value>
+  </data>
+  <data name="CharBatteryLevel" xml:space="preserve">
+    <value>Battery Level</value>
+  </data>
+  <data name="CharManufacturer" xml:space="preserve">
+    <value>Manufacturer Name</value>
+  </data>
+  <data name="CharModelNumber" xml:space="preserve">
+    <value>Model Number</value>
+  </data>
+  <data name="CharHeartRateMeas" xml:space="preserve">
+    <value>Heart Rate Measurement</value>
+  </data>
+  <data name="CharDeviceName" xml:space="preserve">
+    <value>Device Name</value>
+  </data>
+  <data name="CharCustom" xml:space="preserve">
+    <value>Custom Characteristic</value>
+  </data>
+  <data name="DescCccd" xml:space="preserve">
+    <value>Client Characteristic Configuration</value>
+  </data>
+  <data name="DescUserDescription" xml:space="preserve">
+    <value>Characteristic User Description</value>
+  </data>
+  <data name="DescCustom" xml:space="preserve">
+    <value>Descriptor</value>
+  </data>
+  <data name="EmptyTerminalTitle.Text" xml:space="preserve">
+    <value>Terminal ready</value>
+  </data>
+  <data name="EmptyTerminalSubtitle.Text" xml:space="preserve">
+    <value>Select a Classic device and press Connect to send and receive data.</value>
+  </data>
+  <data name="EmptyGattTitle.Text" xml:space="preserve">
+    <value>No GATT services</value>
+  </data>
+  <data name="EmptyGattSubtitle.Text" xml:space="preserve">
+    <value>Pick a BLE device from the list to explore its services.</value>
+  </data>
+  <data name="EmptyBleDevicesTitle.Text" xml:space="preserve">
+    <value>No BLE devices</value>
+  </data>
+  <data name="EmptyBleDevicesSubtitle.Text" xml:space="preserve">
+    <value>Tap Scan BLE to discover nearby advertisers.</value>
+  </data>
+  <data name="EmptyCharTitle.Text" xml:space="preserve">
+    <value>No characteristic selected</value>
+  </data>
+  <data name="EmptyCharSubtitle.Text" xml:space="preserve">
+    <value>Select a characteristic in the GATT tree to read, write, or subscribe.</value>
+  </data>
+  <data name="SectionSelectedChar.Text" xml:space="preserve">
+    <value>Selected characteristic</value>
+  </data>
+  <data name="SectionReadNotify.Text" xml:space="preserve">
+    <value>Read / Notify</value>
+  </data>
+  <data name="SectionWrite.Text" xml:space="preserve">
+    <value>Write</value>
+  </data>
+  <data name="SectionScript.Text" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="WriteFormatHex.Content" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="WriteFormatText.Content" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="WriteFormatUint8.Content" xml:space="preserve">
+    <value>Uint8</value>
+  </data>
+  <data name="BtnWriteCccd.Content" xml:space="preserve">
+    <value>Write CCCD Notify</value>
+  </data>
+  <data name="ScriptBox.PlaceholderText" xml:space="preserve">
+    <value># WAIT 200&#x0a;# READ 2a19&#x0a;# WRITE 2a39 hex:01</value>
+  </data>
+  <data name="ServiceCombo.PlaceholderText" xml:space="preserve">
+    <value>RFCOMM service</value>
+  </data>
+  <data name="FavoriteButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Favorite</value>
+  </data>
+  <data name="ShowUnknownMenuItem.Text" xml:space="preserve">
+    <value>Show unknown devices</value>
+  </data>
+  
+  
+  <data name="ShellStatusConnected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="ShellStatusConnectedTo" xml:space="preserve">
+    <value>Connected:</value>
+  </data>
+  <data name="ShellStatusDisconnected" xml:space="preserve">
+    <value>Disconnected</value>
+  </data>
+  <data name="SettingsThemeTitle.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="SettingsThemeDesc.Text" xml:space="preserve">
+    <value>System, light, or dark appearance.</value>
+  </data>
+  <data name="SettingsCompactTitle.Text" xml:space="preserve">
+    <value>Compact density</value>
+  </data>
+  <data name="SettingsCompactDesc.Text" xml:space="preserve">
+    <value>Tighter spacing in the device list and toolbars.</value>
+  </data>
+  <data name="SettingsSortTitle.Text" xml:space="preserve">
+    <value>Default sort</value>
+  </data>
+  <data name="SettingsSortDesc.Text" xml:space="preserve">
+    <value>How devices are ordered after a scan.</value>
+  </data>
+  <data name="SettingsLineEndingTitle.Text" xml:space="preserve">
+    <value>Line ending</value>
+  </data>
+  <data name="SettingsLineEndingDesc.Text" xml:space="preserve">
+    <value>Appended to text when sending from the terminal.</value>
+  </data>
+  <data name="SettingsSendAsHexTitle.Text" xml:space="preserve">
+    <value>Send as Hex</value>
+  </data>
+  <data name="SettingsSendAsHexDesc.Text" xml:space="preserve">
+    <value>Treat input as hexadecimal bytes by default.</value>
+  </data>
+  <data name="SettingsAutoReconnectTitle.Text" xml:space="preserve">
+    <value>Auto-reconnect</value>
+  </data>
+  <data name="SettingsAutoReconnectDesc.Text" xml:space="preserve">
+    <value>Try to reconnect when the RFCOMM link drops.</value>
+  </data>
+  <data name="SettingsPresetsTitle.Text" xml:space="preserve">
+    <value>Import / Export</value>
+  </data>
+  <data name="SettingsPresetsDesc.Text" xml:space="preserve">
+    <value>Backup or restore command presets as a file.</value>
+  </data>
+  <data name="LineEndingLf.Content" xml:space="preserve">
+    <value>LF (\n)</value>
+  </data>
+  <data name="LineEndingCrLf.Content" xml:space="preserve">
+    <value>CRLF (\r\n)</value>
+  </data>
+  <data name="LineEndingCr.Content" xml:space="preserve">
+    <value>CR (\r)</value>
+  </data>
+  <data name="LineEndingNone.Content" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="TipNext" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="TipSkip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="TipDone" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="TipScanTitle" xml:space="preserve">
+    <value>Scan for devices</value>
+  </data>
+  <data name="TipScanSubtitle" xml:space="preserve">
+    <value>Start a scan to find Classic and BLE devices nearby.</value>
+  </data>
+  <data name="TipDevicesTitle" xml:space="preserve">
+    <value>Pair and connect</value>
+  </data>
+  <data name="TipDevicesSubtitle" xml:space="preserve">
+    <value>Use Pair if needed, then Connect for the SPP terminal.</value>
+  </data>
+  <data name="TipTerminalTitle" xml:space="preserve">
+    <value>Send commands</value>
+  </data>
+  <data name="TipTerminalSubtitle" xml:space="preserve">
+    <value>Type here and press Send. TX and RX traffic appear color-coded in the log.</value>
+  </data>
+  <data name="TipSessionTitle" xml:space="preserve">
+    <value>Session stays alive</value>
+  </data>
+  <data name="TipSessionSubtitle" xml:space="preserve">
+    <value>Switching tabs keeps your RFCOMM connection. Status is shown here and in the nav pane.</value>
+  </data>
+  <data name="TipAnalyzerTitle" xml:space="preserve">
+    <value>BLE Analyzer</value>
+  </data>
+  <data name="TipAnalyzerSubtitle" xml:space="preserve">
+    <value>Scan for BLE advertisers, pick a device, then explore GATT services and characteristics.</value>
+  </data>
+  <data name="DisconnectWarningBar.Title" xml:space="preserve">
+    <value>Session kept</value>
+  </data>
+  <data name="DisconnectWarningBar.Message" xml:space="preserve">
+    <value>Your RFCOMM connection stays active while you switch tabs.</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Professional Bluetooth terminal (RFCOMM/SPP), echo server and low-level BLE GATT analyzer tool.</value>
   </data>
 </root>

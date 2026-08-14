@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ScanButton.Content" xml:space="preserve">
+    <value>扫描</value>
+  </data>
+  <data name="StatusTextBlock.Text" xml:space="preserve">
+    <value>状态：已断开连接</value>
+  </data>
+  <data name="InputTextBox.PlaceholderText" xml:space="preserve">
+    <value>输入要发送的文字...</value>
+  </data>
+  <data name="TerminalLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>数据交换日志将出现在这里...</value>
+  </data>
+  <data name="SendButton.Content" xml:space="preserve">
+    <value>发送</value>
+  </data>
+  <data name="NavDevices.Content" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="NavAnalyzer.Content" xml:space="preserve">
+    <value>LE 分析器</value>
+  </data>
+  <data name="MsgBtErrorTitle" xml:space="preserve">
+    <value>蓝牙错误</value>
+  </data>
+  <data name="MsgBtErrorContent" xml:space="preserve">
+    <value>在此设备上找不到蓝牙适配器。</value>
+  </data>
+  <data name="StatusPaired" xml:space="preserve">
+    <value>配对</value>
+  </data>
+  <data name="StatusAvailable" xml:space="preserve">
+    <value>可用的</value>
+  </data>
+  <data name="ScanErrorTitle" xml:space="preserve">
+    <value>扫描错误</value>
+  </data>
+  <data name="MsgCompatErrorTitle" xml:space="preserve">
+    <value>兼容性错误</value>
+  </data>
+  <data name="MsgCompatErrorContent" xml:space="preserve">
+    <value>您的蓝牙适配器不支持所需的操作标准。</value>
+  </data>
+  <data name="MsgBtOffTitle" xml:space="preserve">
+    <value>蓝牙已关闭</value>
+  </data>
+  <data name="MsgBtOffContent" xml:space="preserve">
+    <value>请在 Windows 系统设置中启用蓝牙。</value>
+  </data>
+  <data name="MsgInitErrorTitle" xml:space="preserve">
+    <value>初始化错误</value>
+  </data>
+  <data name="MsgInitErrorContent" xml:space="preserve">
+    <value>无法检查蓝牙状态：</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>状态：正在连接...</value>
+  </data>
+  <data name="StatusConnectedTo" xml:space="preserve">
+    <value>状态：已连接到</value>
+  </data>
+  <data name="StatusConnError" xml:space="preserve">
+    <value>状态：连接错误</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>状态：已断开连接</value>
+  </data>
+  <data name="MsgConnErrorTitle" xml:space="preserve">
+    <value>连接错误</value>
+  </data>
+  <data name="LogOutput" xml:space="preserve">
+    <value>[输出]</value>
+  </data>
+  <data name="LogInput" xml:space="preserve">
+    <value>[输入]</value>
+  </data>
+  <data name="LogSendError" xml:space="preserve">
+    <value>[发送错误]</value>
+  </data>
+  <data name="LogConnLost" xml:space="preserve">
+    <value>[连接丢失]</value>
+  </data>
+  <data name="ErrorNoSppProfile" xml:space="preserve">
+    <value>该设备不支持标准串行端口配置文件 (RFCOMM/SPP)。</value>
+  </data>
+  <data name="ErrorDeviceAccess" xml:space="preserve">
+    <value>无法访问设备。</value>
+  </data>
+  <data name="ScanButtonStop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="StartServerButton.Content" xml:space="preserve">
+    <value>启动服务器</value>
+  </data>
+  <data name="StopServerButton.Content" xml:space="preserve">
+    <value>停止服务器</value>
+  </data>
+  <data name="StatusServerListening" xml:space="preserve">
+    <value>服务器：正在监听连接...</value>
+  </data>
+  <data name="StatusServerConnected" xml:space="preserve">
+    <value>服务器：客户端已连接！</value>
+  </data>
+  <data name="StatusServerStopped" xml:space="preserve">
+    <value>服务器：已停止</value>
+  </data>
+  <data name="ScanButtonStart" xml:space="preserve">
+    <value>扫描</value>
+  </data>
+  <data name="ShowUnknownSwitch.Header" xml:space="preserve">
+    <value>显示未知设备</value>
+  </data>
+  <data name="UnknownDeviceLabel" xml:space="preserve">
+    <value>[未知设备]</value>
+  </data>
+  <data name="BtnConnect" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="DisconnectButton.Content" xml:space="preserve">
+    <value>断开</value>
+  </data>
+  <data name="RadarVeryClose" xml:space="preserve">
+    <value>非常接近</value>
+  </data>
+  <data name="RadarInRadius" xml:space="preserve">
+    <value>范围内</value>
+  </data>
+  <data name="RadarFarAway" xml:space="preserve">
+    <value>距离较远（信号弱）</value>
+  </data>
+  <data name="AnalyzerTitle.Text" xml:space="preserve">
+    <value>蓝牙 LE 分析仪 (PRO)</value>
+  </data>
+  <data name="AnalyzerSubtitle.Text" xml:space="preserve">
+    <value>检查设备 GATT 特征和描述符</value>
+  </data>
+  <data name="UnlockProButton.Content" xml:space="preserve">
+    <value>解锁 PRO 版</value>
+  </data>
+  <data name="ProPurchaseSuccessTitle" xml:space="preserve">
+    <value>成功！</value>
+  </data>
+  <data name="ProPurchaseSuccessContent" xml:space="preserve">
+    <value>PRO版本成功激活。所有功能已解锁！</value>
+  </data>
+  <data name="ProPurchaseFailTitle" xml:space="preserve">
+    <value>购买错误</value>
+  </data>
+  <data name="ProPurchaseFailContent" xml:space="preserve">
+    <value>未能完成购买。请再试一次。</value>
+  </data>
+  <data name="AnalyzerPromoText.Text" xml:space="preserve">
+    <value>该模块专为低功耗蓝牙 (BLE) 设备的高级诊断而设计。免费 PRO 试用结束后，请解锁 PRO 以保留完整分析器访问权限。</value>
+  </data>
+  <data name="AnalyzerFeature1.Text" xml:space="preserve">
+    <value>• 发现并阅读隐藏的 GATT 服务和特征</value>
+  </data>
+  <data name="AnalyzerFeature2.Text" xml:space="preserve">
+    <value>• 修改并发送BLE数据包描述符</value>
+  </data>
+  <data name="AnalyzerFeature3.Text" xml:space="preserve">
+    <value>• 记录并持续捕获低级别流量</value>
+  </data>
+  <data name="BtnScanBle.Content" xml:space="preserve">
+    <value>查找 BLE 设备</value>
+  </data>
+  <data name="ValueLabel.Text" xml:space="preserve">
+    <value>价值：</value>
+  </data>
+  <data name="BleComboPlaceholder" xml:space="preserve">
+    <value>选择 BLE 设备...</value>
+  </data>
+  <data name="BleDevicesHeader" xml:space="preserve">
+    <value>BLE 设备</value>
+  </data>
+  <data name="ErrorBleScanTitle" xml:space="preserve">
+    <value>扫描错误</value>
+  </data>
+  <data name="ErrorGattTitle" xml:space="preserve">
+    <value>关贸总协定错误</value>
+  </data>
+  <data name="ErrorConnBleTitle" xml:space="preserve">
+    <value>BLE 连接错误</value>
+  </data>
+  <data name="ErrorNoBleDevice" xml:space="preserve">
+    <value>无法与 BLE 设备建立连接。</value>
+  </data>
+  <data name="CharClickToRead" xml:space="preserve">
+    <value>点击阅读</value>
+  </data>
+  <data name="CharWriteOnlyError" xml:space="preserve">
+    <value>错误：仅写入/通知</value>
+  </data>
+  <data name="CharEmptyBuffer" xml:space="preserve">
+    <value>空数据缓冲区</value>
+  </data>
+  <data name="CharReadError" xml:space="preserve">
+    <value>读取错误。地位：</value>
+  </data>
+  <data name="AppTitle" xml:space="preserve">
+    <value>BlueIDE：蓝牙终端与 BLE 扫描分析器</value>
+  </data>
+  <data name="ServerLockTitle" xml:space="preserve">
+    <value>在 BlueIDE PRO 中可用</value>
+  </data>
+  <data name="ServerLockContent" xml:space="preserve">
+    <value>内置蓝牙回显服务器允许您直接在 PC 内模拟无线板以进行环回测试。您想解锁 PRO 版本和所有高级工具吗？</value>
+  </data>
+  <data name="BtnBuyPro" xml:space="preserve">
+    <value>购买 PRO</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="AnalyzerHeader" xml:space="preserve">
+    <value>可用的关贸总协定服务</value>
+  </data>
+  <data name="CharacteristicsHeader" xml:space="preserve">
+    <value>特性及数据</value>
+  </data>
+  <data name="DialogOk" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ServerErrorTitle" xml:space="preserve">
+    <value>服务器错误</value>
+  </data>
+  <data name="BtnPair" xml:space="preserve">
+    <value>一对</value>
+  </data>
+  <data name="BtnUnpair" xml:space="preserve">
+    <value>取消配对</value>
+  </data>
+  <data name="PairErrorTitle" xml:space="preserve">
+    <value>配对错误</value>
+  </data>
+  <data name="PairErrorContent" xml:space="preserve">
+    <value>配对失败：</value>
+  </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>按名称或 MAC 过滤...</value>
+  </data>
+  <data name="EmptyDevicesTitle.Text" xml:space="preserve">
+    <value>还没有设备</value>
+  </data>
+  <data name="EmptyDevicesSubtitle.Text" xml:space="preserve">
+    <value>点击扫描以发现附近的经典和 BLE 设备。</value>
+  </data>
+  <data name="BtnClearLog.Content" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="BtnCopyLog.Content" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="BtnAddPreset.Content" xml:space="preserve">
+    <value>+ 预设</value>
+  </data>
+  <data name="BtnRunMacro.Content" xml:space="preserve">
+    <value>运行宏</value>
+  </data>
+  <data name="HistoryCombo.PlaceholderText" xml:space="preserve">
+    <value>命令历史</value>
+  </data>
+  <data name="SettingsSendAsHex.Header" xml:space="preserve">
+    <value>以十六进制发送</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>外貌</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="ThemeSystem.Content" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  <data name="ThemeLight.Content" xml:space="preserve">
+    <value>光</value>
+  </data>
+  <data name="ThemeDark.Content" xml:space="preserve">
+    <value>黑暗的</value>
+  </data>
+  <data name="SettingsCompact.Header" xml:space="preserve">
+    <value>紧凑的设备列表</value>
+  </data>
+  <data name="SettingsScannerHeader.Text" xml:space="preserve">
+    <value>扫描器</value>
+  </data>
+  <data name="SettingsSort.Header" xml:space="preserve">
+    <value>默认排序</value>
+  </data>
+  <data name="SortRssi.Content" xml:space="preserve">
+    <value>通过RSSI</value>
+  </data>
+  <data name="SortName.Content" xml:space="preserve">
+    <value>按名字</value>
+  </data>
+  <data name="SortRecent.Content" xml:space="preserve">
+    <value>最近看到的</value>
+  </data>
+  <data name="SettingsTerminalHeader.Text" xml:space="preserve">
+    <value>终端</value>
+  </data>
+  <data name="SettingsLineEnding.Header" xml:space="preserve">
+    <value>行尾</value>
+  </data>
+  <data name="SettingsAutoReconnect.Header" xml:space="preserve">
+    <value>掉线时自动重新连接</value>
+  </data>
+  <data name="SettingsPresetsHeader.Text" xml:space="preserve">
+    <value>命令预设</value>
+  </data>
+  <data name="BtnExportPresets.Content" xml:space="preserve">
+    <value>导出预设</value>
+  </data>
+  <data name="BtnImportPresets.Content" xml:space="preserve">
+    <value>导入预设</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>许可证</value>
+  </data>
+  <data name="SettingsLicenseTitle.Text" xml:space="preserve">
+    <value>BlueIDE PRO</value>
+  </data>
+  <data name="TrialBannerTitle" xml:space="preserve">
+    <value>PRO 试用中</value>
+  </data>
+  <data name="TrialBannerMessage" xml:space="preserve">
+    <value>剩余 {0} 天。购买 PRO 以在试用结束后保留分析器、回显服务器和宏。</value>
+  </data>
+  <data name="TrialEndedTitle" xml:space="preserve">
+    <value>PRO 试用已结束</value>
+  </data>
+  <data name="TrialEndedContent" xml:space="preserve">
+    <value>您的 14 天 PRO 试用已结束。请解锁 PRO 以继续使用 BLE 分析器、回显服务器和宏。</value>
+  </data>
+  <data name="LicenseStatusTrial" xml:space="preserve">
+    <value>许可证：PRO 试用（剩余 {0} 天）</value>
+  </data>
+  <data name="LicenseStatusPro" xml:space="preserve">
+    <value>许可证：BlueIDE PRO</value>
+  </data>
+  <data name="LicenseStatusFree" xml:space="preserve">
+    <value>许可证：免费（试用已结束）</value>
+  </data>
+  <data name="SettingsAboutText.Text" xml:space="preserve">
+    <value>BlueIDE — 面向创客和工程师的蓝牙终端和 BLE GATT 分析仪。</value>
+  </data>
+  <data name="BtnRateApp.Content" xml:space="preserve">
+    <value>Microsoft Store 中的评分</value>
+  </data>
+  <data name="BtnShowOnboarding.Content" xml:space="preserve">
+    <value>显示欢迎提示</value>
+  </data>
+  <data name="ExportSuccessTitle" xml:space="preserve">
+    <value>出口</value>
+  </data>
+  <data name="ExportSuccessContent" xml:space="preserve">
+    <value>预设导出成功。</value>
+  </data>
+  <data name="ImportSuccessTitle" xml:space="preserve">
+    <value>进口</value>
+  </data>
+  <data name="ImportSuccessContent" xml:space="preserve">
+    <value>预设导入成功。</value>
+  </data>
+  <data name="OnboardTitle" xml:space="preserve">
+    <value>欢迎来到 BlueIDE</value>
+  </data>
+  <data name="OnboardStep1" xml:space="preserve">
+    <value>1. 扫描附近的 Classic 和 BLE 设备。</value>
+  </data>
+  <data name="OnboardStep2" xml:space="preserve">
+    <value>2. 如果需要，请配对，然后连接 SPP 终端。</value>
+  </data>
+  <data name="OnboardStep3" xml:space="preserve">
+    <value>3. 享受 14 天 PRO 试用（分析器、回显服务器、宏），然后购买以保留这些功能。</value>
+  </data>
+  <data name="OnboardGotIt" xml:space="preserve">
+    <value>知道了</value>
+  </data>
+  <data name="StatusReconnecting" xml:space="preserve">
+    <value>正在重新连接...</value>
+  </data>
+  <data name="ErrorInvalidHex" xml:space="preserve">
+    <value>无效的十六进制输入。</value>
+  </data>
+  <data name="AddPresetTitle" xml:space="preserve">
+    <value>添加预设</value>
+  </data>
+  <data name="PresetNamePlaceholder" xml:space="preserve">
+    <value>预设名称</value>
+  </data>
+  <data name="MacroProOnly" xml:space="preserve">
+    <value>命令宏需要 BlueIDE PRO。</value>
+  </data>
+  <data name="PresetPayloadPlaceholder" xml:space="preserve">
+    <value>命令 / 数据</value>
+  </data>
+  <data name="PresetEmptyMessage" xml:space="preserve">
+    <value>请输入要保存为预设的命令。</value>
+  </data>
+  <data name="MacroNoPresets" xml:space="preserve">
+    <value>运行宏之前请至少添加一个预设。</value>
+  </data>
+  <data name="MacroNotConnected" xml:space="preserve">
+    <value>请先连接设备或启动回显服务器。</value>
+  </data>
+  <data name="ServiceSppDefault" xml:space="preserve">
+    <value>串行端口 (SPP)</value>
+  </data>
+  <data name="BtnRead.Content" xml:space="preserve">
+    <value>读</value>
+  </data>
+  <data name="BtnWrite.Content" xml:space="preserve">
+    <value>写</value>
+  </data>
+  <data name="BtnSubscribe.Content" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="BtnUnsubscribe" xml:space="preserve">
+    <value>退订</value>
+  </data>
+  <data name="WriteBox.PlaceholderText" xml:space="preserve">
+    <value>值得写...</value>
+  </data>
+  <data name="DescriptorsHeader.Text" xml:space="preserve">
+    <value>描述符</value>
+  </data>
+  <data name="TrafficLogHeader.Text" xml:space="preserve">
+    <value>交通日志</value>
+  </data>
+  <data name="BtnExportTxt.Content" xml:space="preserve">
+    <value>导出TXT</value>
+  </data>
+  <data name="BtnExportCsv.Content" xml:space="preserve">
+    <value>导出 CSV</value>
+  </data>
+  <data name="BtnRunScript.Content" xml:space="preserve">
+    <value>运行脚本</value>
+  </data>
+  <data name="BleFilterBox.PlaceholderText" xml:space="preserve">
+    <value>过滤器名称/MAC/UUID...</value>
+  </data>
+  <data name="SvcBattery" xml:space="preserve">
+    <value>电池服务</value>
+  </data>
+  <data name="SvcDeviceInfo" xml:space="preserve">
+    <value>设备信息</value>
+  </data>
+  <data name="SvcHeartRate" xml:space="preserve">
+    <value>心率</value>
+  </data>
+  <data name="SvcHid" xml:space="preserve">
+    <value>人机接口设备</value>
+  </data>
+  <data name="SvcGenericAccess" xml:space="preserve">
+    <value>通用访问</value>
+  </data>
+  <data name="SvcGenericAttribute" xml:space="preserve">
+    <value>通用属性</value>
+  </data>
+  <data name="SvcCustom" xml:space="preserve">
+    <value>定制服务</value>
+  </data>
+  <data name="CharBatteryLevel" xml:space="preserve">
+    <value>电池电量</value>
+  </data>
+  <data name="CharManufacturer" xml:space="preserve">
+    <value>制造商名称</value>
+  </data>
+  <data name="CharModelNumber" xml:space="preserve">
+    <value>型号</value>
+  </data>
+  <data name="CharHeartRateMeas" xml:space="preserve">
+    <value>心率测量</value>
+  </data>
+  <data name="CharDeviceName" xml:space="preserve">
+    <value>设备名称</value>
+  </data>
+  <data name="CharCustom" xml:space="preserve">
+    <value>定制特性</value>
+  </data>
+  <data name="DescCccd" xml:space="preserve">
+    <value>客户端特征配置</value>
+  </data>
+  <data name="DescUserDescription" xml:space="preserve">
+    <value>特征用户描述</value>
+  </data>
+  <data name="DescCustom" xml:space="preserve">
+    <value>描述符</value>
+  </data>
+  <data name="EmptyTerminalTitle.Text" xml:space="preserve">
+    <value>终端准备就绪</value>
+  </data>
+  <data name="EmptyTerminalSubtitle.Text" xml:space="preserve">
+    <value>选择经典设备并按连接以发送和接收数据。</value>
+  </data>
+  <data name="EmptyGattTitle.Text" xml:space="preserve">
+    <value>无关贸总协定服务</value>
+  </data>
+  <data name="EmptyGattSubtitle.Text" xml:space="preserve">
+    <value>从列表中选择一个 BLE 设备来探索其服务。</value>
+  </data>
+  <data name="EmptyBleDevicesTitle.Text" xml:space="preserve">
+    <value>无 BLE 设备</value>
+  </data>
+  <data name="EmptyBleDevicesSubtitle.Text" xml:space="preserve">
+    <value>点击扫描 BLE 以发现附近的广告商。</value>
+  </data>
+  <data name="EmptyCharTitle.Text" xml:space="preserve">
+    <value>未选择特征</value>
+  </data>
+  <data name="EmptyCharSubtitle.Text" xml:space="preserve">
+    <value>在 GATT 树中选择一个特征进行读取、写入或订阅。</value>
+  </data>
+  <data name="SectionSelectedChar.Text" xml:space="preserve">
+    <value>选定的特征</value>
+  </data>
+  <data name="SectionReadNotify.Text" xml:space="preserve">
+    <value>阅读/通知</value>
+  </data>
+  <data name="SectionWrite.Text" xml:space="preserve">
+    <value>写</value>
+  </data>
+  <data name="SectionScript.Text" xml:space="preserve">
+    <value>脚本</value>
+  </data>
+  <data name="WriteFormatHex.Content" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="WriteFormatText.Content" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="WriteFormatUint8.Content" xml:space="preserve">
+    <value>Uint8</value>
+  </data>
+  <data name="BtnWriteCccd.Content" xml:space="preserve">
+    <value>写 CCCD 通知</value>
+  </data>
+  <data name="ScriptBox.PlaceholderText" xml:space="preserve">
+    <value># WAIT 200
+# READ 2a19
+# WRITE 2a39 hex:01</value>
+  </data>
+  <data name="ServiceCombo.PlaceholderText" xml:space="preserve">
+    <value>射频通讯服务</value>
+  </data>
+  <data name="FavoriteButton.AutomationProperties.Name" xml:space="preserve">
+    <value>最喜欢的</value>
+  </data>
+  <data name="ShowUnknownMenuItem.Text" xml:space="preserve">
+    <value>显示未知设备</value>
+  </data>
+  <data name="ShellStatusConnected" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="ShellStatusConnectedTo" xml:space="preserve">
+    <value>已连接：</value>
+  </data>
+  <data name="ShellStatusDisconnected" xml:space="preserve">
+    <value>已断开连接</value>
+  </data>
+  <data name="SettingsThemeTitle.Text" xml:space="preserve">
+    <value>主题</value>
+  </data>
+  <data name="SettingsThemeDesc.Text" xml:space="preserve">
+    <value>系统，浅色或深色外观。</value>
+  </data>
+  <data name="SettingsCompactTitle.Text" xml:space="preserve">
+    <value>致密密度</value>
+  </data>
+  <data name="SettingsCompactDesc.Text" xml:space="preserve">
+    <value>设备列表和工具栏中的间距更紧密。</value>
+  </data>
+  <data name="SettingsSortTitle.Text" xml:space="preserve">
+    <value>默认排序</value>
+  </data>
+  <data name="SettingsSortDesc.Text" xml:space="preserve">
+    <value>扫描后如何订购设备。</value>
+  </data>
+  <data name="SettingsLineEndingTitle.Text" xml:space="preserve">
+    <value>行尾</value>
+  </data>
+  <data name="SettingsLineEndingDesc.Text" xml:space="preserve">
+    <value>从终端发送时附加到文本。</value>
+  </data>
+  <data name="SettingsSendAsHexTitle.Text" xml:space="preserve">
+    <value>以十六进制发送</value>
+  </data>
+  <data name="SettingsSendAsHexDesc.Text" xml:space="preserve">
+    <value>默认情况下将输入视为十六进制字节。</value>
+  </data>
+  <data name="SettingsAutoReconnectTitle.Text" xml:space="preserve">
+    <value>自动重新连接</value>
+  </data>
+  <data name="SettingsAutoReconnectDesc.Text" xml:space="preserve">
+    <value>当 RFCOMM 链路断开时尝试重新连接。</value>
+  </data>
+  <data name="SettingsPresetsTitle.Text" xml:space="preserve">
+    <value>进口/出口</value>
+  </data>
+  <data name="SettingsPresetsDesc.Text" xml:space="preserve">
+    <value>将命令预设备份或恢复为文件。</value>
+  </data>
+  <data name="LineEndingLf.Content" xml:space="preserve">
+    <value>LF (\n)</value>
+  </data>
+  <data name="LineEndingCrLf.Content" xml:space="preserve">
+    <value>CRLF (\r\n)</value>
+  </data>
+  <data name="LineEndingCr.Content" xml:space="preserve">
+    <value>CR (\r)</value>
+  </data>
+  <data name="LineEndingNone.Content" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="TipNext" xml:space="preserve">
+    <value>下一个</value>
+  </data>
+  <data name="TipSkip" xml:space="preserve">
+    <value>跳过</value>
+  </data>
+  <data name="TipDone" xml:space="preserve">
+    <value>知道了</value>
+  </data>
+  <data name="TipScanTitle" xml:space="preserve">
+    <value>扫描设备</value>
+  </data>
+  <data name="TipScanSubtitle" xml:space="preserve">
+    <value>开始扫描以查找附近的 Classic 和 BLE 设备。</value>
+  </data>
+  <data name="TipDevicesTitle" xml:space="preserve">
+    <value>配对并连接</value>
+  </data>
+  <data name="TipDevicesSubtitle" xml:space="preserve">
+    <value>如果需要，请使用“配对”，然后使用“连接”连接 SPP 终端。</value>
+  </data>
+  <data name="TipTerminalTitle" xml:space="preserve">
+    <value>发送命令</value>
+  </data>
+  <data name="TipTerminalSubtitle" xml:space="preserve">
+    <value>在此输入并按发送。 TX 和 RX 流量在日志中以颜色编码显示。</value>
+  </data>
+  <data name="TipSessionTitle" xml:space="preserve">
+    <value>会话保持活动状态</value>
+  </data>
+  <data name="TipSessionSubtitle" xml:space="preserve">
+    <value>切换选项卡可保持 RFCOMM 连接。状态显示在此处和导航窗格中。</value>
+  </data>
+  <data name="TipAnalyzerTitle" xml:space="preserve">
+    <value>BLE 分析仪</value>
+  </data>
+  <data name="TipAnalyzerSubtitle" xml:space="preserve">
+    <value>扫描 BLE 广告商，选择设备，然后探索 GATT 服务和特性。</value>
+  </data>
+  <data name="DisconnectWarningBar.Title" xml:space="preserve">
+    <value>会话已保留</value>
+  </data>
+  <data name="DisconnectWarningBar.Message" xml:space="preserve">
+    <value>当您切换选项卡时，您的 RFCOMM 连接保持活动状态。</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>专业蓝牙终端（RFCOMM/SPP）、回显服务器和底层 BLE GATT 分析工具。</value>
+  </data>
+</root>

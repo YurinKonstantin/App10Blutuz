@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.System;
 
@@ -9,38 +6,54 @@ namespace BluetoothManager
 {
     public static class RateManager
     {
-        // Ключ для хранения в реестре приложения, чтобы не надоедать пользователю, если он уже оценил
         private const string RatedRegistryKey = "App_UserHasRated_v1";
+        private const string SessionPromptKey = "RatePromptedSession";
+        private const string EngageCountKey = "MeaningfulEngageCount";
 
         /// <summary>
-        /// Вызывает официальное окно оценки приложения в Microsoft Store
+        /// Soft rating prompt: only after meaningful engagement (sessions / PRO), not every packet burst.
         /// </summary>
-        public static async Task PromptRatingAsync()
+        public static async Task PromptRatingAsync(bool force = false)
         {
-            // 1. Проверяем локальные настройки: если пользователь уже кликал, больше не беспокоим его
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            if (localSettings.Values.ContainsKey(RatedRegistryKey))
-            {
+            if (!force && localSettings.Values.ContainsKey(RatedRegistryKey))
                 return;
-            }
+
+            if (!force && localSettings.Values.ContainsKey(SessionPromptKey))
+                return;
 
             try
             {
-                // Запоминаем, что мы показали окно
-                localSettings.Values[RatedRegistryKey] = true;
-
-                // 2. Нативный и самый надежный способ для WinUI 3 Desktop:
-                // Открываем глубокую системную ссылку (Deep Link) протокола MS Store
-                // Она мгновенно выводит аккуратное окно «Оценить приложение» прямо поверх нашей программы
-                string storeId = "9N5H75QWBHLL"; // Store ID вашей программы
+                string storeId = "9N5H75QWBHLL";
                 var uri = new Uri($"ms-windows-store://review/?ProductId={storeId}");
 
-                await Launcher.LaunchUriAsync(uri);
+                bool launched = await Launcher.LaunchUriAsync(uri);
+                if (launched)
+                {
+                    localSettings.Values[RatedRegistryKey] = true;
+                    localSettings.Values[SessionPromptKey] = true;
+                }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Ошибка вызова окна оценок: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Rate prompt error: {ex.Message}");
             }
+        }
+
+        /// <summary>Call after meaningful actions (connect, PRO unlock). Prompts after 3 engages.</summary>
+        public static async Task RegisterMeaningfulEngageAsync()
+        {
+            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            if (localSettings.Values.ContainsKey(RatedRegistryKey)) return;
+
+            int count = 0;
+            if (localSettings.Values.TryGetValue(EngageCountKey, out var v) && v is int i)
+                count = i;
+            count++;
+            localSettings.Values[EngageCountKey] = count;
+
+            if (count >= 3)
+                await PromptRatingAsync();
         }
     }
 }

@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ScanButton.Content" xml:space="preserve">
+    <value>スキャン</value>
+  </data>
+  <data name="StatusTextBlock.Text" xml:space="preserve">
+    <value>ステータス: 切断されました</value>
+  </data>
+  <data name="InputTextBox.PlaceholderText" xml:space="preserve">
+    <value>送信するテキストを入力してください...</value>
+  </data>
+  <data name="TerminalLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>データ交換ログがここに表示されます...</value>
+  </data>
+  <data name="SendButton.Content" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="NavDevices.Content" xml:space="preserve">
+    <value>デバイス</value>
+  </data>
+  <data name="NavAnalyzer.Content" xml:space="preserve">
+    <value>LE アナライザー</value>
+  </data>
+  <data name="MsgBtErrorTitle" xml:space="preserve">
+    <value>Bluetooth エラー</value>
+  </data>
+  <data name="MsgBtErrorContent" xml:space="preserve">
+    <value>このデバイスでは Bluetooth アダプターが見つかりませんでした。</value>
+  </data>
+  <data name="StatusPaired" xml:space="preserve">
+    <value>ペアリング済み</value>
+  </data>
+  <data name="StatusAvailable" xml:space="preserve">
+    <value>利用可能</value>
+  </data>
+  <data name="ScanErrorTitle" xml:space="preserve">
+    <value>スキャンエラー</value>
+  </data>
+  <data name="MsgCompatErrorTitle" xml:space="preserve">
+    <value>互換性エラー</value>
+  </data>
+  <data name="MsgCompatErrorContent" xml:space="preserve">
+    <value>お使いの Bluetooth アダプターは、必要な動作規格をサポートしていません。</value>
+  </data>
+  <data name="MsgBtOffTitle" xml:space="preserve">
+    <value>Bluetoothがオフになっています</value>
+  </data>
+  <data name="MsgBtOffContent" xml:space="preserve">
+    <value>Windows のシステム設定で Bluetooth を有効にしてください。</value>
+  </data>
+  <data name="MsgInitErrorTitle" xml:space="preserve">
+    <value>初期化エラー</value>
+  </data>
+  <data name="MsgInitErrorContent" xml:space="preserve">
+    <value>Bluetooth ステータスの確認に失敗しました:</value>
+  </data>
+  <data name="StatusConnecting" xml:space="preserve">
+    <value>ステータス: 接続中...</value>
+  </data>
+  <data name="StatusConnectedTo" xml:space="preserve">
+    <value>ステータス: 接続済み</value>
+  </data>
+  <data name="StatusConnError" xml:space="preserve">
+    <value>ステータス: 接続エラー</value>
+  </data>
+  <data name="StatusDisconnected" xml:space="preserve">
+    <value>ステータス: 切断されました</value>
+  </data>
+  <data name="MsgConnErrorTitle" xml:space="preserve">
+    <value>接続エラー</value>
+  </data>
+  <data name="LogOutput" xml:space="preserve">
+    <value>[出力]</value>
+  </data>
+  <data name="LogInput" xml:space="preserve">
+    <value>[入力]</value>
+  </data>
+  <data name="LogSendError" xml:space="preserve">
+    <value>[送信エラー]</value>
+  </data>
+  <data name="LogConnLost" xml:space="preserve">
+    <value>[接続が失われました]</value>
+  </data>
+  <data name="ErrorNoSppProfile" xml:space="preserve">
+    <value>このデバイスは標準シリアル ポート プロファイル (RFCOMM/SPP) をサポートしていません。</value>
+  </data>
+  <data name="ErrorDeviceAccess" xml:space="preserve">
+    <value>デバイスへのアクセスに失敗しました。</value>
+  </data>
+  <data name="ScanButtonStop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="StartServerButton.Content" xml:space="preserve">
+    <value>サーバーの起動</value>
+  </data>
+  <data name="StopServerButton.Content" xml:space="preserve">
+    <value>サーバーを停止する</value>
+  </data>
+  <data name="StatusServerListening" xml:space="preserve">
+    <value>サーバー: 接続を待機しています...</value>
+  </data>
+  <data name="StatusServerConnected" xml:space="preserve">
+    <value>サーバー: クライアントが接続されました!</value>
+  </data>
+  <data name="StatusServerStopped" xml:space="preserve">
+    <value>サーバー: 停止しました</value>
+  </data>
+  <data name="ScanButtonStart" xml:space="preserve">
+    <value>スキャン</value>
+  </data>
+  <data name="ShowUnknownSwitch.Header" xml:space="preserve">
+    <value>不明なデバイスを表示する</value>
+  </data>
+  <data name="UnknownDeviceLabel" xml:space="preserve">
+    <value>[不明なデバイス]</value>
+  </data>
+  <data name="BtnConnect" xml:space="preserve">
+    <value>接続する</value>
+  </data>
+  <data name="DisconnectButton.Content" xml:space="preserve">
+    <value>切断する</value>
+  </data>
+  <data name="RadarVeryClose" xml:space="preserve">
+    <value>非常に近い</value>
+  </data>
+  <data name="RadarInRadius" xml:space="preserve">
+    <value>範囲内</value>
+  </data>
+  <data name="RadarFarAway" xml:space="preserve">
+    <value>遠くにある (弱い信号)</value>
+  </data>
+  <data name="AnalyzerTitle.Text" xml:space="preserve">
+    <value>Bluetooth LE アナライザー (PRO)</value>
+  </data>
+  <data name="AnalyzerSubtitle.Text" xml:space="preserve">
+    <value>デバイスの GATT 特性と記述子の検査</value>
+  </data>
+  <data name="UnlockProButton.Content" xml:space="preserve">
+    <value>PRO 版を解除</value>
+  </data>
+  <data name="ProPurchaseSuccessTitle" xml:space="preserve">
+    <value>成功！</value>
+  </data>
+  <data name="ProPurchaseSuccessContent" xml:space="preserve">
+    <value>PRO バージョンが正常にアクティベートされました。すべての機能がロック解除されました!</value>
+  </data>
+  <data name="ProPurchaseFailTitle" xml:space="preserve">
+    <value>購入エラー</value>
+  </data>
+  <data name="ProPurchaseFailContent" xml:space="preserve">
+    <value>購入を完了できませんでした。もう一度試してください。</value>
+  </data>
+  <data name="AnalyzerPromoText.Text" xml:space="preserve">
+    <value>このモジュールは、Bluetooth Low Energy (BLE) デバイスの高度な診断用に設計されています。無料の PRO トライアル後、PRO を解除してアナライザーへのフル アクセスを維持してください。</value>
+  </data>
+  <data name="AnalyzerFeature1.Text" xml:space="preserve">
+    <value>• 隠された GATT サービスと特性を検出して読み取る</value>
+  </data>
+  <data name="AnalyzerFeature2.Text" xml:space="preserve">
+    <value>• BLE パケット記述子の変更と送信</value>
+  </data>
+  <data name="AnalyzerFeature3.Text" xml:space="preserve">
+    <value>• 低レベルのトラフィックをログに記録し、継続的にキャプチャする</value>
+  </data>
+  <data name="BtnScanBle.Content" xml:space="preserve">
+    <value>BLE デバイスを探す</value>
+  </data>
+  <data name="ValueLabel.Text" xml:space="preserve">
+    <value>価値：</value>
+  </data>
+  <data name="BleComboPlaceholder" xml:space="preserve">
+    <value>BLE デバイスを選択...</value>
+  </data>
+  <data name="BleDevicesHeader" xml:space="preserve">
+    <value>BLE デバイス</value>
+  </data>
+  <data name="ErrorBleScanTitle" xml:space="preserve">
+    <value>スキャンエラー</value>
+  </data>
+  <data name="ErrorGattTitle" xml:space="preserve">
+    <value>ガットエラー</value>
+  </data>
+  <data name="ErrorConnBleTitle" xml:space="preserve">
+    <value>BLE接続エラー</value>
+  </data>
+  <data name="ErrorNoBleDevice" xml:space="preserve">
+    <value>BLEデバイスとの接続の確立に失敗しました。</value>
+  </data>
+  <data name="CharClickToRead" xml:space="preserve">
+    <value>クリックして読んでください</value>
+  </data>
+  <data name="CharWriteOnlyError" xml:space="preserve">
+    <value>エラー: 書き込み/通知のみ</value>
+  </data>
+  <data name="CharEmptyBuffer" xml:space="preserve">
+    <value>空のデータバッファ</value>
+  </data>
+  <data name="CharReadError" xml:space="preserve">
+    <value>読み取りエラー。状態：</value>
+  </data>
+  <data name="AppTitle" xml:space="preserve">
+    <value>BlueIDE: Bluetooth ターミナルと BLE スキャナーアナライザー</value>
+  </data>
+  <data name="ServerLockTitle" xml:space="preserve">
+    <value>BlueIDE PRO で利用可能</value>
+  </data>
+  <data name="ServerLockContent" xml:space="preserve">
+    <value>内蔵 Bluetooth エコー サーバーを使用すると、ループバック テストのために PC 内でワイヤレス ボードを直接シミュレートできます。 PRO バージョンとすべての高度なツールのロックを解除しますか?</value>
+  </data>
+  <data name="BtnBuyPro" xml:space="preserve">
+    <value>PRO を購入</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="AnalyzerHeader" xml:space="preserve">
+    <value>利用可能な GATT サービス</value>
+  </data>
+  <data name="CharacteristicsHeader" xml:space="preserve">
+    <value>特性とデータ</value>
+  </data>
+  <data name="DialogOk" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ServerErrorTitle" xml:space="preserve">
+    <value>サーバーエラー</value>
+  </data>
+  <data name="BtnPair" xml:space="preserve">
+    <value>ペア</value>
+  </data>
+  <data name="BtnUnpair" xml:space="preserve">
+    <value>ペアリングを解除する</value>
+  </data>
+  <data name="PairErrorTitle" xml:space="preserve">
+    <value>ペアリングエラー</value>
+  </data>
+  <data name="PairErrorContent" xml:space="preserve">
+    <value>ペアリングに失敗しました:</value>
+  </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>名前またはMACでフィルタリング...</value>
+  </data>
+  <data name="EmptyDevicesTitle.Text" xml:space="preserve">
+    <value>まだデバイスがありません</value>
+  </data>
+  <data name="EmptyDevicesSubtitle.Text" xml:space="preserve">
+    <value>「スキャン」をタップして、近くにあるクラシック デバイスと BLE デバイスを検出します。</value>
+  </data>
+  <data name="BtnClearLog.Content" xml:space="preserve">
+    <value>クリア</value>
+  </data>
+  <data name="BtnCopyLog.Content" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="BtnAddPreset.Content" xml:space="preserve">
+    <value>+ プリセット</value>
+  </data>
+  <data name="BtnRunMacro.Content" xml:space="preserve">
+    <value>マクロを実行する</value>
+  </data>
+  <data name="HistoryCombo.PlaceholderText" xml:space="preserve">
+    <value>コマンド履歴</value>
+  </data>
+  <data name="SettingsSendAsHex.Header" xml:space="preserve">
+    <value>16 進数として送信</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>外観</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>テーマ</value>
+  </data>
+  <data name="ThemeSystem.Content" xml:space="preserve">
+    <value>システム</value>
+  </data>
+  <data name="ThemeLight.Content" xml:space="preserve">
+    <value>ライト</value>
+  </data>
+  <data name="ThemeDark.Content" xml:space="preserve">
+    <value>暗い</value>
+  </data>
+  <data name="SettingsCompact.Header" xml:space="preserve">
+    <value>コンパクトデバイス一覧</value>
+  </data>
+  <data name="SettingsScannerHeader.Text" xml:space="preserve">
+    <value>スキャナー</value>
+  </data>
+  <data name="SettingsSort.Header" xml:space="preserve">
+    <value>デフォルトの並べ替え</value>
+  </data>
+  <data name="SortRssi.Content" xml:space="preserve">
+    <value>RSSIによる</value>
+  </data>
+  <data name="SortName.Content" xml:space="preserve">
+    <value>名前で</value>
+  </data>
+  <data name="SortRecent.Content" xml:space="preserve">
+    <value>最近見た</value>
+  </data>
+  <data name="SettingsTerminalHeader.Text" xml:space="preserve">
+    <value>ターミナル</value>
+  </data>
+  <data name="SettingsLineEnding.Header" xml:space="preserve">
+    <value>行末</value>
+  </data>
+  <data name="SettingsAutoReconnect.Header" xml:space="preserve">
+    <value>ドロップ時に自動再接続</value>
+  </data>
+  <data name="SettingsPresetsHeader.Text" xml:space="preserve">
+    <value>コマンドプリセット</value>
+  </data>
+  <data name="BtnExportPresets.Content" xml:space="preserve">
+    <value>プリセットのエクスポート</value>
+  </data>
+  <data name="BtnImportPresets.Content" xml:space="preserve">
+    <value>プリセットをインポートする</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>について</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>ライセンス</value>
+  </data>
+  <data name="SettingsLicenseTitle.Text" xml:space="preserve">
+    <value>BlueIDE PRO</value>
+  </data>
+  <data name="TrialBannerTitle" xml:space="preserve">
+    <value>PRO トライアル中</value>
+  </data>
+  <data name="TrialBannerMessage" xml:space="preserve">
+    <value>残り {0} 日。トライアル後もアナライザー、エコー サーバー、マクロを使うには PRO を購入してください。</value>
+  </data>
+  <data name="TrialEndedTitle" xml:space="preserve">
+    <value>PRO トライアル終了</value>
+  </data>
+  <data name="TrialEndedContent" xml:space="preserve">
+    <value>14 日間の PRO トライアルが終了しました。BLE アナライザー、エコー サーバー、マクロを続けるには PRO を解除してください。</value>
+  </data>
+  <data name="LicenseStatusTrial" xml:space="preserve">
+    <value>ライセンス: PRO トライアル（残り {0} 日）</value>
+  </data>
+  <data name="LicenseStatusPro" xml:space="preserve">
+    <value>ライセンス: BlueIDE PRO</value>
+  </data>
+  <data name="LicenseStatusFree" xml:space="preserve">
+    <value>ライセンス: 無料（トライアル終了）</value>
+  </data>
+  <data name="SettingsAboutText.Text" xml:space="preserve">
+    <value>BlueIDE — メーカーおよびエンジニア向けの Bluetooth ターミナルおよび BLE GATT アナライザー。</value>
+  </data>
+  <data name="BtnRateApp.Content" xml:space="preserve">
+    <value>Microsoft Store でのレート</value>
+  </data>
+  <data name="BtnShowOnboarding.Content" xml:space="preserve">
+    <value>ウェルカムヒントを表示する</value>
+  </data>
+  <data name="ExportSuccessTitle" xml:space="preserve">
+    <value>輸出済み</value>
+  </data>
+  <data name="ExportSuccessContent" xml:space="preserve">
+    <value>プリセットは正常にエクスポートされました。</value>
+  </data>
+  <data name="ImportSuccessTitle" xml:space="preserve">
+    <value>輸入品</value>
+  </data>
+  <data name="ImportSuccessContent" xml:space="preserve">
+    <value>プリセットは正常にインポートされました。</value>
+  </data>
+  <data name="OnboardTitle" xml:space="preserve">
+    <value>BlueIDE へようこそ</value>
+  </data>
+  <data name="OnboardStep1" xml:space="preserve">
+    <value>1. 近くのクラシック デバイスと BLE デバイスをスキャンします。</value>
+  </data>
+  <data name="OnboardStep2" xml:space="preserve">
+    <value>2. 必要に応じてペアリングし、SPP 端末に接続します。</value>
+  </data>
+  <data name="OnboardStep3" xml:space="preserve">
+    <value>3. 14 日間の PRO トライアル（アナライザー、エコー サーバー、マクロ）を利用し、その後購入して継続できます。</value>
+  </data>
+  <data name="OnboardGotIt" xml:space="preserve">
+    <value>わかった</value>
+  </data>
+  <data name="StatusReconnecting" xml:space="preserve">
+    <value>再接続中...</value>
+  </data>
+  <data name="ErrorInvalidHex" xml:space="preserve">
+    <value>無効な 16 進数入力です。</value>
+  </data>
+  <data name="AddPresetTitle" xml:space="preserve">
+    <value>プリセットの追加</value>
+  </data>
+  <data name="PresetNamePlaceholder" xml:space="preserve">
+    <value>プリセット名</value>
+  </data>
+  <data name="MacroProOnly" xml:space="preserve">
+    <value>コマンド マクロには BlueIDE PRO が必要です。</value>
+  </data>
+  <data name="PresetPayloadPlaceholder" xml:space="preserve">
+    <value>コマンド / ペイロード</value>
+  </data>
+  <data name="PresetEmptyMessage" xml:space="preserve">
+    <value>プリセットとして保存するコマンドを入力してください。</value>
+  </data>
+  <data name="MacroNoPresets" xml:space="preserve">
+    <value>マクロを実行する前に、少なくとも 1 つのプリセットを追加してください。</value>
+  </data>
+  <data name="MacroNotConnected" xml:space="preserve">
+    <value>先にデバイスに接続するか、エコー サーバーを起動してください。</value>
+  </data>
+  <data name="ServiceSppDefault" xml:space="preserve">
+    <value>シリアル ポート (SPP)</value>
+  </data>
+  <data name="BtnRead.Content" xml:space="preserve">
+    <value>読む</value>
+  </data>
+  <data name="BtnWrite.Content" xml:space="preserve">
+    <value>書く</value>
+  </data>
+  <data name="BtnSubscribe.Content" xml:space="preserve">
+    <value>購読する</value>
+  </data>
+  <data name="BtnUnsubscribe" xml:space="preserve">
+    <value>購読を解除する</value>
+  </data>
+  <data name="WriteBox.PlaceholderText" xml:space="preserve">
+    <value>書き込む値...</value>
+  </data>
+  <data name="DescriptorsHeader.Text" xml:space="preserve">
+    <value>記述子</value>
+  </data>
+  <data name="TrafficLogHeader.Text" xml:space="preserve">
+    <value>トラフィックログ</value>
+  </data>
+  <data name="BtnExportTxt.Content" xml:space="preserve">
+    <value>TXTのエクスポート</value>
+  </data>
+  <data name="BtnExportCsv.Content" xml:space="preserve">
+    <value>CSVのエクスポート</value>
+  </data>
+  <data name="BtnRunScript.Content" xml:space="preserve">
+    <value>スクリプトを実行する</value>
+  </data>
+  <data name="BleFilterBox.PlaceholderText" xml:space="preserve">
+    <value>フィルター名/MAC/UUID...</value>
+  </data>
+  <data name="SvcBattery" xml:space="preserve">
+    <value>バッテリーサービス</value>
+  </data>
+  <data name="SvcDeviceInfo" xml:space="preserve">
+    <value>デバイス情報</value>
+  </data>
+  <data name="SvcHeartRate" xml:space="preserve">
+    <value>心拍</value>
+  </data>
+  <data name="SvcHid" xml:space="preserve">
+    <value>ヒューマンインターフェースデバイス</value>
+  </data>
+  <data name="SvcGenericAccess" xml:space="preserve">
+    <value>汎用アクセス</value>
+  </data>
+  <data name="SvcGenericAttribute" xml:space="preserve">
+    <value>汎用属性</value>
+  </data>
+  <data name="SvcCustom" xml:space="preserve">
+    <value>カスタムサービス</value>
+  </data>
+  <data name="CharBatteryLevel" xml:space="preserve">
+    <value>バッテリー残量</value>
+  </data>
+  <data name="CharManufacturer" xml:space="preserve">
+    <value>メーカー名</value>
+  </data>
+  <data name="CharModelNumber" xml:space="preserve">
+    <value>モデル番号</value>
+  </data>
+  <data name="CharHeartRateMeas" xml:space="preserve">
+    <value>心拍数測定</value>
+  </data>
+  <data name="CharDeviceName" xml:space="preserve">
+    <value>デバイス名</value>
+  </data>
+  <data name="CharCustom" xml:space="preserve">
+    <value>カスタム特性</value>
+  </data>
+  <data name="DescCccd" xml:space="preserve">
+    <value>クライアント特性の設定</value>
+  </data>
+  <data name="DescUserDescription" xml:space="preserve">
+    <value>特徴的なユーザーの説明</value>
+  </data>
+  <data name="DescCustom" xml:space="preserve">
+    <value>ディスクリプタ</value>
+  </data>
+  <data name="EmptyTerminalTitle.Text" xml:space="preserve">
+    <value>端末準備完了</value>
+  </data>
+  <data name="EmptyTerminalSubtitle.Text" xml:space="preserve">
+    <value>クラシック デバイスを選択し、[接続] を押してデータを送受信します。</value>
+  </data>
+  <data name="EmptyGattTitle.Text" xml:space="preserve">
+    <value>GATT サービスなし</value>
+  </data>
+  <data name="EmptyGattSubtitle.Text" xml:space="preserve">
+    <value>リストから BLE デバイスを選択して、そのサービスを調べます。</value>
+  </data>
+  <data name="EmptyBleDevicesTitle.Text" xml:space="preserve">
+    <value>BLE デバイスがありません</value>
+  </data>
+  <data name="EmptyBleDevicesSubtitle.Text" xml:space="preserve">
+    <value>「Scan BLE」をタップして近くの広告主を見つけます。</value>
+  </data>
+  <data name="EmptyCharTitle.Text" xml:space="preserve">
+    <value>特性が選択されていません</value>
+  </data>
+  <data name="EmptyCharSubtitle.Text" xml:space="preserve">
+    <value>GATT ツリーで読み取り、書き込み、またはサブスクライブする特性を選択します。</value>
+  </data>
+  <data name="SectionSelectedChar.Text" xml:space="preserve">
+    <value>選択された特性</value>
+  </data>
+  <data name="SectionReadNotify.Text" xml:space="preserve">
+    <value>読む/通知する</value>
+  </data>
+  <data name="SectionWrite.Text" xml:space="preserve">
+    <value>書く</value>
+  </data>
+  <data name="SectionScript.Text" xml:space="preserve">
+    <value>スクリプト</value>
+  </data>
+  <data name="WriteFormatHex.Content" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="WriteFormatText.Content" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="WriteFormatUint8.Content" xml:space="preserve">
+    <value>Uint8</value>
+  </data>
+  <data name="BtnWriteCccd.Content" xml:space="preserve">
+    <value>書き込みCCCD通知</value>
+  </data>
+  <data name="ScriptBox.PlaceholderText" xml:space="preserve">
+    <value># WAIT 200
+# READ 2a19
+# WRITE 2a39 hex:01</value>
+  </data>
+  <data name="ServiceCombo.PlaceholderText" xml:space="preserve">
+    <value>RFCOMMサービス</value>
+  </data>
+  <data name="FavoriteButton.AutomationProperties.Name" xml:space="preserve">
+    <value>お気に入り</value>
+  </data>
+  <data name="ShowUnknownMenuItem.Text" xml:space="preserve">
+    <value>不明なデバイスを表示する</value>
+  </data>
+  <data name="ShellStatusConnected" xml:space="preserve">
+    <value>接続済み</value>
+  </data>
+  <data name="ShellStatusConnectedTo" xml:space="preserve">
+    <value>接続済み:</value>
+  </data>
+  <data name="ShellStatusDisconnected" xml:space="preserve">
+    <value>切断されました</value>
+  </data>
+  <data name="SettingsThemeTitle.Text" xml:space="preserve">
+    <value>テーマ</value>
+  </data>
+  <data name="SettingsThemeDesc.Text" xml:space="preserve">
+    <value>システム、明るいまたは暗い外観。</value>
+  </data>
+  <data name="SettingsCompactTitle.Text" xml:space="preserve">
+    <value>コンパクトな密度</value>
+  </data>
+  <data name="SettingsCompactDesc.Text" xml:space="preserve">
+    <value>デバイスリストとツールバーの間隔が狭くなりました。</value>
+  </data>
+  <data name="SettingsSortTitle.Text" xml:space="preserve">
+    <value>デフォルトの並べ替え</value>
+  </data>
+  <data name="SettingsSortDesc.Text" xml:space="preserve">
+    <value>スキャン後のデバイスの順序付け方法。</value>
+  </data>
+  <data name="SettingsLineEndingTitle.Text" xml:space="preserve">
+    <value>行末</value>
+  </data>
+  <data name="SettingsLineEndingDesc.Text" xml:space="preserve">
+    <value>端末から送信する際に本文に付加されます。</value>
+  </data>
+  <data name="SettingsSendAsHexTitle.Text" xml:space="preserve">
+    <value>16 進数として送信</value>
+  </data>
+  <data name="SettingsSendAsHexDesc.Text" xml:space="preserve">
+    <value>デフォルトでは、入力を 16 進数のバイトとして扱います。</value>
+  </data>
+  <data name="SettingsAutoReconnectTitle.Text" xml:space="preserve">
+    <value>自動再接続</value>
+  </data>
+  <data name="SettingsAutoReconnectDesc.Text" xml:space="preserve">
+    <value>RFCOMM リンクが切断された場合は、再接続を試みます。</value>
+  </data>
+  <data name="SettingsPresetsTitle.Text" xml:space="preserve">
+    <value>インポート/エクスポート</value>
+  </data>
+  <data name="SettingsPresetsDesc.Text" xml:space="preserve">
+    <value>コマンド プリセットをファイルとしてバックアップまたは復元します。</value>
+  </data>
+  <data name="LineEndingLf.Content" xml:space="preserve">
+    <value>LF (\n)</value>
+  </data>
+  <data name="LineEndingCrLf.Content" xml:space="preserve">
+    <value>CRLF (\r\n)</value>
+  </data>
+  <data name="LineEndingCr.Content" xml:space="preserve">
+    <value>CR (\r)</value>
+  </data>
+  <data name="LineEndingNone.Content" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="TipNext" xml:space="preserve">
+    <value>次</value>
+  </data>
+  <data name="TipSkip" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="TipDone" xml:space="preserve">
+    <value>わかった</value>
+  </data>
+  <data name="TipScanTitle" xml:space="preserve">
+    <value>デバイスのスキャン</value>
+  </data>
+  <data name="TipScanSubtitle" xml:space="preserve">
+    <value>スキャンを開始して近くのクラシック デバイスと BLE デバイスを見つけます。</value>
+  </data>
+  <data name="TipDevicesTitle" xml:space="preserve">
+    <value>ペアリングして接続する</value>
+  </data>
+  <data name="TipDevicesSubtitle" xml:space="preserve">
+    <value>必要に応じて「ペアリング」を使用し、SPP 端末の場合は「接続」を使用します。</value>
+  </data>
+  <data name="TipTerminalTitle" xml:space="preserve">
+    <value>コマンドを送信する</value>
+  </data>
+  <data name="TipTerminalSubtitle" xml:space="preserve">
+    <value>ここに入力して送信を押してください。 TX および RX トラフィックはログ内で色分けされて表示されます。</value>
+  </data>
+  <data name="TipSessionTitle" xml:space="preserve">
+    <value>セッションは存続します</value>
+  </data>
+  <data name="TipSessionSubtitle" xml:space="preserve">
+    <value>タブを切り替えると、RFCOMM 接続が維持されます。ステータスはこことナビゲーション ペインに表示されます。</value>
+  </data>
+  <data name="TipAnalyzerTitle" xml:space="preserve">
+    <value>BLEアナライザー</value>
+  </data>
+  <data name="TipAnalyzerSubtitle" xml:space="preserve">
+    <value>BLE 広告主をスキャンしてデバイスを選択し、GATT のサービスと特性を調べます。</value>
+  </data>
+  <data name="DisconnectWarningBar.Title" xml:space="preserve">
+    <value>セッションは維持されました</value>
+  </data>
+  <data name="DisconnectWarningBar.Message" xml:space="preserve">
+    <value>タブを切り替えている間、RFCOMM 接続はアクティブなままになります。</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>プロ向け Bluetooth ターミナル（RFCOMM/SPP）、エコーサーバー、低レベル BLE GATT 分析ツール。</value>
+  </data>
+</root>
