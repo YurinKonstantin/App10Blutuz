@@ -465,11 +465,32 @@
   <data name="LicenseStatusFree" xml:space="preserve">
     <value>Лицензия: бесплатная (пробный период закончился)</value>
   </data>
+  <data name="BtnRefreshLicense" xml:space="preserve">
+    <value>Восстановить покупки</value>
+  </data>
+  <data name="LicenseRestoreTitle" xml:space="preserve">
+    <value>Восстановление покупок</value>
+  </data>
+  <data name="LicenseRestoreFound" xml:space="preserve">
+    <value>Покупка BlueIDE PRO активна на этом устройстве.</value>
+  </data>
+  <data name="LicenseRestoreNotFound" xml:space="preserve">
+    <value>Для этой учетной записи Microsoft на этом устройстве активная покупка BlueIDE PRO не найдена.</value>
+  </data>
   <data name="SettingsAboutText.Text" xml:space="preserve">
     <value>BlueIDE — Bluetooth-терминал и BLE GATT-анализатор для мейкеров и инженеров.</value>
   </data>
   <data name="BtnRateApp.Content" xml:space="preserve">
     <value>Оценить в Microsoft Store</value>
+  </data>
+  <data name="BtnPrivacyPolicy" xml:space="preserve">
+    <value>Политика конфиденциальности</value>
+  </data>
+  <data name="PrivacyPolicyTitle" xml:space="preserve">
+    <value>Политика конфиденциальности</value>
+  </data>
+  <data name="PrivacyPolicyStoreFallback" xml:space="preserve">
+    <value>Откройте страницу BlueIDE в Microsoft Store и добавьте публичный URL политики конфиденциальности в Partner Center перед следующей отправкой.</value>
   </data>
   <data name="BtnShowOnboarding.Content" xml:space="preserve">
     <value>Показать подсказки</value>
@@ -496,7 +517,7 @@
     <value>2. При необходимости сопрягите, затем подключитесь к SPP-терминалу.</value>
   </data>
   <data name="OnboardStep3" xml:space="preserve">
-    <value>3. 14 дней PRO бесплатно (Analyzer, эхо-сервер, макросы), затем купите, чтобы сохранить доступ.</value>
+    <value>3. У PRO-инструментов есть 14-дневный пробный период, который стартует при первом использовании (Analyzer, эхо-сервер, макросы).</value>
   </data>
   <data name="OnboardGotIt" xml:space="preserve">
     <value>Понятно</value>

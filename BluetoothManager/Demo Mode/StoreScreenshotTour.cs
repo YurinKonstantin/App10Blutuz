@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.Windows.ApplicationModel.Resources;
 using Windows.Globalization;
 
 namespace BluetoothManager.Demo_Mode
@@ -65,8 +63,7 @@ namespace BluetoothManager.Demo_Mode
                         await SwitchLanguageAsync(previousLang, main);
                     else
                     {
-                        ApplicationLanguages.PrimaryLanguageOverride = "";
-                        App.ResLoader = new ResourceLoader();
+                        LocalizationHelper.ApplyWindowsLanguage();
                     }
                 }
                 catch
@@ -105,18 +102,7 @@ namespace BluetoothManager.Demo_Mode
 
         public static async Task SwitchLanguageAsync(string bcp47, MainWindow main)
         {
-            ApplicationLanguages.PrimaryLanguageOverride = bcp47;
-            try
-            {
-                CultureInfo.CurrentUICulture = new CultureInfo(bcp47);
-                CultureInfo.CurrentCulture = new CultureInfo(bcp47);
-            }
-            catch
-            {
-                // culture parse may fail for some tags; PrimaryLanguageOverride still applies
-            }
-
-            App.ResLoader = new ResourceLoader();
+            LocalizationHelper.ApplyLanguage(bcp47);
             main.RefreshShellLocalization();
 
             main.ForceNavigateFresh("devices");

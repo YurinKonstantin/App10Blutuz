@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.ApplicationModel.Resources;
 using BluetoothManager.Demo_Mode;
 using BluetoothManager.Services;
+using Windows.System;
 
 namespace BluetoothManager
 {
@@ -16,6 +17,7 @@ namespace BluetoothManager
         {
             InitializeComponent();
             Loaded += SettingsPage_Loaded;
+            LicenseManager.StatusChanged += OnLicenseStatusChanged;
         }
 
         private async void SettingsPage_Loaded(object sender, RoutedEventArgs e)
@@ -31,7 +33,16 @@ namespace BluetoothManager
 
             await LicenseManager.CheckLicenseAsync();
             UpdateLicenseUi();
+            RefreshLicenseButton.Content = ResHelper.Get(_res, "BtnRefreshLicense", "Restore purchases");
+            PrivacyPolicyButton.Content = ResHelper.Get(_res, "BtnPrivacyPolicy", "Privacy policy");
             InitStoreScreenshotPanel();
+        }
+
+        protected override async void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await LicenseManager.CheckLicenseAsync();
+            UpdateLicenseUi();
         }
 
         private void InitStoreScreenshotPanel()
@@ -143,6 +154,27 @@ namespace BluetoothManager
                 : Visibility.Visible;
         }
 
+        private void OnLicenseStatusChanged()
+        {
+            DispatcherQueue.TryEnqueue(UpdateLicenseUi);
+        }
+
+        private async void RefreshLicense_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshLicenseButton.IsEnabled = false;
+            await LicenseManager.CheckLicenseAsync();
+            UpdateLicenseUi();
+
+            string content = LicenseManager.IsProUser
+                ? ResHelper.Get(_res, "LicenseRestoreFound", "Your BlueIDE PRO purchase is active on this device.")
+                : ResHelper.Get(_res, "LicenseRestoreNotFound", "No active BlueIDE PRO purchase was found for this Microsoft account on this device.");
+
+            await DialogHelper.ShowAsync(
+                ResHelper.Get(_res, "LicenseRestoreTitle", "Restore purchases"),
+                content);
+            RefreshLicenseButton.IsEnabled = true;
+        }
+
         private async void BuyPro_Click(object sender, RoutedEventArgs e)
         {
             BuyProSettingsButton.IsEnabled = false;
@@ -224,6 +256,19 @@ namespace BluetoothManager
         private async void RateApp_Click(object sender, RoutedEventArgs e)
         {
             await RateManager.PromptRatingAsync(force: true);
+        }
+
+        private async void PrivacyPolicy_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri("https://apps.microsoft.com/detail/9N5H75QWBHLL");
+            bool launched = await Launcher.LaunchUriAsync(uri);
+            if (!launched)
+            {
+                await DialogHelper.ShowAsync(
+                    ResHelper.Get(_res, "PrivacyPolicyTitle", "Privacy policy"),
+                    ResHelper.Get(_res, "PrivacyPolicyStoreFallback",
+                        "Open the BlueIDE Microsoft Store page and add your public privacy policy URL in Partner Center before the next submission."));
+            }
         }
 
         private async void ShowOnboarding_Click(object sender, RoutedEventArgs e)

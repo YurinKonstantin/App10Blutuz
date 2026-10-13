@@ -465,11 +465,32 @@
   <data name="LicenseStatusFree" xml:space="preserve">
     <value>License: Free (trial ended)</value>
   </data>
+  <data name="BtnRefreshLicense" xml:space="preserve">
+    <value>Restore purchases</value>
+  </data>
+  <data name="LicenseRestoreTitle" xml:space="preserve">
+    <value>Restore purchases</value>
+  </data>
+  <data name="LicenseRestoreFound" xml:space="preserve">
+    <value>Your BlueIDE PRO purchase is active on this device.</value>
+  </data>
+  <data name="LicenseRestoreNotFound" xml:space="preserve">
+    <value>No active BlueIDE PRO purchase was found for this Microsoft account on this device.</value>
+  </data>
   <data name="SettingsAboutText.Text" xml:space="preserve">
     <value>BlueIDE — Bluetooth terminal and BLE GATT analyzer for makers and engineers.</value>
   </data>
   <data name="BtnRateApp.Content" xml:space="preserve">
     <value>Rate in Microsoft Store</value>
+  </data>
+  <data name="BtnPrivacyPolicy" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="PrivacyPolicyTitle" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="PrivacyPolicyStoreFallback" xml:space="preserve">
+    <value>Open the BlueIDE Microsoft Store page and add your public privacy policy URL in Partner Center before the next submission.</value>
   </data>
   <data name="BtnShowOnboarding.Content" xml:space="preserve">
     <value>Show welcome tips</value>
@@ -496,7 +517,7 @@
     <value>2. Pair if needed, then Connect for the SPP terminal.</value>
   </data>
   <data name="OnboardStep3" xml:space="preserve">
-    <value>3. Enjoy a 14-day PRO trial (Analyzer, echo server, macros), then buy to keep them.</value>
+    <value>3. PRO tools include a 14-day trial that starts on first use (Analyzer, echo server, macros).</value>
   </data>
   <data name="OnboardGotIt" xml:space="preserve">
     <value>Got it</value>

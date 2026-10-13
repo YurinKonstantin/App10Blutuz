@@ -46,6 +46,7 @@ namespace BluetoothManager
             AnalyzerHeader.Text = ResHelper.Get(_res, "AnalyzerHeader", "GATT Services");
             CharacteristicsHeader.Text = ResHelper.Get(_res, "CharacteristicsHeader", "Characteristics");
             Loaded += AnalyzerPage_Loaded;
+            LicenseManager.StatusChanged += OnLicenseStatusChanged;
             _traffic.Changed += () => DispatcherQueue.TryEnqueue(() =>
             {
                 TrafficByteCount.Text = $"TX {_traffic.TotalBytesTx} / RX {_traffic.TotalBytesRx} B";
@@ -58,7 +59,7 @@ namespace BluetoothManager
             {
                 Loaded -= AnalyzerPage_Loaded;
                 _initialLoadDone = true;
-                await LicenseManager.CheckLicenseAsync();
+                await LicenseManager.CheckLicenseAsync(startTrialIfNeeded: true);
                 UpdateUiState();
                 UpdateAnalyzerEmptyStates();
                 SetCharSelectionVisible(false);
@@ -774,7 +775,19 @@ namespace BluetoothManager
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            _ = RefreshLicenseUiAsync();
             UpdateAnalyzerEmptyStates();
+        }
+
+        private async Task RefreshLicenseUiAsync()
+        {
+            await LicenseManager.CheckLicenseAsync(startTrialIfNeeded: true);
+            UpdateUiState();
+        }
+
+        private void OnLicenseStatusChanged()
+        {
+            DispatcherQueue.TryEnqueue(UpdateUiState);
         }
 
         public void ApplyDemoScene(string sceneFileName)

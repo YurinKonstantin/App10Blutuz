@@ -23,6 +23,7 @@ namespace BluetoothManager
 
         public App()
         {
+            LocalizationHelper.ApplyWindowsLanguage();
             InitializeComponent();
             ResLoader = new Microsoft.Windows.ApplicationModel.Resources.ResourceLoader();
         }

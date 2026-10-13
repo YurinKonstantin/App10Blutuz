@@ -120,9 +120,13 @@
                         <TextBlock x:Uid="SettingsLicenseTitle" Style="{StaticResource SettingsCardTitleStyle}"/>
                         <TextBlock x:Name="LicenseStatusText" Style="{StaticResource SettingsCardDescStyle}"/>
                     </StackPanel>
-                    <Button x:Name="BuyProSettingsButton" Grid.Column="1"
-                            VerticalAlignment="Center" Click="BuyPro_Click"
-                            Style="{StaticResource AccentButtonStyle}"/>
+                    <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                        <Button x:Name="BuyProSettingsButton"
+                                Click="BuyPro_Click"
+                                Style="{StaticResource AccentButtonStyle}"/>
+                        <Button x:Name="RefreshLicenseButton"
+                                Click="RefreshLicense_Click"/>
+                    </StackPanel>
                 </Grid>
             </Border>
 
@@ -133,6 +137,7 @@
                     <TextBlock x:Uid="SettingsAboutText" TextWrapping="Wrap"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <Button x:Uid="BtnRateApp" Click="RateApp_Click" HorizontalAlignment="Left"/>
+                    <Button x:Name="PrivacyPolicyButton" Click="PrivacyPolicy_Click" HorizontalAlignment="Left"/>
                     <Button x:Uid="BtnShowOnboarding" Click="ShowOnboarding_Click" HorizontalAlignment="Left"/>
                 </StackPanel>
             </Border>

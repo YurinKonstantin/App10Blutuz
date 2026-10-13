@@ -15,7 +15,7 @@ namespace BluetoothManager
 
     public static class LicenseManager
     {
-        private static StoreContext _storeContext;
+        private static StoreContext? _storeContext;
         private const string ProStoreId = "9NF72H80049N";
         public const int TrialDurationDays = 14;
 
@@ -25,6 +25,7 @@ namespace BluetoothManager
         public static bool IsTrialActive => AccessKind == ProAccessKind.Trial;
         public static bool IsTrialExpired =>
             AccessKind == ProAccessKind.Free && !string.IsNullOrEmpty(AppSettings.TrialStartedUtc);
+        public static event Action? StatusChanged;
 
         private static void InitializeContext()
         {
@@ -36,12 +37,12 @@ namespace BluetoothManager
             }
         }
 
-        public static async Task CheckLicenseAsync()
+        public static async Task CheckLicenseAsync(bool startTrialIfNeeded = false)
         {
             try
             {
                 InitializeContext();
-                StoreAppLicense appLicense = await _storeContext.GetAppLicenseAsync();
+                StoreAppLicense appLicense = await _storeContext!.GetAppLicenseAsync();
 
                 if (appLicense != null &&
                     appLicense.AddOnLicenses.TryGetValue(ProStoreId, out var license) &&
@@ -56,7 +57,7 @@ namespace BluetoothManager
                 // Offline / Store errors must not wipe an active trial.
             }
 
-            ApplyTrialOrFree();
+            ApplyTrialOrFree(startTrialIfNeeded);
         }
 
         public static async Task<bool> RequestPurchaseAsync()
@@ -64,7 +65,7 @@ namespace BluetoothManager
             try
             {
                 InitializeContext();
-                StorePurchaseResult result = await _storeContext.RequestPurchaseAsync(ProStoreId);
+                StorePurchaseResult result = await _storeContext!.RequestPurchaseAsync(ProStoreId);
 
                 if (result.Status == StorePurchaseStatus.Succeeded ||
                     result.Status == StorePurchaseStatus.AlreadyPurchased)
@@ -85,17 +86,20 @@ namespace BluetoothManager
             AccessKind = ProAccessKind.Purchased;
             IsProUser = true;
             TrialDaysRemaining = 0;
+            StatusChanged?.Invoke();
         }
 
-        private static void ApplyTrialOrFree()
+        private static void ApplyTrialOrFree(bool startTrialIfNeeded)
         {
-            EnsureTrialStarted();
+            if (startTrialIfNeeded)
+                EnsureTrialStarted();
 
             if (!TryGetTrialStart(out DateTimeOffset start))
             {
                 AccessKind = ProAccessKind.Free;
                 IsProUser = false;
                 TrialDaysRemaining = 0;
+                StatusChanged?.Invoke();
                 return;
             }
 
@@ -114,6 +118,8 @@ namespace BluetoothManager
                 IsProUser = false;
                 TrialDaysRemaining = 0;
             }
+
+            StatusChanged?.Invoke();
         }
 
         private static void EnsureTrialStarted()
