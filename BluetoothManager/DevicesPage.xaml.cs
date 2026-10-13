@@ -944,7 +944,7 @@ namespace BluetoothManager
                 await Task.Delay(1500);
                 try
                 {
-                    await _session.ConnectAsync(_pendingReconnectId!, 0);
+                    await _session.ConnectAsync(_pendingReconnectId!, _session.SelectedServiceIndex);
                     StatusTextBlock.Text = $"{_res.GetString("StatusConnectedTo")} {_session.ConnectedDeviceName}";
                     UpdateConnectionUi(true);
                     AppendTerminal(TrafficDirection.Info, StatusTextBlock.Text);
@@ -992,7 +992,7 @@ namespace BluetoothManager
                 if (_session.IsConnected)
                     await _session.SendAsync(payload);
                 else if (_server.IsRunning)
-                    await _server.BroadcastAsync(asHex ? BitConverter.ToString(payload).Replace("-", " ") : message + AppSettings.GetLineEndingString());
+                    await _server.BroadcastAsync(asHex ? payload : System.Text.Encoding.UTF8.GetBytes(message + AppSettings.GetLineEndingString()));
                 else
                     return;
 
@@ -1042,7 +1042,7 @@ namespace BluetoothManager
         {
             if (!LicenseManager.IsProUser)
             {
-                await LicenseManager.CheckLicenseAsync();
+                await LicenseManager.CheckLicenseAsync(startTrialIfNeeded: true);
                 if (!LicenseManager.IsProUser)
                 {
                     var dialog = new ContentDialog
@@ -1209,7 +1209,7 @@ namespace BluetoothManager
         {
             if (!LicenseManager.IsProUser)
             {
-                await LicenseManager.CheckLicenseAsync();
+                await LicenseManager.CheckLicenseAsync(startTrialIfNeeded: true);
                 if (!LicenseManager.IsProUser)
                 {
                     var dialog = new ContentDialog

@@ -11,7 +11,7 @@
   <Identity
     Name="38673Yurin.BluetoothDevice"
     Publisher="CN=6DBA1DE5-9EA9-4313-BEA7-F315A6AEEB19"
-    Version="0.0.150.0" />
+    Version="0.0.151.0" />
 
   <mp:PhoneIdentity PhoneProductId="f680ced9-6f7b-4d5f-a8c9-c9e402dd5479" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

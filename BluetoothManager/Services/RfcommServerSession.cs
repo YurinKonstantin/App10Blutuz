@@ -102,6 +102,11 @@ namespace BluetoothManager.Services
 
         public async Task BroadcastAsync(string message)
         {
+            await BroadcastAsync(System.Text.Encoding.UTF8.GetBytes(message));
+        }
+
+        public async Task BroadcastAsync(byte[] payload)
+        {
             List<RfcommServerClient> snapshot;
             lock (_lock) { snapshot = new List<RfcommServerClient>(_clients.Values); }
 
@@ -110,7 +115,7 @@ namespace BluetoothManager.Services
                 try
                 {
                     if (client.Writer == null) continue;
-                    client.Writer.WriteString(message);
+                    client.Writer.WriteBytes(payload);
                     await client.Writer.StoreAsync();
                 }
                 catch { }
