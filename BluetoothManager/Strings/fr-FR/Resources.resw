@@ -726,4 +726,64 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Terminal Bluetooth professionnel (RFCOMM/SPP), serveur écho et outil d'analyse BLE GATT bas niveau.</value>
   </data>
+  <data name="BtnBuyProWithPrice" xml:space="preserve">
+    <value>Acheter PRO — {0}</value>
+  </data>
+  <data name="ProFeaturesHeader" xml:space="preserve">
+    <value>BlueIDE PRO comprend :</value>
+  </data>
+  <data name="ProFeatureAnalyzer" xml:space="preserve">
+    <value>Analyseur BLE GATT : lecture, écriture, notifications</value>
+  </data>
+  <data name="ProFeatureServer" xml:space="preserve">
+    <value>Serveur d’écho Bluetooth pour les tests en boucle</value>
+  </data>
+  <data name="ProFeatureMacros" xml:space="preserve">
+    <value>Macros de commandes pour les tâches répétitives</value>
+  </data>
+  <data name="ProFeatureExport" xml:space="preserve">
+    <value>Export du trafic en TXT / CSV</value>
+  </data>
+  <data name="ProOneTimeText.Text" xml:space="preserve">
+    <value>Achat unique — sans abonnement, à vie.</value>
+  </data>
+  <data name="ProPriceSale" xml:space="preserve">
+    <value>Promotion — au lieu de {0}</value>
+  </data>
+  <data name="ServerProOnly" xml:space="preserve">
+    <value>Le serveur d’écho simule une carte Bluetooth directement sur votre PC pour les tests en boucle.</value>
+  </data>
+  <data name="TrialEndingTitle" xml:space="preserve">
+    <value>L’essai PRO se termine bientôt</value>
+  </data>
+  <data name="TrialEndingMessage" xml:space="preserve">
+    <value>Il reste {0} jour(s). Vos préréglages et macros sont conservés — achetez PRO pour garder l’analyseur, le serveur d’écho et les macros.</value>
+  </data>
+  <data name="TrialEndedBarMessage" xml:space="preserve">
+    <value>Vos préréglages et macros sont toujours enregistrés. Débloquez PRO pour utiliser à nouveau l’analyseur, le serveur d’écho et les macros.</value>
+  </data>
+  <data name="LicenseStatusFreeTrialAvailable" xml:space="preserve">
+    <value>Licence : gratuite (l’essai PRO de 14 jours démarre à l’ouverture d’un outil PRO)</value>
+  </data>
+  <data name="BtnRefreshLicense" xml:space="preserve">
+    <value>Restaurer les achats</value>
+  </data>
+  <data name="LicenseRestoreTitle" xml:space="preserve">
+    <value>Restaurer les achats</value>
+  </data>
+  <data name="LicenseRestoreFound" xml:space="preserve">
+    <value>Votre achat BlueIDE PRO est actif sur cet appareil.</value>
+  </data>
+  <data name="LicenseRestoreNotFound" xml:space="preserve">
+    <value>Aucun achat BlueIDE PRO actif n’a été trouvé pour ce compte Microsoft sur cet appareil.</value>
+  </data>
+  <data name="BtnPrivacyPolicy" xml:space="preserve">
+    <value>Politique de confidentialité</value>
+  </data>
+  <data name="PrivacyPolicyTitle" xml:space="preserve">
+    <value>Politique de confidentialité</value>
+  </data>
+  <data name="PrivacyPolicyStoreFallback" xml:space="preserve">
+    <value>Impossible d’ouvrir le navigateur. La politique de confidentialité est disponible sur la page BlueIDE du Microsoft Store.</value>
+  </data>
 </root>

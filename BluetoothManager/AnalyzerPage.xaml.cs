@@ -109,6 +109,26 @@ namespace BluetoothManager
                 AnalyzerPanel.Visibility = Visibility.Collapsed;
                 ApplyExpiredPaywallCopy();
             }
+
+            _ = ApplyPriceAsync();
+        }
+
+        /// <summary>Puts the Store price on buy buttons ("Buy PRO — $4.99") and shows a sale line if any.</summary>
+        private async Task ApplyPriceAsync()
+        {
+            if (LicenseManager.AccessKind == ProAccessKind.Purchased) return;
+
+            // Plain label first so the button is never empty while the Store query runs.
+            if (TrialBuyButton.Content == null)
+                TrialBuyButton.Content = ProGate.BuyButtonText(null);
+
+            string buyText = await ProGate.GetBuyButtonTextAsync();
+            string? saleText = await ProGate.GetSaleTextAsync();
+
+            UnlockProButton.Content = buyText;
+            TrialBuyButton.Content = buyText;
+            SalePriceText.Text = saleText ?? "";
+            SalePriceText.Visibility = saleText == null ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void UpdateTrialBanner()
@@ -123,7 +143,6 @@ namespace BluetoothManager
             string template = ResHelper.Get(_res, "TrialBannerMessage",
                 "{0} day(s) left. Buy PRO to keep Analyzer, echo server, and macros.");
             TrialBannerMessageText.Text = string.Format(template, LicenseManager.TrialDaysRemaining);
-            TrialBuyButton.Content = ResHelper.Get(_res, "BtnBuyPro", "Buy PRO");
             TrialBanner.Visibility = Visibility.Visible;
         }
 
@@ -154,26 +173,16 @@ namespace BluetoothManager
 
         private async Task<bool> PurchaseProAsync()
         {
-            bool success = await LicenseManager.RequestPurchaseAsync();
-            if (success)
-            {
-                await DialogHelper.ShowAsync(
-                    ResHelper.Get(_res, "ProPurchaseSuccessTitle", "Success!"),
-                    ResHelper.Get(_res, "ProPurchaseSuccessContent", "PRO unlocked."));
-                UpdateUiState();
-                await RateManager.RegisterMeaningfulEngageAsync();
-                if (TeachingTourHelper.ShouldShowAnalyzerTip && AnalyzerPanel.Visibility == Visibility.Visible)
-                {
-                    await TeachingTourHelper.DelayForLayoutAsync();
-                    TipAnalyzer.IsOpen = true;
-                }
-                return true;
-            }
+            if (!await ProGate.PurchaseAsync())
+                return false;
 
-            await DialogHelper.ShowAsync(
-                ResHelper.Get(_res, "ProPurchaseFailTitle", "Purchase Error"),
-                ResHelper.Get(_res, "ProPurchaseFailContent", "Failed to complete the purchase."));
-            return false;
+            UpdateUiState();
+            if (TeachingTourHelper.ShouldShowAnalyzerTip && AnalyzerPanel.Visibility == Visibility.Visible)
+            {
+                await TeachingTourHelper.DelayForLayoutAsync();
+                TipAnalyzer.IsOpen = true;
+            }
+            return true;
         }
 
         private async void ScanBleButton_Click(object sender, RoutedEventArgs e)

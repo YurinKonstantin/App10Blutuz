@@ -22,7 +22,9 @@ namespace BluetoothManager
             InitializeComponent();
             App.MainWindow = this;
             ConnectionStatusHub.Changed += OnConnectionStatusChanged;
+            LicenseManager.StatusChanged += OnLicenseStatusChanged;
             UpdateShellConnectionStatus();
+            ApplyNavBadges();
             SetWindowIconAndTitle();
 
             // Defer first navigation until Activated so XamlRoot / resources are ready
@@ -56,6 +58,71 @@ namespace BluetoothManager
                 if (System.IO.Path.Exists(iconPath))
                     _appWindow.SetIcon(iconPath);
             }
+        }
+
+        private void OnLicenseStatusChanged()
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                ApplyNavBadges();
+                _ = UpdateTrialReminderAsync();
+            });
+        }
+
+        private void ApplyNavBadges()
+        {
+            foreach (var item in MainNav.MenuItems)
+            {
+                if (item is NavigationViewItem nvi && nvi.Tag as string == "analyzer")
+                    ProGate.ApplyBadge(nvi, ResHelper.Get(_resourceLoader, "NavAnalyzer.Content", "LE Analyzer"));
+            }
+        }
+
+        /// <summary>One-time reminders: when ≤3 trial days remain, and once after the trial ends.</summary>
+        private async System.Threading.Tasks.Task UpdateTrialReminderAsync()
+        {
+            if (TeachingTourHelper.SuppressTips || Demo_Mode.StoreScreenshotTour.IsRunning)
+                return;
+
+            if (LicenseManager.AccessKind == ProAccessKind.Purchased)
+            {
+                TrialReminderBar.IsOpen = false;
+                return;
+            }
+
+            int stage = AppSettings.TrialReminderStage;
+            if (LicenseManager.IsTrialActive && LicenseManager.TrialDaysRemaining <= 3 && stage < 1)
+            {
+                TrialReminderBar.Title = ResHelper.Get(_resourceLoader, "TrialEndingTitle", "PRO trial ends soon");
+                TrialReminderBar.Message = string.Format(
+                    ResHelper.Get(_resourceLoader, "TrialEndingMessage",
+                        "{0} day(s) left. Your presets and macros stay saved — buy PRO to keep the Analyzer, echo server and macros unlocked."),
+                    LicenseManager.TrialDaysRemaining);
+                AppSettings.TrialReminderStage = 1;
+            }
+            else if (LicenseManager.IsTrialExpired && stage < 2)
+            {
+                TrialReminderBar.Title = ResHelper.Get(_resourceLoader, "TrialEndedTitle", "PRO trial ended");
+                TrialReminderBar.Message = ResHelper.Get(_resourceLoader, "TrialEndedBarMessage",
+                    "Your presets and macros are still saved. Unlock PRO to use the Analyzer, echo server and macros again.");
+                AppSettings.TrialReminderStage = 2;
+            }
+            else
+            {
+                return;
+            }
+
+            TrialReminderBuyButton.Content = ProGate.BuyButtonText(null);
+            TrialReminderBar.IsOpen = true;
+            TrialReminderBuyButton.Content = await ProGate.GetBuyButtonTextAsync();
+        }
+
+        private async void TrialReminderBuy_Click(object sender, RoutedEventArgs e)
+        {
+            TrialReminderBuyButton.IsEnabled = false;
+            if (await ProGate.PurchaseAsync())
+                TrialReminderBar.IsOpen = false;
+            TrialReminderBuyButton.IsEnabled = true;
         }
 
         private void OnConnectionStatusChanged()
@@ -164,6 +231,7 @@ namespace BluetoothManager
             if (_appWindow != null)
                 _appWindow.Title = ResHelper.Get(_resourceLoader, "AppTitle", "BlueIDE");
             UpdateShellConnectionStatus();
+            ApplyNavBadges();
             PageHeader.Text = _currentTag switch
             {
                 "analyzer" => ResHelper.Get(_resourceLoader, "NavAnalyzer.Content", "LE Analyzer"),

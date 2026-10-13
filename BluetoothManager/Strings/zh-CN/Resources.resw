@@ -726,4 +726,64 @@
   <data name="AppDescription" xml:space="preserve">
     <value>专业蓝牙终端（RFCOMM/SPP）、回显服务器和底层 BLE GATT 分析工具。</value>
   </data>
+  <data name="BtnBuyProWithPrice" xml:space="preserve">
+    <value>购买 PRO — {0}</value>
+  </data>
+  <data name="ProFeaturesHeader" xml:space="preserve">
+    <value>BlueIDE PRO 包含：</value>
+  </data>
+  <data name="ProFeatureAnalyzer" xml:space="preserve">
+    <value>BLE GATT 分析器：读取、写入、通知</value>
+  </data>
+  <data name="ProFeatureServer" xml:space="preserve">
+    <value>用于回环测试的蓝牙回显服务器</value>
+  </data>
+  <data name="ProFeatureMacros" xml:space="preserve">
+    <value>用于重复操作的命令宏</value>
+  </data>
+  <data name="ProFeatureExport" xml:space="preserve">
+    <value>将通信记录导出为 TXT / CSV</value>
+  </data>
+  <data name="ProOneTimeText.Text" xml:space="preserve">
+    <value>一次性购买 — 无需订阅，永久使用。</value>
+  </data>
+  <data name="ProPriceSale" xml:space="preserve">
+    <value>促销 — 原价 {0}</value>
+  </data>
+  <data name="ServerProOnly" xml:space="preserve">
+    <value>回显服务器可在电脑上模拟蓝牙开发板，用于回环测试。</value>
+  </data>
+  <data name="TrialEndingTitle" xml:space="preserve">
+    <value>PRO 试用即将结束</value>
+  </data>
+  <data name="TrialEndingMessage" xml:space="preserve">
+    <value>还剩 {0} 天。你的预设和宏会保留 — 购买 PRO 即可继续使用分析器、回显服务器和宏。</value>
+  </data>
+  <data name="TrialEndedBarMessage" xml:space="preserve">
+    <value>你的预设和宏仍已保存。解锁 PRO 即可再次使用分析器、回显服务器和宏。</value>
+  </data>
+  <data name="LicenseStatusFreeTrialAvailable" xml:space="preserve">
+    <value>许可证：免费（首次打开 PRO 工具时开始 14 天 PRO 试用）</value>
+  </data>
+  <data name="BtnRefreshLicense" xml:space="preserve">
+    <value>恢复购买</value>
+  </data>
+  <data name="LicenseRestoreTitle" xml:space="preserve">
+    <value>恢复购买</value>
+  </data>
+  <data name="LicenseRestoreFound" xml:space="preserve">
+    <value>你的 BlueIDE PRO 购买已在此设备上激活。</value>
+  </data>
+  <data name="LicenseRestoreNotFound" xml:space="preserve">
+    <value>在此设备上未找到此 Microsoft 帐户的有效 BlueIDE PRO 购买。</value>
+  </data>
+  <data name="BtnPrivacyPolicy" xml:space="preserve">
+    <value>隐私政策</value>
+  </data>
+  <data name="PrivacyPolicyTitle" xml:space="preserve">
+    <value>隐私政策</value>
+  </data>
+  <data name="PrivacyPolicyStoreFallback" xml:space="preserve">
+    <value>无法打开浏览器。隐私政策可在 Microsoft Store 的 BlueIDE 页面上查看。</value>
+  </data>
 </root>

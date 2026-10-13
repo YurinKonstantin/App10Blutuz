@@ -54,6 +54,7 @@ namespace BluetoothManager
             ServiceCombo.ItemsSource = _serviceItems;
             Loaded += DevicesPage_Loaded;
             AppSettings.SettingsChanged += OnSettingsChanged;
+            LicenseManager.StatusChanged += () => DispatcherQueue.TryEnqueue(ApplyProBadges);
 
             _watcher.DeviceAdded += OnDeviceAdded;
             _watcher.DeviceUpdated += OnDeviceUpdated;
@@ -109,6 +110,7 @@ namespace BluetoothManager
                 ReloadHistory();
                 EnsureDefaultRfcommService();
                 InitTeachingTipCopy();
+                ApplyProBadges();
                 _uiReady = true;
                 ApplyFilterAndSort();
                 UpdateTerminalEmptyState();
@@ -1040,26 +1042,9 @@ namespace BluetoothManager
 
         private async void StartServerButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!LicenseManager.IsProUser)
-            {
-                await LicenseManager.CheckLicenseAsync(startTrialIfNeeded: true);
-                if (!LicenseManager.IsProUser)
-                {
-                    var dialog = new ContentDialog
-                    {
-                        Title = _res.GetString("ServerLockTitle") ?? "PRO Feature",
-                        Content = _res.GetString("ServerLockContent"),
-                        PrimaryButtonText = _res.GetString("BtnBuyPro") ?? "Buy PRO",
-                        CloseButtonText = _res.GetString("Cancel") ?? "Cancel",
-                        XamlRoot = App.MainWindow.Content.XamlRoot
-                    };
-                    var result = await dialog.ShowAsync();
-                    if (result != ContentDialogResult.Primary) return;
-                    if (!await LicenseManager.RequestPurchaseAsync()) return;
-                    await DialogHelper.ShowAsync(_res.GetString("ProPurchaseSuccessTitle"), _res.GetString("ProPurchaseSuccessContent"));
-                    await RateManager.RegisterMeaningfulEngageAsync();
-                }
-            }
+            if (!await ProGate.EnsureProAsync(ResHelper.Get(_res, "ServerProOnly",
+                    "The echo server simulates a Bluetooth board inside your PC for loopback tests.")))
+                return;
 
             if (!await CheckBluetoothAvailabilityAsync(showDialog: true)) return;
 
@@ -1207,27 +1192,9 @@ namespace BluetoothManager
 
         private async void RunMacro_Click(object sender, RoutedEventArgs e)
         {
-            if (!LicenseManager.IsProUser)
-            {
-                await LicenseManager.CheckLicenseAsync(startTrialIfNeeded: true);
-                if (!LicenseManager.IsProUser)
-                {
-                    var dialog = new ContentDialog
-                    {
-                        Title = ResHelper.Get(_res, "ServerLockTitle", "Available in BlueIDE PRO"),
-                        Content = ResHelper.Get(_res, "MacroProOnly", "Command macros require BlueIDE PRO."),
-                        PrimaryButtonText = ResHelper.Get(_res, "BtnBuyPro", "Buy PRO"),
-                        CloseButtonText = ResHelper.Get(_res, "Cancel", "Cancel"),
-                        XamlRoot = App.MainWindow.Content.XamlRoot
-                    };
-                    if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
-                    if (!await LicenseManager.RequestPurchaseAsync()) return;
-                    await DialogHelper.ShowAsync(
-                        ResHelper.Get(_res, "ProPurchaseSuccessTitle", "Success!"),
-                        ResHelper.Get(_res, "ProPurchaseSuccessContent", "PRO unlocked."));
-                    await RateManager.RegisterMeaningfulEngageAsync();
-                }
-            }
+            if (!await ProGate.EnsureProAsync(ResHelper.Get(_res, "MacroProOnly",
+                    "Command macros require BlueIDE PRO.")))
+                return;
 
             var presets = CommandPresetStore.LoadPresets();
             if (presets.Count == 0)
@@ -1261,6 +1228,12 @@ namespace BluetoothManager
             if (_syncingHistory) return;
             if (HistoryCombo.SelectedItem is string s)
                 InputTextBox.Text = s;
+        }
+
+        private void ApplyProBadges()
+        {
+            ProGate.ApplyBadge(StartServerButton, ResHelper.Get(_res, "StartServerButton.Content", "Start Server"));
+            ProGate.ApplyBadge(RunMacroButton, ResHelper.Get(_res, "BtnRunMacro.Content", "Run macro"));
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

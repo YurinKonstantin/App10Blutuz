@@ -74,6 +74,10 @@
             </Border>
             <Button x:Name="UnlockProButton" x:Uid="UnlockProButton" Click="UnlockProButton_Click"
                     Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Center" Height="40" Padding="32,0"/>
+            <TextBlock x:Name="SalePriceText" Visibility="Collapsed" HorizontalAlignment="Center"
+                       FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <TextBlock x:Uid="ProOneTimeText" FontSize="12" HorizontalAlignment="Center" TextAlignment="Center"
+                       TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
         </StackPanel>
 
         <Grid x:Name="AnalyzerPanel" Visibility="Collapsed" RowDefinitions="Auto,*,Auto">

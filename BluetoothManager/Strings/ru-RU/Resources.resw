@@ -490,7 +490,7 @@
     <value>Политика конфиденциальности</value>
   </data>
   <data name="PrivacyPolicyStoreFallback" xml:space="preserve">
-    <value>Откройте страницу BlueIDE в Microsoft Store и добавьте публичный URL политики конфиденциальности в Partner Center перед следующей отправкой.</value>
+    <value>Не удалось открыть браузер. Политика конфиденциальности доступна на странице BlueIDE в Microsoft Store.</value>
   </data>
   <data name="BtnShowOnboarding.Content" xml:space="preserve">
     <value>Показать подсказки</value>
@@ -809,5 +809,44 @@
   </data>
   <data name="AppDescription" xml:space="preserve">
     <value>Профессиональный Bluetooth-терминал (RFCOMM/SPP), эхо-сервер и низкоуровневый BLE GATT-анализатор.</value>
+  </data>
+  <data name="BtnBuyProWithPrice" xml:space="preserve">
+    <value>Купить PRO — {0}</value>
+  </data>
+  <data name="ProFeaturesHeader" xml:space="preserve">
+    <value>BlueIDE PRO включает:</value>
+  </data>
+  <data name="ProFeatureAnalyzer" xml:space="preserve">
+    <value>BLE GATT-анализатор: чтение, запись, уведомления</value>
+  </data>
+  <data name="ProFeatureServer" xml:space="preserve">
+    <value>Bluetooth эхо-сервер для петлевых тестов</value>
+  </data>
+  <data name="ProFeatureMacros" xml:space="preserve">
+    <value>Макросы команд для повторяющихся задач</value>
+  </data>
+  <data name="ProFeatureExport" xml:space="preserve">
+    <value>Экспорт трафика в TXT / CSV</value>
+  </data>
+  <data name="ProOneTimeText.Text" xml:space="preserve">
+    <value>Разовая покупка — без подписки, навсегда.</value>
+  </data>
+  <data name="ProPriceSale" xml:space="preserve">
+    <value>Скидка — было {0}</value>
+  </data>
+  <data name="ServerProOnly" xml:space="preserve">
+    <value>Эхо-сервер имитирует Bluetooth-плату прямо на вашем ПК для петлевых тестов.</value>
+  </data>
+  <data name="TrialEndingTitle" xml:space="preserve">
+    <value>Пробный период PRO скоро закончится</value>
+  </data>
+  <data name="TrialEndingMessage" xml:space="preserve">
+    <value>Осталось дней: {0}. Ваши пресеты и макросы сохранятся — купите PRO, чтобы анализатор, эхо-сервер и макросы остались доступны.</value>
+  </data>
+  <data name="TrialEndedBarMessage" xml:space="preserve">
+    <value>Ваши пресеты и макросы сохранены. Разблокируйте PRO, чтобы снова пользоваться анализатором, эхо-сервером и макросами.</value>
+  </data>
+  <data name="LicenseStatusFreeTrialAvailable" xml:space="preserve">
+    <value>Лицензия: бесплатная (14-дневный пробный период PRO начнётся при первом открытии PRO-инструмента)</value>
   </data>
 </root>

@@ -726,4 +726,64 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Professionelles Bluetooth-Terminal (RFCOMM/SPP), Echo-Server und Low-Level-BLE-GATT-Analysetool.</value>
   </data>
+  <data name="BtnBuyProWithPrice" xml:space="preserve">
+    <value>PRO kaufen — {0}</value>
+  </data>
+  <data name="ProFeaturesHeader" xml:space="preserve">
+    <value>BlueIDE PRO enthält:</value>
+  </data>
+  <data name="ProFeatureAnalyzer" xml:space="preserve">
+    <value>BLE-GATT-Analyzer: Lesen, Schreiben, Benachrichtigungen</value>
+  </data>
+  <data name="ProFeatureServer" xml:space="preserve">
+    <value>Bluetooth-Echoserver für Loopback-Tests</value>
+  </data>
+  <data name="ProFeatureMacros" xml:space="preserve">
+    <value>Befehlsmakros für wiederkehrende Abläufe</value>
+  </data>
+  <data name="ProFeatureExport" xml:space="preserve">
+    <value>Traffic-Export als TXT / CSV</value>
+  </data>
+  <data name="ProOneTimeText.Text" xml:space="preserve">
+    <value>Einmalkauf — kein Abo, dauerhaft freigeschaltet.</value>
+  </data>
+  <data name="ProPriceSale" xml:space="preserve">
+    <value>Angebot — vorher {0}</value>
+  </data>
+  <data name="ServerProOnly" xml:space="preserve">
+    <value>Der Echoserver simuliert eine Bluetooth-Platine direkt auf Ihrem PC für Loopback-Tests.</value>
+  </data>
+  <data name="TrialEndingTitle" xml:space="preserve">
+    <value>PRO-Testversion endet bald</value>
+  </data>
+  <data name="TrialEndingMessage" xml:space="preserve">
+    <value>Noch {0} Tag(e). Ihre Vorlagen und Makros bleiben gespeichert — kaufen Sie PRO, um Analyzer, Echoserver und Makros weiter zu nutzen.</value>
+  </data>
+  <data name="TrialEndedBarMessage" xml:space="preserve">
+    <value>Ihre Vorlagen und Makros sind weiterhin gespeichert. Schalten Sie PRO frei, um Analyzer, Echoserver und Makros wieder zu nutzen.</value>
+  </data>
+  <data name="LicenseStatusFreeTrialAvailable" xml:space="preserve">
+    <value>Lizenz: Kostenlos (14-tägige PRO-Testversion startet beim ersten Öffnen eines PRO-Tools)</value>
+  </data>
+  <data name="BtnRefreshLicense" xml:space="preserve">
+    <value>Käufe wiederherstellen</value>
+  </data>
+  <data name="LicenseRestoreTitle" xml:space="preserve">
+    <value>Käufe wiederherstellen</value>
+  </data>
+  <data name="LicenseRestoreFound" xml:space="preserve">
+    <value>Ihr BlueIDE PRO-Kauf ist auf diesem Gerät aktiv.</value>
+  </data>
+  <data name="LicenseRestoreNotFound" xml:space="preserve">
+    <value>Für dieses Microsoft-Konto wurde auf diesem Gerät kein aktiver BlueIDE PRO-Kauf gefunden.</value>
+  </data>
+  <data name="BtnPrivacyPolicy" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="PrivacyPolicyTitle" xml:space="preserve">
+    <value>Datenschutzerklärung</value>
+  </data>
+  <data name="PrivacyPolicyStoreFallback" xml:space="preserve">
+    <value>Der Browser konnte nicht geöffnet werden. Die Datenschutzerklärung finden Sie auf der BlueIDE-Seite im Microsoft Store.</value>
+  </data>
 </root>

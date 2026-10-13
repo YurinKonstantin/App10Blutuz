@@ -13,6 +13,13 @@ namespace BluetoothManager
         Purchased = 2
     }
 
+    public enum PurchaseOutcome
+    {
+        Succeeded = 0,
+        Cancelled = 1,
+        Failed = 2
+    }
+
     public static class LicenseManager
     {
         private static StoreContext? _storeContext;
@@ -26,6 +33,9 @@ namespace BluetoothManager
         public static bool IsTrialExpired =>
             AccessKind == ProAccessKind.Free && !string.IsNullOrEmpty(AppSettings.TrialStartedUtc);
         public static event Action? StatusChanged;
+
+        private static string? _cachedPrice;
+        private static string? _cachedBasePrice;
 
         private static void InitializeContext()
         {
@@ -60,25 +70,72 @@ namespace BluetoothManager
             ApplyTrialOrFree(startTrialIfNeeded);
         }
 
-        public static async Task<bool> RequestPurchaseAsync()
+        public static async Task<PurchaseOutcome> RequestPurchaseAsync()
         {
             try
             {
                 InitializeContext();
                 StorePurchaseResult result = await _storeContext!.RequestPurchaseAsync(ProStoreId);
 
-                if (result.Status == StorePurchaseStatus.Succeeded ||
-                    result.Status == StorePurchaseStatus.AlreadyPurchased)
+                switch (result.Status)
                 {
-                    ApplyPurchased();
-                    return true;
+                    case StorePurchaseStatus.Succeeded:
+                    case StorePurchaseStatus.AlreadyPurchased:
+                        ApplyPurchased();
+                        return PurchaseOutcome.Succeeded;
+                    case StorePurchaseStatus.NotPurchased:
+                        // User closed the Store dialog — not an error.
+                        return PurchaseOutcome.Cancelled;
+                    default:
+                        return PurchaseOutcome.Failed;
                 }
-                return false;
             }
             catch
             {
-                return false;
+                return PurchaseOutcome.Failed;
             }
+        }
+
+        /// <summary>
+        /// Localized PRO price from the Store (e.g. "$4.99"). BasePrice is set only while a sale is running.
+        /// Returns nulls when the Store is unreachable (sideload / offline).
+        /// </summary>
+        public static async Task<(string? Price, string? BasePrice)> GetProPriceAsync()
+        {
+            if (_cachedPrice != null)
+                return (_cachedPrice, _cachedBasePrice);
+
+            try
+            {
+                InitializeContext();
+                StoreProductQueryResult query = await _storeContext!.GetStoreProductsAsync(
+                    new[] { "Durable" }, new[] { ProStoreId });
+
+                if (query.ExtendedError == null &&
+                    query.Products.TryGetValue(ProStoreId, out StoreProduct? product) &&
+                    product?.Price != null &&
+                    !string.IsNullOrEmpty(product.Price.FormattedPrice))
+                {
+                    _cachedPrice = product.Price.FormattedPrice;
+                    _cachedBasePrice = product.Price.IsOnSale &&
+                        product.Price.FormattedBasePrice != product.Price.FormattedPrice
+                        ? product.Price.FormattedBasePrice
+                        : null;
+                }
+            }
+            catch
+            {
+                // Store unavailable — callers fall back to copy without a price.
+            }
+
+            return (_cachedPrice, _cachedBasePrice);
+        }
+
+        /// <summary>Shared Store context (window-initialized) for rating and other Store dialogs.</summary>
+        public static StoreContext GetStoreContext()
+        {
+            InitializeContext();
+            return _storeContext!;
         }
 
         private static void ApplyPurchased()

@@ -53,10 +53,21 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <InfoBar x:Name="DisconnectWarningBar"
-                         Severity="Warning" IsOpen="False" IsClosable="True"
-                         Style="{StaticResource PageInfoBarStyle}"
-                         Margin="18,0,18,0"/>
+                <StackPanel>
+                    <InfoBar x:Name="DisconnectWarningBar"
+                             Severity="Warning" IsOpen="False" IsClosable="True"
+                             Style="{StaticResource PageInfoBarStyle}"
+                             Margin="18,0,18,0"/>
+                    <InfoBar x:Name="TrialReminderBar"
+                             Severity="Informational" IsOpen="False" IsClosable="True"
+                             Style="{StaticResource PageInfoBarStyle}"
+                             Margin="18,0,18,0">
+                        <InfoBar.ActionButton>
+                            <Button x:Name="TrialReminderBuyButton" Click="TrialReminderBuy_Click"
+                                    Style="{StaticResource AccentButtonStyle}"/>
+                        </InfoBar.ActionButton>
+                    </InfoBar>
+                </StackPanel>
                 <Frame x:Name="ContentFrame" Grid.Row="1" Padding="18"/>
             </Grid>
         </NavigationView>

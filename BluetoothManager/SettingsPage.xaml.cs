@@ -146,12 +146,23 @@ namespace BluetoothManager
                 ProAccessKind.Trial => string.Format(
                     ResHelper.Get(_res, "LicenseStatusTrial", "License: PRO trial ({0} day(s) left)"),
                     LicenseManager.TrialDaysRemaining),
-                _ => ResHelper.Get(_res, "LicenseStatusFree", "License: Free (trial ended)")
+                _ when LicenseManager.IsTrialExpired =>
+                    ResHelper.Get(_res, "LicenseStatusFree", "License: Free (trial ended)"),
+                _ => ResHelper.Get(_res, "LicenseStatusFreeTrialAvailable",
+                    "License: Free (14-day PRO trial starts when you open a PRO tool)")
             };
-            BuyProSettingsButton.Content = ResHelper.Get(_res, "BtnBuyPro", "Buy PRO");
             BuyProSettingsButton.Visibility = LicenseManager.AccessKind == ProAccessKind.Purchased
                 ? Visibility.Collapsed
                 : Visibility.Visible;
+            if (BuyProSettingsButton.Content == null)
+                BuyProSettingsButton.Content = ProGate.BuyButtonText(null);
+            _ = ApplyPriceAsync();
+        }
+
+        private async System.Threading.Tasks.Task ApplyPriceAsync()
+        {
+            if (LicenseManager.AccessKind == ProAccessKind.Purchased) return;
+            BuyProSettingsButton.Content = await ProGate.GetBuyButtonTextAsync();
         }
 
         private void OnLicenseStatusChanged()
@@ -178,20 +189,7 @@ namespace BluetoothManager
         private async void BuyPro_Click(object sender, RoutedEventArgs e)
         {
             BuyProSettingsButton.IsEnabled = false;
-            bool success = await LicenseManager.RequestPurchaseAsync();
-            if (success)
-            {
-                await DialogHelper.ShowAsync(
-                    ResHelper.Get(_res, "ProPurchaseSuccessTitle", "Success!"),
-                    ResHelper.Get(_res, "ProPurchaseSuccessContent", "PRO unlocked."));
-                await RateManager.RegisterMeaningfulEngageAsync();
-            }
-            else
-            {
-                await DialogHelper.ShowAsync(
-                    ResHelper.Get(_res, "ProPurchaseFailTitle", "Purchase Error"),
-                    ResHelper.Get(_res, "ProPurchaseFailContent", "Failed to complete the purchase."));
-            }
+            await ProGate.PurchaseAsync();
             UpdateLicenseUi();
             BuyProSettingsButton.IsEnabled = true;
         }

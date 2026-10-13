@@ -706,4 +706,64 @@
   <data name="AppDescription" xml:space="preserve">
     <value>プロ向け Bluetooth ターミナル（RFCOMM/SPP）、エコーサーバー、低レベル BLE GATT 分析ツール。</value>
   </data>
+  <data name="BtnBuyProWithPrice" xml:space="preserve">
+    <value>PRO を購入 — {0}</value>
+  </data>
+  <data name="ProFeaturesHeader" xml:space="preserve">
+    <value>BlueIDE PRO の内容:</value>
+  </data>
+  <data name="ProFeatureAnalyzer" xml:space="preserve">
+    <value>BLE GATT アナライザー: 読み取り・書き込み・通知</value>
+  </data>
+  <data name="ProFeatureServer" xml:space="preserve">
+    <value>ループバックテスト用 Bluetooth エコーサーバー</value>
+  </data>
+  <data name="ProFeatureMacros" xml:space="preserve">
+    <value>繰り返し作業のためのコマンドマクロ</value>
+  </data>
+  <data name="ProFeatureExport" xml:space="preserve">
+    <value>通信ログを TXT / CSV にエクスポート</value>
+  </data>
+  <data name="ProOneTimeText.Text" xml:space="preserve">
+    <value>買い切り — サブスクリプションなし、ずっと使えます。</value>
+  </data>
+  <data name="ProPriceSale" xml:space="preserve">
+    <value>セール中 — 通常 {0}</value>
+  </data>
+  <data name="ServerProOnly" xml:space="preserve">
+    <value>エコーサーバーは PC 内で Bluetooth ボードをシミュレートし、ループバックテストを行えます。</value>
+  </data>
+  <data name="TrialEndingTitle" xml:space="preserve">
+    <value>PRO 試用期間がまもなく終了します</value>
+  </data>
+  <data name="TrialEndingMessage" xml:space="preserve">
+    <value>残り {0} 日です。プリセットとマクロは保存されたままです。PRO を購入すると、アナライザー・エコーサーバー・マクロを引き続き使用できます。</value>
+  </data>
+  <data name="TrialEndedBarMessage" xml:space="preserve">
+    <value>プリセットとマクロは保存されています。PRO をアンロックすると、アナライザー・エコーサーバー・マクロを再び使用できます。</value>
+  </data>
+  <data name="LicenseStatusFreeTrialAvailable" xml:space="preserve">
+    <value>ライセンス: 無料 (PRO ツールを初めて開くと 14 日間の PRO 試用が始まります)</value>
+  </data>
+  <data name="BtnRefreshLicense" xml:space="preserve">
+    <value>購入を復元</value>
+  </data>
+  <data name="LicenseRestoreTitle" xml:space="preserve">
+    <value>購入を復元</value>
+  </data>
+  <data name="LicenseRestoreFound" xml:space="preserve">
+    <value>このデバイスで BlueIDE PRO の購入が有効です。</value>
+  </data>
+  <data name="LicenseRestoreNotFound" xml:space="preserve">
+    <value>このデバイスでは、この Microsoft アカウントの有効な BlueIDE PRO 購入が見つかりませんでした。</value>
+  </data>
+  <data name="BtnPrivacyPolicy" xml:space="preserve">
+    <value>プライバシーポリシー</value>
+  </data>
+  <data name="PrivacyPolicyTitle" xml:space="preserve">
+    <value>プライバシーポリシー</value>
+  </data>
+  <data name="PrivacyPolicyStoreFallback" xml:space="preserve">
+    <value>ブラウザーを開けませんでした。プライバシーポリシーは Microsoft Store の BlueIDE ページで確認できます。</value>
+  </data>
 </root>

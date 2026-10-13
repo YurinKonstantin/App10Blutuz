@@ -92,6 +92,13 @@ namespace BluetoothManager
             set => Values["TrialStartedUtc"] = value ?? "";
         }
 
+        /// <summary>Trial reminder already shown: 0 = none, 1 = "ends soon", 2 = "ended".</summary>
+        public static int TrialReminderStage
+        {
+            get => GetInt("TrialReminderStage", 0);
+            set => Values["TrialReminderStage"] = value;
+        }
+
         public static string LastConnectedDeviceId
         {
             get => Values.TryGetValue("LastConnectedDeviceId", out var v) ? v?.ToString() ?? "" : "";
